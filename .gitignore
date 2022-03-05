@@ -34,3 +34,6 @@
 # Tokens
 settings/secret.json
 settings/tokens.json
+
+# Node
+node_modules/
