@@ -1,0 +1,9 @@
+{
+    "Resize": {
+        "Amplitude": 4
+    },
+
+    "PosRandomize": {
+        "Amplitude": 1000
+    }
+}
