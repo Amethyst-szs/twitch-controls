@@ -4,11 +4,13 @@
 #include "nn/init.h"
 #include "nn/os.hpp"
 #include "types.h"
+#include "util.h"
 #include <fl/server.h>
 #include <mem.h>
 #include <nn/nifm.h>
 #include <nn/socket.h>
 #include <sead/basis/seadNew.hpp>
+#include "util.h"
 
 #define IN_PACKET(TYPE) case smo::InPacketType::TYPE: {\
                 InPacket##TYPE p;\
@@ -82,6 +84,7 @@ namespace smo
             start();
 
         sendInit(ipS);
+        // amy::log(1, "%i", amy::getRedeemInfo().isInvalidStage);
     }
 
     void Server::disconnect()

@@ -25,8 +25,10 @@ namespace smo
     }
 
     void InPacketEvent::on(Server &server){
-        amy::updateRedeemStatus();
-        amy::log("Event Redeem Claimed! EventID: %i - Rejected: %s", eventID, !amy::getRedeemInfo().isRedeemsValid ? "true" : "false");
+        if(!amy::getRedeemInfo().isTransition){
+            amy::updateRedeemStatus();
+        } else return;
+        amy::log(0, "Event Redeem Claimed! EventID: %i - Rejected: %s", eventID, !amy::getRedeemInfo().isRedeemsValid ? "true" : "false");
         if(amy::getRedeemInfo().isRedeemsValid){
             switch(eventID){
                 case 1:{ //PrevScene - See Myself Out
@@ -53,7 +55,7 @@ namespace smo
                 }
                 case 5:{
                     if(!amy::getGlobalStageScene()->mHolder->mGameDataFile->isUnlockedWorld(2)){
-                        amy::log("Rejected random kingdom because Sand Kingdom isn't unlocked yet!");
+                        amy::log(0, "Rejected random kingdom because Sand Kingdom isn't unlocked yet!");
                         break;
                     }
 
@@ -62,7 +64,7 @@ namespace smo
                     break;
                 }
                 default:{
-                    amy::log("Invalid EventID sent? EventID: %i", eventID);
+                    amy::log(0, "Invalid EventID sent? EventID: %i", eventID);
                     break;
                 }
             }
@@ -74,8 +76,10 @@ namespace smo
     }
 
     void InPacketResize::on(Server &server){
-        amy::updateRedeemStatus();
-        amy::log("Resize Redeem Claimed! Rejected: %s", !amy::getRedeemInfo().isRedeemsValid ? "true" : "false");
+        if(!amy::getRedeemInfo().isTransition){
+            amy::updateRedeemStatus();
+        } else return;
+        amy::log(0, "Resize Redeem Claimed! Rejected: %s", !amy::getRedeemInfo().isRedeemsValid ? "true" : "false");
         if(amy::getRedeemInfo().isRedeemsValid){
             al::PlayerHolder *pHolder = al::getScenePlayerHolder(amy::getGlobalStageScene());
             PlayerActorHakoniwa *player = al::tryGetPlayerActor(pHolder, 0);
@@ -89,14 +93,16 @@ namespace smo
     }
 
     void InPacketPosRandomize::on(Server &server){
-        amy::updateRedeemStatus();
-        amy::log("PosRandomize Redeem Claimed! Rejected: %s", !amy::getRedeemInfo().isRedeemsValid ? "true" : "false");
+        if(!amy::getRedeemInfo().isTransition){
+            amy::updateRedeemStatus();
+        } else return;
+        amy::log(0, "PosRandomize Redeem Claimed! Rejected: %s", !amy::getRedeemInfo().isRedeemsValid ? "true" : "false");
         if(amy::getRedeemInfo().isRedeemsValid){
             al::PlayerHolder *pHolder = al::getScenePlayerHolder(amy::getGlobalStageScene());
             PlayerActorHakoniwa *player = al::tryGetPlayerActor(pHolder, 0);
 
             if(rs::isPlayer2D(player)){
-                amy::log("Rejected PosRandomize because of 2D Area");
+                amy::log(0, "Rejected PosRandomize because of 2D Area");
                 return;
             }
 

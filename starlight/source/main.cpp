@@ -20,6 +20,7 @@
 
 static bool showMenu = false;
 static bool isInGame = false;
+static bool prevFrameInvalidScene = true;
 static HakoniwaSequence *curGlobalSequence;
 
 DebugWarpPoint warpPoints[40];
@@ -105,6 +106,14 @@ al::StageInfo *initDebugListHook(const al::Scene *curScene)
 
 void drawMainHook(HakoniwaSequence *curSequence, sead::Viewport *viewport, sead::DrawContext *drawContext)
 {
+    //Update invalid stage
+    amy::getRedeemInfo().isInvalidStage = al::isEqualSubString(curSequence->mGameDataHolder->getCurrentStageName(), "Demo");
+    
+    //If the stage switched from an invalid stage to valid or vise versa
+    if(amy::getRedeemInfo().isInvalidStage != prevFrameInvalidScene){
+        amy::log(1, "%i", amy::getRedeemInfo().isInvalidStage);
+        prevFrameInvalidScene = amy::getRedeemInfo().isInvalidStage;
+    }
 
     if (!showMenu)
     {
@@ -127,7 +136,6 @@ void drawMainHook(HakoniwaSequence *curSequence, sead::Viewport *viewport, sead:
 
     if (curScene && isInGame)
     {
-
         drawBackground((agl::DrawContext *)drawContext);
 
         gTextWriter->beginDraw();
@@ -171,6 +179,7 @@ void drawMainHook(HakoniwaSequence *curSequence, sead::Viewport *viewport, sead:
                 gTextWriter->printf("Twitch Integration Values:\n");
                 gTextWriter->printf("Reject Redeems: %s\n", !amy::getRedeemInfo().isRedeemsValid ? "true" : "false");
                 gTextWriter->printf("Invalid Stage: %s\n", amy::getRedeemInfo().isInvalidStage ? "true" : "false");
+                gTextWriter->printf("Scene Transition: %s\n", amy::getRedeemInfo().isTransition ? "true" : "false");
                 gTextWriter->printf("Gravity Timer: %i\n", amy::getRedeemInfo().gravityTimer);
                 gTextWriter->printf("Invis Timer: %i\n", amy::getRedeemInfo().invisTimer);
                 break;
@@ -204,7 +213,7 @@ void drawMainHook(HakoniwaSequence *curSequence, sead::Viewport *viewport, sead:
                             smo::Server::instance().connect(smo::getServerIp().serverIp);
                             break;
                         case 1:
-                            amy::log("ClientDisconnect");
+                            amy::log(1, "ClientDisconnect");
                             break;
                         case 2:
                             GameDataFunction::killPlayer(*stageScene->mHolder);
@@ -228,12 +237,13 @@ void drawMainHook(HakoniwaSequence *curSequence, sead::Viewport *viewport, sead:
     al::executeDraw(curSequence->mLytKit, "２Ｄバック（メイン画面）");
 }
 
+HOOK_ATTR
 void stageInitHook(StageScene *initStageScene, al::SceneInitInfo *sceneInitInfo)
 {
     __asm("MOV X19, X0");
     __asm("LDR X24, [X1, #0x18]");
 
-    amy::getRedeemInfo().isRedeemsValid = false;
+    amy::getRedeemInfo().isTransition = true;
     
     __asm("MOV X1, X24");
 }
@@ -245,14 +255,10 @@ ulong threadInit()
     return 0x20;
 }
 
-void stageSceneHook()
+HOOK_ATTR
+void stageSceneHook(StageScene* stageScene)
 {
-
     __asm("MOV X19, X0");
-
-    StageScene *stageScene;
-    __asm("MOV %[result], X0"
-          : [result] "=r"(stageScene));
 
     al::PlayerHolder *pHolder = al::getScenePlayerHolder(stageScene);
     PlayerActorHakoniwa *player = al::tryGetPlayerActor(pHolder, 0);
@@ -262,7 +268,7 @@ void stageSceneHook()
     al::Projection *CamProject = al::getProjection(UseCamera, 0);
     GameDataHolderWriter holder = *stageScene->mHolder;
 
-    //ADD A VALUE THAT UPDATES EVERY FRAME SO THAT LOADING ZONES CAN BE FOUND AND NOT CRASH PLZ THANKS
+    amy::getRedeemInfo().isTransition = false;
     //Some way to update invalidStage when in Home Ship cutscenes
 
     //Gravity timer updater

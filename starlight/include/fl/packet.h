@@ -37,7 +37,7 @@ class OutPacketLog : public OutPacket {
 public:
     enum LogType : u8 {
         Log = 0,
-        Warning = 1,
+        DemoToggle = 1,
         Error = 2,
         Fatal = 3
     };

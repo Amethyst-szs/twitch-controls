@@ -9,7 +9,6 @@ static const char *DBG_TBL_PATH = "DebugData/Font/nvn_font_jis1_tbl.bin";
 sead::TextWriter *gTextWriter;
 
 void setupDebugMenu(GameSystem *gSys) {
-
     // gLogger->LOG("Preparing Debug Menu.\n");
 
     sead::Heap *curHeap = al::getCurrentHeap();

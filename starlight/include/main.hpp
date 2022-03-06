@@ -45,6 +45,7 @@
 #define RAD(deg) (deg * (M_PI / 180))        // converts Degrees to Radians
 #define DEG(rad) (rad * (180 / M_PI))        // converts Radians to Degrees
 #define BTOC(bool) (bool ? "True" : "False") // converts boolean to true/false char
+#define HOOK_ATTR __attribute__((section(".text.hooks")))
 
 #define TEMPPLAYERNAME "Amy"
 

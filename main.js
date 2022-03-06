@@ -16,11 +16,14 @@ const outPackets = require('./server_bin/outPackets');
 const inPackets = require('./server_bin/inPackets');
 const log = require('./server_bin/console');
 
+let invalidStage = false;
+
 //Hydration
 let Hydrate = parseInt(fs.readFileSync(`${CurDir}/settings/hydrate.txt`).toString().substring(17), 10);
 
 //Respond to packets from the switch
 server.on('message', (msg, rinfo) => {
+    console.log(msg);
     switch(msg.readInt8()){
         case -1: //Dummy Initalization
             inPackets.DummyInit(msg, rinfo);

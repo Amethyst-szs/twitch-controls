@@ -19,6 +19,7 @@ SECTIONS
   .text : {
     HIDDEN(__text_start__ = .);
     KEEP (*(.text.crt0))
+    KEEP (*(.text.hooks))
     *(.text .text.*)
     HIDDEN(__text_end__ = .);
   } :text

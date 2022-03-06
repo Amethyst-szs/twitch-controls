@@ -52,8 +52,7 @@ void amy::updateRedeemStatus(){
     StageScene *stageScene = amy::getGlobalStageScene();
     al::PlayerHolder *pHolder = al::getScenePlayerHolder(stageScene);
     PlayerActorHakoniwa *player = al::tryGetPlayerActor(pHolder, 0);
-    amy::getRedeemInfo().isInvalidStage = al::isEqualSubString(GameDataFunction::getCurrentStageName(*stageScene->mHolder), "Demo");
-    amy::getRedeemInfo().isRedeemsValid = !(stageScene->isPause() || PlayerFunction::isPlayerDeadStatus(player) || rs::isActiveDemo(player) || amy::getRedeemInfo().isInvalidStage);
-    amy::log("Info: %i %i %s", amy::getRedeemInfo().isRedeemsValid, amy::getRedeemInfo().isInvalidStage, GameDataFunction::getCurrentStageName(*amy::getGlobalStageScene()->mHolder));
+    amy::getRedeemInfo().isRedeemsValid = !(stageScene->isPause() || PlayerFunction::isPlayerDeadStatus(player) || rs::isActiveDemo(player));
+    amy::log(0, "Info: %i %i %s", amy::getRedeemInfo().isRedeemsValid, amy::getRedeemInfo().isInvalidStage, GameDataFunction::getCurrentStageName(*amy::getGlobalStageScene()->mHolder));
     return;
 }

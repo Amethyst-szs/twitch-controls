@@ -13,7 +13,7 @@ B59E28: // sead::system::print
     MOV X0, X19 // move GameSystem to arg register
     BL setupDebugMenu
     
-50F258: // HakoniwaSequence::drawMain+84
+50F258: // HakoniwaSequence::drawMain+80
     MOV X0, X19 // HakoniwaSequence
     MOV X1, SP // viewport
     MOV X2, X20 // drawContext
@@ -74,5 +74,10 @@ B59E28: // sead::system::print
 0041e764: //Fixes Mario posing when gravity is changed
     NOP
 
-// 30AA10:
-    // BL rocketDeadHook
+// Costume Setup
+54C498: // rs::isHaveCloth
+    MOV W0, #1
+    RET
+54C4A4: // rs::isHaveCap
+    MOV W0, #1
+    RET

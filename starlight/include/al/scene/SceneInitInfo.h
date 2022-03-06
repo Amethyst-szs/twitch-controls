@@ -7,7 +7,7 @@ namespace al {
         struct GameSystemInfo * gameSysInfo;
         GameDataHolderAccessor *gameDataHolder;
         undefined field_0x10[8];
-        char *initStageName;
+        const char *initStageName;
         u32 scenarioNo;
     };
 }
