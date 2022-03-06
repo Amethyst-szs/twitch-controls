@@ -46,3 +46,33 @@ B59E28: // sead::system::print
 576FB8: // rs::isTriggerSnapShotMode
     MOV X0, #0
     RET
+
+// 52A0C8: // forces isUnlockedWorld to always return true
+    // MOV X0, #1
+    // RET
+// 52A140: // forces isUnlockedCurrentWorld to always return true
+    // MOV X0, #1
+    // RET
+// 52C2C0: // forces isExistHome to always return true
+    // MOV X0, #1
+    // RET
+
+//52AE10: // sets world index for cityWorld to 0
+//    MOV X0, #0
+
+// These hooks essentially forces the odyssey to never kill itself when its in a kingdom that it "shouldnt" be in
+309254: // ShineTowerRocket::init+3F4
+    NOP
+309274: // ShineTowerRocket::init+414
+    NOP
+
+309904: // ShineTowerRocket::init+0xAA4
+    MOV X0, #1
+309938: // ShineTowerRocket::init+0xAD8
+    MOV X0, #1
+
+0041e764: //Fixes Mario posing when gravity is changed
+    NOP
+
+// 30AA10:
+    // BL rocketDeadHook

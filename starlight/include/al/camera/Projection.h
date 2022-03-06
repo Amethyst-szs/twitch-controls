@@ -6,5 +6,8 @@ namespace al
         public:
             float getFovy(void) const;
             void setFovy(float);
+
+            unsigned char padding[0xa0];
+            float fovy;
     };
 };

@@ -37,6 +37,8 @@ typedef unsigned int    undefined3;
 typedef unsigned int    undefined4;
 typedef unsigned long    undefined8;
 
+#define spad(ID, SIZE) undefined padding##SIZE_##ID[SIZE];
+
 enum SocketLogState
 {
     SOCKET_LOG_UNINITIALIZED    = 0,

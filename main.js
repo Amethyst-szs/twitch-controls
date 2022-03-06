@@ -16,6 +16,9 @@ const outPackets = require('./server_bin/outPackets');
 const inPackets = require('./server_bin/inPackets');
 const log = require('./server_bin/console');
 
+//Hydration
+let Hydrate = parseInt(fs.readFileSync(`${CurDir}/settings/hydrate.txt`).toString().substring(17), 10);
+
 //Respond to packets from the switch
 server.on('message', (msg, rinfo) => {
     switch(msg.readInt8()){
@@ -69,6 +72,25 @@ async function TwitchHandler() {
     log.log(2, `Subscribed to redeem alerts with channel:read:redemptions scope`);
     //Create listener that is triggered every channel point redeem
     const listener = await PubSubClient.onRedemption(userId, (message) => {
+        //Dydration
+        switch(message.rewardTitle){
+            case "Hydrate!":
+                Hydrate = parseInt(fs.readFileSync(`${CurDir}/settings/hydrate.txt`).toString().substring(17), 10);
+                Hydrate++;
+                fs.writeFileSync(`${CurDir}/settings/hydrate.txt`, `Hydration Count: ${Hydrate.toString(10)}`);
+                break;
+            case "Dehydrate":
+                Hydrate = parseInt(fs.readFileSync(`${CurDir}/settings/hydrate.txt`).toString().substring(17), 10);
+                Hydrate--;
+                fs.writeFileSync(`${CurDir}/settings/hydrate.txt`, `Hydration Count: ${Hydrate.toString(10)}`);
+                break;
+            case "I Drank Water":
+                Hydrate = parseInt(fs.readFileSync(`${CurDir}/settings/hydrate.txt`).toString().substring(17), 10);
+                Hydrate--;
+                fs.writeFileSync(`${CurDir}/settings/hydrate.txt`, `Hydration Count: ${Hydrate.toString(10)}`);
+                break;
+        }
+
         //Check and make sure a switch has connected already
         if(client.address == undefined){
             log.log(2, `${message.rewardTitle} from ${message.userDisplayName} but no client connected yet!`);
@@ -95,6 +117,18 @@ async function TwitchHandler() {
             case "Change Gravity": //Event ID 2 (GravFlip)
                 outPackets.Events(server, 2, client);
                 log.log(1, "Event packet sent (Change Gravity)");
+                break;
+            case "Up we go": //Event ID 3 (Fling)
+                outPackets.Events(server, 3, client);
+                log.log(1, "Event packet sent (Up we go)");
+                break;
+            case "Cappy? Nah": //Event ID 4 (Cappy)
+                outPackets.Events(server, 4, client);
+                log.log(1, "Event packet sent (Cappy? Nah)");
+                break;
+            case "Random Kingdom": //Event ID 5 (Random Kingdom)
+                outPackets.Events(server, 5, client);
+                log.log(1, "Event packet sent (Random Kingdom)");
                 break;
             default: //Generic reward
                 log.log(2, `Generic reward ${message.rewardTitle} redeemed`);

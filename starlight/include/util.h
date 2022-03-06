@@ -10,11 +10,16 @@ namespace amy
 {
     class RedeemInfo{
         public:
-            float gravityTimer;
+            int gravityTimer;
+            int invisTimer;
             sead::Vector3f getRandomGravity();
+            bool isInvalidStage;
             bool isRedeemsValid;
     };
     RedeemInfo& getRedeemInfo();
+    
+    const char *getRandomHomeStage();
+    void updateRedeemStatus();
 
     StageScene*& getGlobalStageScene();
     template <typename ...Args>

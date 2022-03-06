@@ -56,6 +56,13 @@ public:
     static bool isEnableCap(GameDataHolderAccessor);
     // enables cappy if not enabled already
     static void enableCap(GameDataHolderWriter);
+    // remove cappy
+    static void disableCapByPlacement(al::LiveActor const*);
+
+    //unlocks a kingdom based off index
+    // static void unlockWorld(GameDataHolderWriter, int);
+    //sets the scenario of the specified kingdom
+    static void setMainScenarioNo(GameDataHolderWriter, int scenarioNo);
 
     // kills the player
     static void killPlayer(GameDataHolderWriter);

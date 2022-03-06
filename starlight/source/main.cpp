@@ -1,4 +1,5 @@
 #include "main.hpp"
+#include "al/area/ChangeStageInfo.h"
 #include "al/camera/CameraDirector.h"
 #include "al/camera/Projection.h"
 #include "al/scene/Scene.h"
@@ -32,9 +33,9 @@ static int debugMax = 2;
 static const char* page2Options[] {
         "Connect to Server\n",
         "Disconnect from Server\n",
-        "Animation Tester\n",
+        "Kill Player\n",
         "End Puppetable\n",
-        "Random Testing"
+        "Random Testing\n"
     };
 static int page2Len = *(&page2Options + 1) - page2Options;
 
@@ -154,7 +155,7 @@ void drawMainHook(HakoniwaSequence *curSequence, sead::Viewport *viewport, sead:
                 gTextWriter->printf("Stage Name: %s\n", stageScene->mHolder->getCurrentStageName());
                 gTextWriter->printf("Scenario: %i\n", GameDataFunction::getScenarioNo(player));
                 gTextWriter->printf("Total Shines in Kingdom: %i\n", GameDataFunction::getWorldTotalShineNum(GameData, GameDataFunction::getCurrentWorldId(GameData)));
-                
+
                 //Camera information
                 gTextWriter->printf("\nCamera FOV: %f\n", CamProject->getFovy());
 
@@ -169,7 +170,9 @@ void drawMainHook(HakoniwaSequence *curSequence, sead::Viewport *viewport, sead:
             case 1:
                 gTextWriter->printf("Twitch Integration Values:\n");
                 gTextWriter->printf("Reject Redeems: %s\n", !amy::getRedeemInfo().isRedeemsValid ? "true" : "false");
-                gTextWriter->printf("Gravity Timer: %f\n", amy::getRedeemInfo().gravityTimer);
+                gTextWriter->printf("Invalid Stage: %s\n", amy::getRedeemInfo().isInvalidStage ? "true" : "false");
+                gTextWriter->printf("Gravity Timer: %i\n", amy::getRedeemInfo().gravityTimer);
+                gTextWriter->printf("Invis Timer: %i\n", amy::getRedeemInfo().invisTimer);
                 break;
             case 2:
                 gTextWriter->printf("Quick Functions:\n");
@@ -179,7 +182,7 @@ void drawMainHook(HakoniwaSequence *curSequence, sead::Viewport *viewport, sead:
                     debugSel++;
                 if(al::isPadTriggerUp(-1) && !al::isPadTriggerZL(-1))
                     debugSel--;
-                
+
                 //If scrolled past end of menu, send to start
                 if(debugSel > page2Len-1)
                     debugSel = 0;
@@ -193,7 +196,7 @@ void drawMainHook(HakoniwaSequence *curSequence, sead::Viewport *viewport, sead:
                     else
                         gTextWriter->printf("> %s", page2Options[i]);
                 };
-                
+
                 //Process a selection
                 if (al::isPadTriggerRight(-1) && !al::isPadHoldZL(-1))
                     switch(debugSel){
@@ -204,18 +207,14 @@ void drawMainHook(HakoniwaSequence *curSequence, sead::Viewport *viewport, sead:
                             amy::log("ClientDisconnect");
                             break;
                         case 2:
-                            player->startDemoPuppetable();
-                            // al::setVelocityZero(player);
-                            // rs::faceToCamera(player);
-                            // al::startAction(player, "AreaWaitDance01");
+                            GameDataFunction::killPlayer(*stageScene->mHolder);
                             break;
                         case 3:
                             player->endDemoPuppetable();
                             break;
                         case 4:
-                            
-                            
-                            // amy::log("CameraUp: x%f y%f z%f", CameraUp->x, CameraUp->y, CameraUp->z);
+                            ChangeStageInfo stageInfo(stageScene->mHolder, "start", "CapWorldHomeStage", false, -1, ChangeStageInfo::SubScenarioType::UNK);
+                            amy::getGlobalStageScene()->mHolder->changeNextStage(&stageInfo, 0);
                             break;
                     }
                 break;
@@ -233,9 +232,9 @@ void stageInitHook(StageScene *initStageScene, al::SceneInitInfo *sceneInitInfo)
 {
     __asm("MOV X19, X0");
     __asm("LDR X24, [X1, #0x18]");
-    
-    amy::getRedeemInfo().isRedeemsValid = false;
 
+    amy::getRedeemInfo().isRedeemsValid = false;
+    
     __asm("MOV X1, X24");
 }
 
@@ -259,18 +258,24 @@ void stageSceneHook()
     PlayerActorHakoniwa *player = al::tryGetPlayerActor(pHolder, 0);
     amy::getGlobalStageScene() = stageScene;
     GameDataHolderAccessor GameData = *stageScene->mHolder;
+    al::IUseCamera *UseCamera = stageScene;
+    al::Projection *CamProject = al::getProjection(UseCamera, 0);
+    GameDataHolderWriter holder = *stageScene->mHolder;
 
-    //Should point redeems work?
-    if(stageScene->isPause() || PlayerFunction::isPlayerDeadStatus(player))
-        amy::getRedeemInfo().isRedeemsValid = false;
-    else
-        amy::getRedeemInfo().isRedeemsValid = true;
+    //ADD A VALUE THAT UPDATES EVERY FRAME SO THAT LOADING ZONES CAN BE FOUND AND NOT CRASH PLZ THANKS
+    //Some way to update invalidStage when in Home Ship cutscenes
 
     //Gravity timer updater
     if(amy::getRedeemInfo().gravityTimer <= 0)
         al::setGravity(player, sead::Vector3f{0, -1, 0});
     else if(!stageScene->isPause() && !PlayerFunction::isPlayerDeadStatus(player))
         amy::getRedeemInfo().gravityTimer--;
+
+    //Activate home ship yes
+    GameDataFunction::activateHome(holder);
+    holder.mGameDataFile->mProgressData->talkCapNearHomeInWaterfall();
+    GameDataFunction::repairHome(holder);
+    GameDataFunction::enableCap(holder);
 
     if (!isInGame)
     {
@@ -287,17 +292,17 @@ void stageSceneHook()
             debugPage++;
         else if(al::isPadTriggerLeft(-1))
             debugPage--;
-        
+
         //Handle over/underflowing
         if(debugPage > debugMax)
             debugPage = 0;
         if(debugPage < 0)
             debugPage = debugMax;
     }
-    
+
     // TESTING FUNCTIONS
     // if(al::isPadHoldZR(-1) && al::isPadTriggerLeft(-1)){
-        
+
     // }
 
     __asm("MOV X0, %[input]"
