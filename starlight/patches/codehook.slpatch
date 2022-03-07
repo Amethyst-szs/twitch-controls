@@ -34,6 +34,12 @@ B59E28: // sead::system::print
 4B5E30: // patches actor factory ctor with custom matching factory
     B ProjectActorFactory
 
+4CA1E4: // disables the OpeningStage cutscene from happening
+    MOV X0, #0
+    
+3A85F8: // stops OpeningStageCapManHero from full init
+    MOV X0, #1
+
 // Amiibo Button Disabling
 577078: // rs::isHoldAmiiboMode
     MOV X0, #0

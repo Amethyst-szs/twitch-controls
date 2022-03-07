@@ -140,6 +140,10 @@ async function TwitchHandler() {
                 outPackets.Events(server, 6, client);
                 log.log(1, "Event packet sent (Highway to Death)");
                 break;
+            case "Whispy Winds": //Event ID 7 (Wind)
+                outPackets.Events(server, 7, client);
+                log.log(1, "Event packet sent (Whispy Winds)");
+                break;
             default: //Generic reward
                 log.log(2, `Generic reward ${message.rewardTitle} redeemed`);
                 break;

@@ -87,6 +87,11 @@ namespace smo
                     ri.coinTickRate = ri.coinTickRate/2;
                     break;
                 }
+                case 7:{
+                    ri.windVect = ri.getRandomGravity();
+                    ri.windTimer += 10*60;
+                    break;
+                }
                 default:{
                     amy::log("Invalid EventID sent? EventID: %i", eventID);
                     break;

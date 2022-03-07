@@ -12,6 +12,8 @@ namespace amy
         public:
             //Timers
             int gravityTimer;
+            sead::Vector3f windVect;
+            int windTimer;
 
             //CoinTick Redeem
             int coinTickCurrent = 0;

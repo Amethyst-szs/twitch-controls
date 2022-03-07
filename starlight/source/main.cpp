@@ -197,7 +197,9 @@ void drawMainHook(HakoniwaSequence *curSequence, sead::Viewport *viewport, sead:
                 gTextWriter->printf("Reject Redeems: %s\n", !ri.isRedeemsValid ? "true" : "false");
                 gTextWriter->printf("Invalid Stage: %s\n", ri.isInvalidStage ? "true" : "false");
                 gTextWriter->printf("Scene Transition: %s\n", ri.isTransition ? "true" : "false");
-                gTextWriter->printf("Gravity Timer: %i\n\n", ri.gravityTimer);
+                gTextWriter->printf("Gravity Timer: %i\n", ri.gravityTimer);
+                gTextWriter->printf("Wind Timer: %i\n", ri.windTimer);
+                gTextWriter->printf("Wind Vector: %fx %fy %fz\n", ri.windVect.x, ri.windVect.y, ri.windVect.z);
                 gTextWriter->printf("Coin Tick Running: %i\n", ri.coinTickRunning);
                 gTextWriter->printf("Coin Tick Current: %i\n", ri.coinTickCurrent);
                 gTextWriter->printf("Coin Tick Rate: %f\n", ri.coinTickRate);
@@ -295,7 +297,6 @@ void stageSceneHook(StageScene* stageScene)
     amy::RedeemInfo &ri = amy::getRedeemInfo();
 
     ri.isTransition = false;
-    //Some way to update invalidStage when in Home Ship cutscenes
 
     //Gravity timer updater
     if(ri.gravityTimer <= 0)
@@ -325,6 +326,16 @@ void stageSceneHook(StageScene* stageScene)
         }
     }
 
+    //Wind handler
+    if(ri.windTimer >= 0 
+    && !stageScene->isPause() 
+    && !PlayerFunction::isPlayerDeadStatus(player) 
+    && !rs::isActiveDemo(player)
+    && !rs::isPlayerOnGround(player)){
+        ri.windTimer--;
+
+        al::addVelocity(player, ri.windVect);
+    }
     //Activate home ship yes
     GameDataFunction::activateHome(holder);
     holder.mGameDataFile->mProgressData->talkCapNearHomeInWaterfall();
