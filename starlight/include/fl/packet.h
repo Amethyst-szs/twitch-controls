@@ -12,7 +12,8 @@ class Server;
 enum OutPacketType : u8 {
     DummyInit = (u8)-1,
     Init = (u8)-2,
-    Log = (u8)-3
+    Log = (u8)-3//,
+    //DemoToggle = (u8)-4
 };
 
 class OutPacket {
@@ -46,6 +47,13 @@ public:
     u32 calcLen();
     void construct(u8* dst);
 };
+
+// class OutPacketDemoToggle : public OutPacket {
+// public:
+//     bool toggleState;
+//     u32 calcLen();
+//     void construct(u8* dst);
+// };
 
 class InPacketEvent : public InPacket{
 u8 eventID;

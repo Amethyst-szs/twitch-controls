@@ -1,7 +1,5 @@
 #pragma once
 
-
-
 class PlayerInput {
     public:
         bool isMove(void) const;

@@ -8,6 +8,7 @@
 
 namespace rs
 {
+    uint32_t getStageShineAnimFrame(const al::LiveActor *, const char *);
 
     ChangeStageInfo *createChangeStageInfo(al::LiveActor const *actor, char const *changeStageID, char const *changeStageName, bool, int scenarioNo, ChangeStageInfo::SubScenarioType type);
     ChangeStageInfo *createChangeStageInfo(al::LiveActor const*, al::PlacementInfo const&, char const*, char const*, bool, int, ChangeStageInfo::SubScenarioType);

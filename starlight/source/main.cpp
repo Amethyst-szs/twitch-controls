@@ -13,6 +13,7 @@
 #include "game/GameData/GameDataHolderWriter.h"
 #include "game/Player/PlayerActorHakoniwa.h"
 #include "game/Player/PlayerFunction.h"
+#include "rs/util.hpp"
 #include "sead/math/seadVector.h"
 #include "sead/prim/seadSafeString.h"
 #include "util.h"
@@ -36,7 +37,10 @@ static const char* page2Options[] {
         "Disconnect from Server\n",
         "Kill Player\n",
         "End Puppetable\n",
-        "Random Testing\n"
+        "Plus 100 Coins\n",
+        "OutPacket 4 - False\n",
+        "OutPacket 4 - True\n",
+        "Yell\n"
     };
 static int page2Len = *(&page2Options + 1) - page2Options;
 
@@ -111,7 +115,7 @@ void drawMainHook(HakoniwaSequence *curSequence, sead::Viewport *viewport, sead:
     
     //If the stage switched from an invalid stage to valid or vise versa
     if(amy::getRedeemInfo().isInvalidStage != prevFrameInvalidScene){
-        amy::log(1, "%i", amy::getRedeemInfo().isInvalidStage);
+        amy::log("Changing scene to: %s", curSequence->mGameDataHolder->getCurrentStageName());
         prevFrameInvalidScene = amy::getRedeemInfo().isInvalidStage;
     }
 
@@ -148,7 +152,10 @@ void drawMainHook(HakoniwaSequence *curSequence, sead::Viewport *viewport, sead:
         GameDataHolderAccessor GameData = *stageScene->mHolder;
         al::IUseCamera *UseCamera = stageScene;
         al::Projection *CamProject = al::getProjection(UseCamera, 0);
+        amy::RedeemInfo &ri = amy::getRedeemInfo();
 
+        // sead::Vector2f *lStick = al::getLeftStick(-1);
+        // sead::Vector2f *rStick = al::getRightStick(-1);
 
         // curGlobalSequence = curSequence;
         // al::Projection *CameraProjection = al::getProjection(curGlobalSequence->curScene, 0);
@@ -160,6 +167,7 @@ void drawMainHook(HakoniwaSequence *curSequence, sead::Viewport *viewport, sead:
             case 0:
                 gTextWriter->printf("Generic Information:\n");
                 //Stage / Scene Type stuff
+                gTextWriter->printf("Coin Counter: %i\n", GameDataFunction::getCoinNum(*stageScene->mHolder));
                 gTextWriter->printf("Stage Name: %s\n", stageScene->mHolder->getCurrentStageName());
                 gTextWriter->printf("Scenario: %i\n", GameDataFunction::getScenarioNo(player));
                 gTextWriter->printf("Total Shines in Kingdom: %i\n", GameDataFunction::getWorldTotalShineNum(GameData, GameDataFunction::getCurrentWorldId(GameData)));
@@ -167,21 +175,32 @@ void drawMainHook(HakoniwaSequence *curSequence, sead::Viewport *viewport, sead:
                 //Camera information
                 gTextWriter->printf("\nCamera FOV: %f\n", CamProject->getFovy());
 
+                //Player Information
+                if(player->getPlayerHackKeeper()->getCurrentHackName() != nullptr){
+                    gTextWriter->printf("\nCurrent Capture: %s\n", player->getPlayerHackKeeper()->getCurrentHackName());
+                }
+
                 //Game flow information
                 gTextWriter->printf("\nIn game? %s\n", isInGame ? "true" : "false");
                 gTextWriter->printf("Is paused? %s\n", amy::getGlobalStageScene()->isPause() ? "true" : "false");
                 gTextWriter->printf("Is dead? %s\n", PlayerFunction::isPlayerDeadStatus(player) ? "true" : "false");
+
+                //Control stick inputs
+                // gTextWriter->printf("\nLeft Stick: %fx %fy\n", lStick->x, lStick->y);
+                // gTextWriter->printf("Right Stick: %fx %fy\n", rStick->x, rStick->y);
 
                 //Save file info stuff
                 gTextWriter->printf("\nLanguage: %s\n", amy::getGlobalStageScene()->mHolder->getLanguage());
                 break;
             case 1:
                 gTextWriter->printf("Twitch Integration Values:\n");
-                gTextWriter->printf("Reject Redeems: %s\n", !amy::getRedeemInfo().isRedeemsValid ? "true" : "false");
-                gTextWriter->printf("Invalid Stage: %s\n", amy::getRedeemInfo().isInvalidStage ? "true" : "false");
-                gTextWriter->printf("Scene Transition: %s\n", amy::getRedeemInfo().isTransition ? "true" : "false");
-                gTextWriter->printf("Gravity Timer: %i\n", amy::getRedeemInfo().gravityTimer);
-                gTextWriter->printf("Invis Timer: %i\n", amy::getRedeemInfo().invisTimer);
+                gTextWriter->printf("Reject Redeems: %s\n", !ri.isRedeemsValid ? "true" : "false");
+                gTextWriter->printf("Invalid Stage: %s\n", ri.isInvalidStage ? "true" : "false");
+                gTextWriter->printf("Scene Transition: %s\n", ri.isTransition ? "true" : "false");
+                gTextWriter->printf("Gravity Timer: %i\n\n", ri.gravityTimer);
+                gTextWriter->printf("Coin Tick Running: %i\n", ri.coinTickRunning);
+                gTextWriter->printf("Coin Tick Current: %i\n", ri.coinTickCurrent);
+                gTextWriter->printf("Coin Tick Rate: %f\n", ri.coinTickRate);
                 break;
             case 2:
                 gTextWriter->printf("Quick Functions:\n");
@@ -213,7 +232,7 @@ void drawMainHook(HakoniwaSequence *curSequence, sead::Viewport *viewport, sead:
                             smo::Server::instance().connect(smo::getServerIp().serverIp);
                             break;
                         case 1:
-                            amy::log(1, "ClientDisconnect");
+                            amy::log("ClientDisconnect");
                             break;
                         case 2:
                             GameDataFunction::killPlayer(*stageScene->mHolder);
@@ -222,9 +241,14 @@ void drawMainHook(HakoniwaSequence *curSequence, sead::Viewport *viewport, sead:
                             player->endDemoPuppetable();
                             break;
                         case 4:
-                            ChangeStageInfo stageInfo(stageScene->mHolder, "start", "CapWorldHomeStage", false, -1, ChangeStageInfo::SubScenarioType::UNK);
-                            amy::getGlobalStageScene()->mHolder->changeNextStage(&stageInfo, 0);
+                            stageScene->mHolder->mGameDataFile->addCoin(100);
                             break;
+                        // case 5:
+                        //     amy::demoToggle(false);
+                        //     break;
+                        // case 6:
+                        //     amy::demoToggle(true);
+                        //     break;
                     }
                 break;
         }
@@ -262,20 +286,44 @@ void stageSceneHook(StageScene* stageScene)
 
     al::PlayerHolder *pHolder = al::getScenePlayerHolder(stageScene);
     PlayerActorHakoniwa *player = al::tryGetPlayerActor(pHolder, 0);
+    al::LiveActor *curHack = player->getPlayerHackKeeper()->currentHackActor;
     amy::getGlobalStageScene() = stageScene;
     GameDataHolderAccessor GameData = *stageScene->mHolder;
     al::IUseCamera *UseCamera = stageScene;
     al::Projection *CamProject = al::getProjection(UseCamera, 0);
     GameDataHolderWriter holder = *stageScene->mHolder;
+    amy::RedeemInfo &ri = amy::getRedeemInfo();
 
-    amy::getRedeemInfo().isTransition = false;
+    ri.isTransition = false;
     //Some way to update invalidStage when in Home Ship cutscenes
 
     //Gravity timer updater
-    if(amy::getRedeemInfo().gravityTimer <= 0)
+    if(ri.gravityTimer <= 0)
         al::setGravity(player, sead::Vector3f{0, -1, 0});
     else if(!stageScene->isPause() && !PlayerFunction::isPlayerDeadStatus(player))
-        amy::getRedeemInfo().gravityTimer--;
+        ri.gravityTimer--;
+
+    //Coin tick updater
+    if(ri.coinTickRunning && !(stageScene->isPause()|| rs::isActiveDemo(player))){
+        ri.coinTickCurrent++;
+
+        //Tick the coin counter if the current rate is reached
+        if(ri.coinTickCurrent >= ri.coinTickRate){
+            stageScene->mHolder->mGameDataFile->addCoin(-1);
+            ri.coinTickCurrent = 0;
+        }
+
+        //Kill the player if they hit zero coins
+        if(GameDataFunction::getCoinNum(*stageScene->mHolder) <= 0){
+            ri.coinTickRunning = false;
+            ri.coinTickRate = 240.f;
+            stageScene->mHolder->mGameDataFile->addCoin(70);
+            GameDataFunction::killPlayer(holder);
+            player->startDemoPuppetable();
+            al::setVelocityZero(player);
+            rs::faceToCamera(player);
+        }
+    }
 
     //Activate home ship yes
     GameDataFunction::activateHome(holder);
@@ -307,9 +355,9 @@ void stageSceneHook(StageScene* stageScene)
     }
 
     // TESTING FUNCTIONS
-    // if(al::isPadHoldZR(-1) && al::isPadTriggerLeft(-1)){
-
-    // }
+    if(al::isPadHoldZR(-1) && al::isPadTriggerLeft(-1)){
+        // rs::appearCapMsgTutorial(stageScene, "YukimaruTutorial");
+    }
 
     __asm("MOV X0, %[input]"
           : [input] "=r"(stageScene));

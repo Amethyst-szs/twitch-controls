@@ -23,7 +23,7 @@ let Hydrate = parseInt(fs.readFileSync(`${CurDir}/settings/hydrate.txt`).toStrin
 
 //Respond to packets from the switch
 server.on('message', (msg, rinfo) => {
-    console.log(msg);
+    // console.log(msg);
     switch(msg.readInt8()){
         case -1: //Dummy Initalization
             inPackets.DummyInit(msg, rinfo);
@@ -37,6 +37,9 @@ server.on('message', (msg, rinfo) => {
                 client = {};
                 log.log(1, "Client has requested a disconnect, clearing...");
             }
+            break;
+        case -4: //demoToggle
+            log.log(0, "DemoToggle");
             break;
     }
 });
@@ -132,6 +135,10 @@ async function TwitchHandler() {
             case "Random Kingdom": //Event ID 5 (Random Kingdom)
                 outPackets.Events(server, 5, client);
                 log.log(1, "Event packet sent (Random Kingdom)");
+                break;
+            case "Highway to Death": //Event ID 6 (CoinTick)
+                outPackets.Events(server, 6, client);
+                log.log(1, "Event packet sent (Highway to Death)");
                 break;
             default: //Generic reward
                 log.log(2, `Generic reward ${message.rewardTitle} redeemed`);

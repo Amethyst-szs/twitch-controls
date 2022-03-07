@@ -4,6 +4,12 @@
 #include "sead/math/seadVector.h"
 #include "sead/random/seadGlobalRandom.h"
 
+// void demoToggle(bool state) {
+//     smo::OutPacketDemoToggle p;
+//     p.toggleState = state;
+//     smo::Server::instance().sendPacket(p, smo::OutPacketType::DemoToggle);
+// }
+
 StageScene*& amy::getGlobalStageScene(){
     static StageScene* stageScene;
     return stageScene;
@@ -53,6 +59,6 @@ void amy::updateRedeemStatus(){
     al::PlayerHolder *pHolder = al::getScenePlayerHolder(stageScene);
     PlayerActorHakoniwa *player = al::tryGetPlayerActor(pHolder, 0);
     amy::getRedeemInfo().isRedeemsValid = !(stageScene->isPause() || PlayerFunction::isPlayerDeadStatus(player) || rs::isActiveDemo(player));
-    amy::log(0, "Info: %i %i %s", amy::getRedeemInfo().isRedeemsValid, amy::getRedeemInfo().isInvalidStage, GameDataFunction::getCurrentStageName(*amy::getGlobalStageScene()->mHolder));
+    amy::log("Info: %i %i %s", amy::getRedeemInfo().isRedeemsValid, amy::getRedeemInfo().isInvalidStage, GameDataFunction::getCurrentStageName(*amy::getGlobalStageScene()->mHolder));
     return;
 }
