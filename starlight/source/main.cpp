@@ -109,7 +109,7 @@ al::StageInfo *initDebugListHook(const al::Scene *curScene)
 
 void drawMainHook(HakoniwaSequence *curSequence, sead::Viewport *viewport, sead::DrawContext *drawContext)
 {
-    amy::RedeemInfo &ri = amy::getRedeemInfo();
+    amy::RedeemInfo::state &ri = amy::getRedeemInfo();
     //Update invalid stage
     ri.isInvalidStage = al::isEqualSubString(curSequence->mGameDataHolder->getCurrentStageName(), "Demo");
     
@@ -196,12 +196,11 @@ void drawMainHook(HakoniwaSequence *curSequence, sead::Viewport *viewport, sead:
                 gTextWriter->printf("Twitch Integration Values:\n");
                 gTextWriter->printf("Reject Redeems: %s\n", !ri.isRedeemsValid ? "true" : "false");
                 gTextWriter->printf("Invalid Stage: %s\n", ri.isInvalidStage ? "true" : "false");
-                gTextWriter->printf("Gravity Timer: %i\n", ri.gravityTimer);
-                gTextWriter->printf("Wind Timer: %i\n", ri.windTimer);
-                gTextWriter->printf("Wind Vector: %fx %fy %fz\n", ri.windVect.x, ri.windVect.y, ri.windVect.z);
-                gTextWriter->printf("Coin Tick Rate: %f\n", ri.coinTickRate);
-                gTextWriter->printf("Hot Floor Timer: %i\n", ri.hotFloorTimer);
-                gTextWriter->printf("Stick Inversion Timer: %i\n", ri.stickInverTimer);
+                gTextWriter->printf("Gravity Timer: %i\n", amy::getGravityState().gravityTimer);
+                gTextWriter->printf("Wind Timer: %i\n", amy::getWindState().windTimer);
+                gTextWriter->printf("Coin Tick Rate: %f\n", amy::getCoinTickState().coinTickRate);
+                gTextWriter->printf("Hot Floor Timer: %i\n", amy::getHotFloorState().hotFloorTimer);
+                gTextWriter->printf("Stick Inversion Timer: %i\n", amy::getStickInverState().stickInverTimer);
                 break;
             case 2:
                 gTextWriter->printf("Quick Functions:\n");
@@ -288,7 +287,7 @@ void stageSceneHook(StageScene* stageScene)
     al::IUseCamera *UseCamera = stageScene;
     al::Projection *CamProject = al::getProjection(UseCamera, 0);
     GameDataHolderWriter holder = *stageScene->mHolder;
-    amy::RedeemInfo &ri = amy::getRedeemInfo();
+    amy::RedeemInfo::state &ri = amy::getRedeemInfo();
 
     bool isPause = stageScene->isPause();
     bool isDemo = rs::isActiveDemo(player);
@@ -298,25 +297,25 @@ void stageSceneHook(StageScene* stageScene)
     ri.isTransition = false;
 
     //Gravity timer updater
-    if(ri.gravityTimer <= 0)
+    if(amy::getGravityState().gravityTimer <= 0)
         al::setGravity(player, sead::Vector3f{0, -1, 0});
     else if(!isInterupted)
-        ri.gravityTimer--;
+        amy::getGravityState().gravityTimer--;
 
     //Coin tick updater
-    if(ri.coinTickRunning && !isInterupted){
-        ri.coinTickCurrent++;
+    if(amy::getCoinTickState().coinTickRunning && !isInterupted){
+        amy::getCoinTickState().coinTickCurrent++;
 
         //Tick the coin counter if the current rate is reached
-        if(ri.coinTickCurrent >= ri.coinTickRate){
+        if(amy::getCoinTickState().coinTickCurrent >= amy::getCoinTickState().coinTickRate){
             stageScene->mHolder->mGameDataFile->addCoin(-1);
-            ri.coinTickCurrent = 0;
+            amy::getCoinTickState().coinTickCurrent = 0;
         }
 
         //Kill the player if they hit zero coins
         if(GameDataFunction::getCoinNum(*stageScene->mHolder) <= 0){
-            ri.coinTickRunning = false;
-            ri.coinTickRate = 240.f;
+            amy::getCoinTickState().coinTickRunning = false;
+            amy::getCoinTickState().coinTickRate = 240.f;
             stageScene->mHolder->mGameDataFile->addCoin(70);
             GameDataFunction::killPlayer(holder);
             player->startDemoPuppetable();
@@ -326,27 +325,27 @@ void stageSceneHook(StageScene* stageScene)
     }
 
     //Wind handler
-    if(ri.windTimer > 0 && !isInterupted){
+    if(amy::getWindState().windTimer > 0 && !isInterupted){
         if(player->getPlayerHackKeeper()->getCurrentHackName() != nullptr){
-            ri.windTimer--;
-            al::addVelocity(player->getPlayerHackKeeper()->currentHackActor, ri.windVect);
+            amy::getWindState().windTimer--;
+            al::addVelocity(player->getPlayerHackKeeper()->currentHackActor, amy::getWindState().windVect);
         } else if(!rs::isPlayerOnGround(player)){
-            ri.windTimer--;
-            al::addVelocity(player, ri.windVect);
+            amy::getWindState().windTimer--;
+            al::addVelocity(player, amy::getWindState().windVect);
         }
     }
 
     //Hot floor updater
-    if(ri.hotFloorTimer <= 0)
-        ri.isHotFloor = false;
+    if(amy::getHotFloorState().hotFloorTimer <= 0)
+        amy::getHotFloorState().isHotFloor = false;
     else if(!isInterupted)
-        ri.hotFloorTimer--;
+        amy::getHotFloorState().hotFloorTimer--;
     
-    //Hot floor updater
-    if(ri.stickInverTimer <= 0)
-        ri.isStickInver = false;
+    //Stick Inver updater
+    if(amy::getStickInverState().stickInverTimer <= 0)
+        amy::getStickInverState().isStickInver = false;
     else if(!isInterupted)
-        ri.stickInverTimer--;
+        amy::getStickInverState().stickInverTimer--;
 
     //Activate home ship yes
     GameDataFunction::activateHome(holder);
@@ -406,15 +405,13 @@ void seadPrintHook(const char *fmt, ...) // hook for replacing sead::system::pri
 
 bool hotFloorHook(PlayerInput* input)
 {
-    amy::RedeemInfo &ri = amy::getRedeemInfo();
-    return ri.isHotFloor ? true : input->isTriggerJump();
+    return amy::getHotFloorState().isHotFloor ? true : input->isTriggerJump();
 }
 
 sead::Vector2f* stickInverHook(int port)
 {
-    amy::RedeemInfo &ri = amy::getRedeemInfo();
     sead::Vector2f *vec = al::getLeftStick(port);
-    if(ri.isStickInver){
+    if(amy::getStickInverState().isStickInver){
         vec->x = vec->x*-1;
         vec->y = vec->y*-1;
     }

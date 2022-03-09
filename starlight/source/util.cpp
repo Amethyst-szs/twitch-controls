@@ -11,8 +11,7 @@
 // }
 
 void amy::updateServerDemoState(){
-    amy::RedeemInfo &ri = amy::getRedeemInfo();
-    amy::log("Demo%i", ri.isInvalidStage);
+    amy::log("Demo%i", amy::getRedeemInfo().isInvalidStage);
 }
 
 StageScene*& amy::getGlobalStageScene(){
@@ -20,12 +19,35 @@ StageScene*& amy::getGlobalStageScene(){
     return stageScene;
 }
 
-amy::RedeemInfo& amy::getRedeemInfo(){
-    static RedeemInfo redeemInfo;
-    return redeemInfo;
+
+//Redeem info handlers
+amy::RedeemInfo::state& amy::getRedeemInfo(){
+    static RedeemInfo::state i;
+    return i;
+}
+amy::RedeemInfo::gravityState& amy::getGravityState(){
+    static RedeemInfo::gravityState i;
+    return i;
+}
+amy::RedeemInfo::coinTickState& amy::getCoinTickState(){
+    static RedeemInfo::coinTickState i;
+    return i;
+}
+amy::RedeemInfo::windState& amy::getWindState(){
+    static RedeemInfo::windState i;
+    return i;
+}
+amy::RedeemInfo::hotFloorState& amy::getHotFloorState(){
+    static RedeemInfo::hotFloorState i;
+    return i;
+}
+amy::RedeemInfo::stickInverState& amy::getStickInverState(){
+    static RedeemInfo::stickInverState i;
+    return i;
 }
 
-sead::Vector3f amy::RedeemInfo::getRandomGravity(){
+
+sead::Vector3f amy::getRandomGravity(){
     sead::Vector3f VectorOptions[] = {
         {-1,0,0},
         {1,0,0},

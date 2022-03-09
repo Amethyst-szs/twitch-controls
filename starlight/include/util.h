@@ -10,29 +10,50 @@ namespace amy
 {
     class RedeemInfo{
         public:
-            //Timers
-            int gravityTimer;
-            sead::Vector3f windVect;
-            int windTimer;
-            bool isHotFloor = false;
-            int hotFloorTimer;
-            bool isStickInver = false;
-            int stickInverTimer;
-
-            //CoinTick Redeem
-            int coinTickCurrent = 0;
-            float coinTickRate = 240.f;
-            bool coinTickRunning = false;
-
-            sead::Vector3f getRandomGravity();
-            bool isInvalidStage = true;
-            bool isRedeemsValid = false;
-            bool isTransition = true;
+            class state{
+                public:
+                    bool isInvalidStage = true;
+                    bool isRedeemsValid = false;
+                    bool isTransition = true;
+            };
+            class gravityState{
+                public:
+                    int gravityTimer;
+            };
+            class coinTickState{
+                public:
+                    int coinTickCurrent = 0;
+                    float coinTickRate = 240.f;
+                    bool coinTickRunning = false;
+            };
+            class windState{
+                public:
+                    sead::Vector3f windVect;
+                    int windTimer;
+            };
+            class hotFloorState{
+                public:
+                    bool isHotFloor = false;
+                    int hotFloorTimer;
+            };
+            class stickInverState{
+                public:
+                    bool isStickInver = false;
+                    int stickInverTimer;
+            };
     };
-    RedeemInfo& getRedeemInfo();
+
+    RedeemInfo::state& getRedeemInfo();
+    RedeemInfo::gravityState& getGravityState();
+    RedeemInfo::coinTickState& getCoinTickState();
+    RedeemInfo::windState& getWindState();
+    RedeemInfo::hotFloorState& getHotFloorState();
+    RedeemInfo::stickInverState& getStickInverState();
+
     void updateServerDemoState();
     
     const char *getRandomHomeStage();
+    sead::Vector3f getRandomGravity();
     void updateRedeemStatus();
 
     StageScene*& getGlobalStageScene();

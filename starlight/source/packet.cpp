@@ -45,7 +45,7 @@ namespace smo
         al::PlayerHolder *pHolder = al::getScenePlayerHolder(stageScene);
         PlayerActorHakoniwa *player = al::tryGetPlayerActor(pHolder, 0);
         al::LiveActor *curHack = player->getPlayerHackKeeper()->currentHackActor;
-        amy::RedeemInfo &ri = amy::getRedeemInfo();
+        amy::RedeemInfo::state &ri = amy::getRedeemInfo();
 
         if(ri.isRedeemsValid){
             switch(eventID){
@@ -54,9 +54,9 @@ namespace smo
                     break;
                 }
                 case 2:{ //GravFlip - Change Gravity
-                    sead::Vector3f gravVector = ri.getRandomGravity();
+                    sead::Vector3f gravVector = amy::getRandomGravity();
                     al::setGravity(player, gravVector);
-                    ri.gravityTimer += 3*60;
+                    amy::getGravityState().gravityTimer += 3*60;
                     break;
                 }
                 case 3:{ //Fling - Up we go
@@ -83,23 +83,23 @@ namespace smo
                     break;
                 }
                 case 6:{
-                    ri.coinTickRunning = true;
-                    ri.coinTickRate = ri.coinTickRate/2;
+                    amy::getCoinTickState().coinTickRunning = true;
+                    amy::getCoinTickState().coinTickRate /= 2;
                     break;
                 }
                 case 7:{
-                    ri.windVect = ri.getRandomGravity();
-                    ri.windTimer += 10*60;
+                    amy::getWindState().windVect = amy::getRandomGravity();
+                    amy::getWindState().windTimer += 10*60;
                     break;
                 }
                 case 8:{
-                    ri.isHotFloor = true;
-                    ri.hotFloorTimer += 10*60;
+                    amy::getHotFloorState().isHotFloor = true;
+                    amy::getHotFloorState().hotFloorTimer += 10*60;
                     break;
                 }
                 case 9:{
-                    ri.isStickInver = true;
-                    ri.stickInverTimer += 15*60;
+                    amy::getStickInverState().isStickInver = true;
+                    amy::getStickInverState().stickInverTimer += 15*60;
                     break;
                 }
                 default:{
