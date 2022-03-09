@@ -87,3 +87,57 @@ B59E28: // sead::system::print
 54C4A4: // rs::isHaveCap
     MOV W0, #1
     RET
+
+// hotFloor hook
+0034f1fc:
+    BL hotFloorHook
+0034f250:
+    BL hotFloorHook
+00458ce4:
+    B hotFloorHook
+0045ac60:
+    BL hotFloorHook
+0045acb0:
+    BL hotFloorHook
+0045b4e0:
+    BL hotFloorHook
+0045b92c:
+    BL hotFloorHook
+0045b984:
+    BL hotFloorHook
+00488df4:
+    BL hotFloorHook
+
+// Controller stick inversion hook
+00447dfc:
+    BL stickInverHook
+0041401c:
+    BL stickInverHook
+0044c108:
+    BL stickInverHook
+0045034c:
+    BL stickInverHook
+004504d8:
+    BL stickInverHook
+004508e0:
+    BL stickInverHook
+004508fc:
+    BL stickInverHook
+0056e270:
+    BL stickInverHook
+0057313c:
+    BL stickInverHook
+00576b50:
+    BL stickInverHook
+00576bdc:
+    BL stickInverHook
+00576c50:
+    BL stickInverHook
+00576cc8:
+    BL stickInverHook
+0097a6d0:
+    BL stickInverHook
+009a37b4:
+    BL stickInverHook
+009a3a2c:
+    BL stickInverHook

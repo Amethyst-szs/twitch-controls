@@ -12,5 +12,7 @@
         _Z12fileReadHookPN4sead11ResourceMgrERKNS0_7LoadArgERKNS_14SafeStringBaseIcEEPNS_12DecompressorE;
         _Z17initDebugListHookPKN2al5SceneE;
         _ZN19ProjectActorFactoryC2Ev;
+        _Z12hotFloorHookP11PlayerInput;
+        _Z14stickInverHooki;
     local: *;
 };

@@ -14,6 +14,10 @@ namespace amy
             int gravityTimer;
             sead::Vector3f windVect;
             int windTimer;
+            bool isHotFloor = false;
+            int hotFloorTimer;
+            bool isStickInver = false;
+            int stickInverTimer;
 
             //CoinTick Redeem
             int coinTickCurrent = 0;
@@ -26,6 +30,7 @@ namespace amy
             bool isTransition = true;
     };
     RedeemInfo& getRedeemInfo();
+    void updateServerDemoState();
     
     const char *getRandomHomeStage();
     void updateRedeemStatus();

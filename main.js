@@ -15,6 +15,8 @@ const clientSecret = Codes.Secret;
 const outPackets = require('./server_bin/outPackets');
 const inPackets = require('./server_bin/inPackets');
 const log = require('./server_bin/console');
+const bufferTool = require('./server_bin/bufferTool');
+const redeemHistory = require('./server_bin/recentHandler');
 
 let invalidStage = false;
 
@@ -32,11 +34,9 @@ server.on('message', (msg, rinfo) => {
             client = inPackets.Init(msg, rinfo);
             break;
         case -3: //Log any information with msg info
-            shouldDisconnect = inPackets.Log(msg, rinfo, CurDir);
-            if(shouldDisconnect){
-                client = {};
-                log.log(1, "Client has requested a disconnect, clearing...");
-            }
+            inPackets.Log(msg, rinfo, CurDir);
+            if(bufferTool.disconnectCheck(msg, CurDir)) client = {};
+            invalidStage = bufferTool.demoUpdate(msg, CurDir, invalidStage);
             break;
         case -4: //demoToggle
             log.log(0, "DemoToggle");
@@ -102,9 +102,16 @@ async function TwitchHandler() {
             log.log(2, `${message.rewardTitle} from ${message.userDisplayName} but no client connected yet!`);
             return;
         }
+        
+        //Check if the player is currently in a demo scene, if so, STOP
+        if(invalidStage){
+            log.log(2, `${message.rewardTitle} from ${message.userDisplayName} but the player is in a demo scene`);
+            return;
+        }
 
-        //Log information about redeem now that we've gotten past the start
+        //Log information about redeem now that we've gotten past the start & update history
         log.log(2, `${message.rewardTitle} - ${message.userDisplayName} redeemed!`);
+        redeemHistory.updateList(`${message.rewardTitle} < ${message.userDisplayName}`);
 
         //Switch case through all valid rewards
         switch(message.rewardTitle){
@@ -143,6 +150,14 @@ async function TwitchHandler() {
             case "Whispy Winds": //Event ID 7 (Wind)
                 outPackets.Events(server, 7, client);
                 log.log(1, "Event packet sent (Whispy Winds)");
+                break;
+            case "Hot Floor": //Event ID 8
+                outPackets.Events(server, 8, client);
+                log.log(1, "Event packet sent (Hot Floor)");
+                break;
+            case "Stick Flip": //Event ID 9
+                outPackets.Events(server, 9, client);
+                log.log(1, "Event packet sent (Hot Floor)");
                 break;
             default: //Generic reward
                 log.log(2, `Generic reward ${message.rewardTitle} redeemed`);

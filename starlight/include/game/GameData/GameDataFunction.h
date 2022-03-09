@@ -38,6 +38,9 @@ public:
 
     // gets the total amount of moons available in a kingdom
     static s32 getWorldTotalShineNum(GameDataHolderAccessor, int); 
+    void getTotalPayShineNum(GameDataHolderAccessor);
+    static u64 getTotalPayShineNumClamp(GameDataHolderAccessor);
+    static void addPayShine(GameDataHolderWriter, int);
 
     // checks save file if shine is collected in kingdom index
     static bool isGotShine(GameDataHolderAccessor, int, int);

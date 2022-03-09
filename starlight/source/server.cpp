@@ -84,7 +84,6 @@ namespace smo
             start();
 
         sendInit(ipS);
-        // amy::log(1, "%i", amy::getRedeemInfo().isInvalidStage);
     }
 
     void Server::disconnect()

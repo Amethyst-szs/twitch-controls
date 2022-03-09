@@ -1,4 +1,5 @@
 #include "main.hpp"
+#include "al/PlayerHolder/PlayerHolder.h"
 #include "al/area/ChangeStageInfo.h"
 #include "al/camera/CameraDirector.h"
 #include "al/camera/Projection.h"
@@ -13,6 +14,7 @@
 #include "game/GameData/GameDataHolderWriter.h"
 #include "game/Player/PlayerActorHakoniwa.h"
 #include "game/Player/PlayerFunction.h"
+#include "game/Player/PlayerInput.h"
 #include "rs/util.hpp"
 #include "sead/math/seadVector.h"
 #include "sead/prim/seadSafeString.h"
@@ -37,10 +39,7 @@ static const char* page2Options[] {
         "Disconnect from Server\n",
         "Kill Player\n",
         "End Puppetable\n",
-        "Plus 100 Coins\n",
-        "OutPacket 4 - False\n",
-        "OutPacket 4 - True\n",
-        "Yell\n"
+        "Plus 100 Coins\n"
     };
 static int page2Len = *(&page2Options + 1) - page2Options;
 
@@ -110,13 +109,14 @@ al::StageInfo *initDebugListHook(const al::Scene *curScene)
 
 void drawMainHook(HakoniwaSequence *curSequence, sead::Viewport *viewport, sead::DrawContext *drawContext)
 {
+    amy::RedeemInfo &ri = amy::getRedeemInfo();
     //Update invalid stage
-    amy::getRedeemInfo().isInvalidStage = al::isEqualSubString(curSequence->mGameDataHolder->getCurrentStageName(), "Demo");
+    ri.isInvalidStage = al::isEqualSubString(curSequence->mGameDataHolder->getCurrentStageName(), "Demo");
     
     //If the stage switched from an invalid stage to valid or vise versa
-    if(amy::getRedeemInfo().isInvalidStage != prevFrameInvalidScene){
-        amy::log("Changing scene to: %s", curSequence->mGameDataHolder->getCurrentStageName());
-        prevFrameInvalidScene = amy::getRedeemInfo().isInvalidStage;
+    if(ri.isInvalidStage != prevFrameInvalidScene){
+        amy::updateServerDemoState();
+        prevFrameInvalidScene = ri.isInvalidStage;
     }
 
     if (!showMenu)
@@ -150,9 +150,9 @@ void drawMainHook(HakoniwaSequence *curSequence, sead::Viewport *viewport, sead:
         al::PlayerHolder *pHolder = al::getScenePlayerHolder(stageScene);
         PlayerActorHakoniwa *player = al::tryGetPlayerActor(pHolder, 0);
         GameDataHolderAccessor GameData = *stageScene->mHolder;
+        GameDataHolderWriter holder = *stageScene->mHolder;
         al::IUseCamera *UseCamera = stageScene;
         al::Projection *CamProject = al::getProjection(UseCamera, 0);
-        amy::RedeemInfo &ri = amy::getRedeemInfo();
 
         // sead::Vector2f *lStick = al::getLeftStick(-1);
         // sead::Vector2f *rStick = al::getRightStick(-1);
@@ -196,13 +196,12 @@ void drawMainHook(HakoniwaSequence *curSequence, sead::Viewport *viewport, sead:
                 gTextWriter->printf("Twitch Integration Values:\n");
                 gTextWriter->printf("Reject Redeems: %s\n", !ri.isRedeemsValid ? "true" : "false");
                 gTextWriter->printf("Invalid Stage: %s\n", ri.isInvalidStage ? "true" : "false");
-                gTextWriter->printf("Scene Transition: %s\n", ri.isTransition ? "true" : "false");
                 gTextWriter->printf("Gravity Timer: %i\n", ri.gravityTimer);
                 gTextWriter->printf("Wind Timer: %i\n", ri.windTimer);
                 gTextWriter->printf("Wind Vector: %fx %fy %fz\n", ri.windVect.x, ri.windVect.y, ri.windVect.z);
-                gTextWriter->printf("Coin Tick Running: %i\n", ri.coinTickRunning);
-                gTextWriter->printf("Coin Tick Current: %i\n", ri.coinTickCurrent);
                 gTextWriter->printf("Coin Tick Rate: %f\n", ri.coinTickRate);
+                gTextWriter->printf("Hot Floor Timer: %i\n", ri.hotFloorTimer);
+                gTextWriter->printf("Stick Inversion Timer: %i\n", ri.stickInverTimer);
                 break;
             case 2:
                 gTextWriter->printf("Quick Functions:\n");
@@ -232,6 +231,7 @@ void drawMainHook(HakoniwaSequence *curSequence, sead::Viewport *viewport, sead:
                     switch(debugSel){
                         case 0:
                             smo::Server::instance().connect(smo::getServerIp().serverIp);
+                            amy::updateServerDemoState();
                             break;
                         case 1:
                             amy::log("ClientDisconnect");
@@ -245,12 +245,6 @@ void drawMainHook(HakoniwaSequence *curSequence, sead::Viewport *viewport, sead:
                         case 4:
                             stageScene->mHolder->mGameDataFile->addCoin(100);
                             break;
-                        // case 5:
-                        //     amy::demoToggle(false);
-                        //     break;
-                        // case 6:
-                        //     amy::demoToggle(true);
-                        //     break;
                     }
                 break;
         }
@@ -296,16 +290,21 @@ void stageSceneHook(StageScene* stageScene)
     GameDataHolderWriter holder = *stageScene->mHolder;
     amy::RedeemInfo &ri = amy::getRedeemInfo();
 
+    bool isPause = stageScene->isPause();
+    bool isDemo = rs::isActiveDemo(player);
+    bool isDead = PlayerFunction::isPlayerDeadStatus(player);
+    bool isInterupted = isDead || isDemo || isPause;
+
     ri.isTransition = false;
 
     //Gravity timer updater
     if(ri.gravityTimer <= 0)
         al::setGravity(player, sead::Vector3f{0, -1, 0});
-    else if(!stageScene->isPause() && !PlayerFunction::isPlayerDeadStatus(player))
+    else if(!isInterupted)
         ri.gravityTimer--;
 
     //Coin tick updater
-    if(ri.coinTickRunning && !(stageScene->isPause()|| rs::isActiveDemo(player))){
+    if(ri.coinTickRunning && !isInterupted){
         ri.coinTickCurrent++;
 
         //Tick the coin counter if the current rate is reached
@@ -327,20 +326,43 @@ void stageSceneHook(StageScene* stageScene)
     }
 
     //Wind handler
-    if(ri.windTimer >= 0 
-    && !stageScene->isPause() 
-    && !PlayerFunction::isPlayerDeadStatus(player) 
-    && !rs::isActiveDemo(player)
-    && !rs::isPlayerOnGround(player)){
-        ri.windTimer--;
-
-        al::addVelocity(player, ri.windVect);
+    if(ri.windTimer > 0 && !isInterupted){
+        if(player->getPlayerHackKeeper()->getCurrentHackName() != nullptr){
+            ri.windTimer--;
+            al::addVelocity(player->getPlayerHackKeeper()->currentHackActor, ri.windVect);
+        } else if(!rs::isPlayerOnGround(player)){
+            ri.windTimer--;
+            al::addVelocity(player, ri.windVect);
+        }
     }
+
+    //Hot floor updater
+    if(ri.hotFloorTimer <= 0)
+        ri.isHotFloor = false;
+    else if(!isInterupted)
+        ri.hotFloorTimer--;
+    
+    //Hot floor updater
+    if(ri.stickInverTimer <= 0)
+        ri.isStickInver = false;
+    else if(!isInterupted)
+        ri.stickInverTimer--;
+
     //Activate home ship yes
     GameDataFunction::activateHome(holder);
     holder.mGameDataFile->mProgressData->talkCapNearHomeInWaterfall();
     GameDataFunction::repairHome(holder);
     GameDataFunction::enableCap(holder);
+
+    //PLAN FOR SHINE STUFF!
+    //Take Crafty's code and take his shine init hook
+    //Create a list of init-ed shines in the scene
+    //Can add a random shine to play by getting the player's hit sensor
+    //and the shine's hit sensor and calling
+    //_ZN2rs15sendMsgShineGetEPN2al9HitSensorES2_
+    //rs::sendMsgShineGet
+
+    //Removing a shine... idk figure it out
 
     if (!isInGame)
     {
@@ -380,4 +402,21 @@ void seadPrintHook(const char *fmt, ...) // hook for replacing sead::system::pri
     va_start(args, fmt);
 
     va_end(args);
+}
+
+bool hotFloorHook(PlayerInput* input)
+{
+    amy::RedeemInfo &ri = amy::getRedeemInfo();
+    return ri.isHotFloor ? true : input->isTriggerJump();
+}
+
+sead::Vector2f* stickInverHook(int port)
+{
+    amy::RedeemInfo &ri = amy::getRedeemInfo();
+    sead::Vector2f *vec = al::getLeftStick(port);
+    if(ri.isStickInver){
+        vec->x = vec->x*-1;
+        vec->y = vec->y*-1;
+    }
+    return vec;
 }

@@ -92,6 +92,16 @@ namespace smo
                     ri.windTimer += 10*60;
                     break;
                 }
+                case 8:{
+                    ri.isHotFloor = true;
+                    ri.hotFloorTimer += 10*60;
+                    break;
+                }
+                case 9:{
+                    ri.isStickInver = true;
+                    ri.stickInverTimer += 15*60;
+                    break;
+                }
                 default:{
                     amy::log("Invalid EventID sent? EventID: %i", eventID);
                     break;

@@ -10,6 +10,11 @@
 //     smo::Server::instance().sendPacket(p, smo::OutPacketType::DemoToggle);
 // }
 
+void amy::updateServerDemoState(){
+    amy::RedeemInfo &ri = amy::getRedeemInfo();
+    amy::log("Demo%i", ri.isInvalidStage);
+}
+
 StageScene*& amy::getGlobalStageScene(){
     static StageScene* stageScene;
     return stageScene;
@@ -59,6 +64,6 @@ void amy::updateRedeemStatus(){
     al::PlayerHolder *pHolder = al::getScenePlayerHolder(stageScene);
     PlayerActorHakoniwa *player = al::tryGetPlayerActor(pHolder, 0);
     amy::getRedeemInfo().isRedeemsValid = !(stageScene->isPause() || PlayerFunction::isPlayerDeadStatus(player) || rs::isActiveDemo(player));
-    amy::log("Info: %i %i %s", amy::getRedeemInfo().isRedeemsValid, amy::getRedeemInfo().isInvalidStage, GameDataFunction::getCurrentStageName(*amy::getGlobalStageScene()->mHolder));
+    // amy::log("Info: %i %i %s", amy::getRedeemInfo().isRedeemsValid, amy::getRedeemInfo().isInvalidStage, GameDataFunction::getCurrentStageName(*amy::getGlobalStageScene()->mHolder));
     return;
 }
