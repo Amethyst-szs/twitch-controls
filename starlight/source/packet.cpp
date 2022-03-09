@@ -54,9 +54,12 @@ namespace smo
                     break;
                 }
                 case 2:{ //GravFlip - Change Gravity
-                    sead::Vector3f gravVector = amy::getRandomGravity();
-                    al::setGravity(player, gravVector);
-                    amy::getGravityState().gravityTimer += 3*60;
+                    amy::RedeemInfo::gravityState &grav = amy::getGravityState();
+                    al::setGravity(player, amy::getRandomGravity());
+                    if(grav.timer <= 0) grav.comboLength = 0;
+                    if(grav.comboLength >= 10) grav.comboLength--;
+                    grav.timer += (grav.addLength-(grav.comboLength*grav.comboDec))*60;
+                    grav.comboLength++;
                     break;
                 }
                 case 3:{ //Fling - Up we go
@@ -83,23 +86,33 @@ namespace smo
                     break;
                 }
                 case 6:{
-                    amy::getCoinTickState().coinTickRunning = true;
-                    amy::getCoinTickState().coinTickRate /= 2;
+                    amy::getCoinTickState().speed /= 2;
+                    amy::getCoinTickState().timer = amy::getCoinTickState().speed;
                     break;
                 }
                 case 7:{
-                    amy::getWindState().windVect = amy::getRandomGravity();
-                    amy::getWindState().windTimer += 10*60;
+                    amy::RedeemInfo::windState &wind = amy::getWindState();
+                    wind.vect = amy::getRandomGravity();
+                    if(wind.timer <= 0) wind.comboLength = 0;
+                    if(wind.comboLength >= 10) wind.comboLength--;
+                    wind.timer += (wind.addLength-(wind.comboLength*wind.comboDec))*60;
+                    wind.comboLength++;
                     break;
                 }
                 case 8:{
-                    amy::getHotFloorState().isHotFloor = true;
-                    amy::getHotFloorState().hotFloorTimer += 10*60;
+                    amy::RedeemInfo::hotFloorState &hot = amy::getHotFloorState();
+                    if(hot.timer <= 0) hot.comboLength = 0;
+                    if(hot.comboLength >= 10) hot.comboLength--;
+                    hot.timer += (hot.addLength-(hot.comboLength*hot.comboDec))*60;
+                    hot.comboLength++;
                     break;
                 }
                 case 9:{
-                    amy::getStickInverState().isStickInver = true;
-                    amy::getStickInverState().stickInverTimer += 15*60;
+                    amy::RedeemInfo::stickInverState &stick = amy::getStickInverState();
+                    if(stick.timer <= 0) stick.comboLength = 0;
+                    if(stick.comboLength >= 10) stick.comboLength--;
+                    stick.timer += (stick.addLength-(stick.comboLength*stick.comboDec))*60;
+                    stick.comboLength++;
                     break;
                 }
                 default:{

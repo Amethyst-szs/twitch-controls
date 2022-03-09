@@ -19,7 +19,6 @@ StageScene*& amy::getGlobalStageScene(){
     return stageScene;
 }
 
-
 //Redeem info handlers
 amy::RedeemInfo::state& amy::getRedeemInfo(){
     static RedeemInfo::state i;
@@ -45,7 +44,6 @@ amy::RedeemInfo::stickInverState& amy::getStickInverState(){
     static RedeemInfo::stickInverState i;
     return i;
 }
-
 
 sead::Vector3f amy::getRandomGravity(){
     sead::Vector3f VectorOptions[] = {
