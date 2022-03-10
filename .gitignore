@@ -32,8 +32,10 @@
 *.app
 
 # Tokens
+settings/notes.txt
 settings/secret.json
 settings/tokens.json
+settings/users/*
 
 # Node
 node_modules/

@@ -9,7 +9,8 @@
     "@twurple/chat": "^5.0.18",
     "@twurple/eventsub": "^5.0.18",
     "@twurple/pubsub": "^5.0.18",
-    "chalk": "^4.1.2"
+    "chalk": "^4.1.2",
+    "input": "^1.0.1"
   },
   "devDependencies": {},
   "scripts": {

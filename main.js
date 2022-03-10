@@ -6,6 +6,7 @@ let client = {};
 const AuthAPI = require('@twurple/auth');
 const PubSub = require('@twurple/pubsub');
 const fs = require('fs');
+const input = require('input');
 //Load in Twitch Auth codes from json
 const CurDir = process.cwd();
 const Codes = require('./settings/secret.json');
@@ -17,6 +18,7 @@ const inPackets = require('./server_bin/inPackets');
 const log = require('./server_bin/console');
 const bufferTool = require('./server_bin/bufferTool');
 const redeemHistory = require('./server_bin/recentHandler');
+const chalk = require('chalk');
 
 let invalidStage = false;
 
@@ -56,26 +58,47 @@ server.on('error', (err) => {
     server.close();
 });
 
-//Bind to server IP!
-server.bind(7902);
+async function getStreamerAuth(){
+    console.log(chalk.magentaBright("Please select an account to listen to:"));
+    const choices = fs.readdirSync(`${CurDir}/settings/users/`);
+    let selection = ``;
 
-//Twitch root function
-async function TwitchHandler() {
-    //Create an authProvider
-    const tokenData = JSON.parse(fs.readFileSync(`${CurDir}/settings/tokens.json`));
+    if(choices.length == 0){
+        console.log(`No twitch accounts avaliable, please make some JSONs`);
+        process.exit();
+    } else if (choices.length == 1){
+        console.log(chalk.magenta(`Only one user available, selected automatically`));
+        selection = choices[0];
+    } else {
+        selection = await input.select(choices);
+    }
+
+    const tokenData = JSON.parse(fs.readFileSync(`${CurDir}/settings/users/${selection}`));
     const authProvider = new AuthAPI.RefreshingAuthProvider(
         {
             clientId,
             clientSecret,
-            onRefresh: async newTokenData => await fs.writeFileSync(`${CurDir}/settings/tokens.json`, JSON.stringify(newTokenData, null, 4))
+            onRefresh: async newTokenData => await fs.writeFileSync(`${CurDir}/settings/users/${selection}`, JSON.stringify(newTokenData, null, 4))
         },
         tokenData
     );
+
+    return authProvider;
+}
+
+//Twitch root function
+async function TwitchHandler() {
+    //Create an authProvider
+    authProvider = await getStreamerAuth();
 
     //Create a subscription client to the channel point redeems
     const PubSubClient = new PubSub.PubSubClient();
     const userId = await PubSubClient.registerUserListener(authProvider);
     log.log(2, `Subscribed to redeem alerts with channel:read:redemptions scope`);
+
+    //Once Twitch is authenticated and ready, launch UDP server
+    server.bind(7902);
+
     //Create listener that is triggered every channel point redeem
     const listener = await PubSubClient.onRedemption(userId, (message) => {
         //Dydration
@@ -157,7 +180,11 @@ async function TwitchHandler() {
                 break;
             case "Stick Flip": //Event ID 9
                 outPackets.Events(server, 9, client);
-                log.log(1, "Event packet sent (Hot Floor)");
+                log.log(1, "Event packet sent (Stick Inver)");
+                break;
+            case "Hot Tub Stream": //Event ID 10
+                outPackets.Events(server, 10, client);
+                log.log(1, "Event packet sent (Hot Tub Stream)");
                 break;
             default: //Generic reward
                 log.log(2, `Generic reward ${message.rewardTitle} redeemed`);
