@@ -39,3 +39,6 @@ settings/users/*
 
 # Node
 node_modules/
+
+# Project Manager
+romfs/
