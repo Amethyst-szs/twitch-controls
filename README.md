@@ -41,7 +41,7 @@ If you wish to add your own redeems, look into the packet and server code! I can
 
 ## Credits
 
-*CraftyBoss* - Made the starlight base that I used, gave some hooks and references to help out!
+*CraftyBoss* - Made the starlight base that I used, gave some hooks and references to help out!  
 *Fruityloops* - Massive help with everything, especially the UDP packet server code, plus taught me how to make my own hooks 
 *MoeagaruYuuki#0001* - Solved my pain trying to work with the Twitch API  
 *GRAnimated* - Help with code, created primitive shape drawer  
