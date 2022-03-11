@@ -2,14 +2,18 @@
 	"Version": "10",
 	"PName": "twitch-controls",
 	"DumpStats": {
-		"Time": "3-10-2022 11:50:18",
-		"Amount": 414,
+		"Time": "3-10-2022 22:21:31",
+		"Amount": 419,
 		"isUndumped": false,
-		"Type": "Full"
+		"Type": "Quick"
 	},
 	"songs": {},
 	"dates": {
 		"2i6owudm0": {
+			"ObjectData": {
+				"PlayerActorHakoniwa.szs": 1646979688406.1343,
+				"PlayerConst.txt": 1646959632182.1106
+			},
 			"SoundData": {}
 		},
 		"jcirk6ww": {

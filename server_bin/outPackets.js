@@ -23,7 +23,7 @@ function PosRandomize(server, client){ //Socket ID 3
 } 
 
 module.exports = {
-    outHandler: function(redeemName){
+    outHandler: function(redeemName, server, client){
         log.log(1, `Sending redeem packet - ${redeemName}`);
         //Switch case through all valid rewards
         switch(redeemName){

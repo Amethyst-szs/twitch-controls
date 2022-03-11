@@ -232,6 +232,7 @@ void drawMainHook(HakoniwaSequence *curSequence, sead::Viewport *viewport, sead:
                         case 0:
                             smo::Server::instance().connect(smo::getServerIp().serverIp);
                             amy::updateServerDemoState();
+                            ri.rejectionID = 0;
                             break;
                         case 1:
                             amy::log("ClientDisconnect");

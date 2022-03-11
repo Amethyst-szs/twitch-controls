@@ -36,18 +36,28 @@ namespace smo
     }
 
     void InPacketEvent::on(Server &server){
+        amy::RedeemInfo::state &ri = amy::getRedeemInfo();
+
+        ri.rejectionID++;
+        if(ri.rejectionID >= 10) ri.rejectionID = 1;
+
         if(!amy::getRedeemInfo().isTransition){
             amy::updateRedeemStatus();
-        } else return;
+        } else {
+            amy::sendPacketStateNotice(true);
+            return;
+        }
+
         amy::log("Event Redeem Claimed! EventID: %i - Rejected: %s", eventID, !amy::getRedeemInfo().isRedeemsValid ? "true" : "false");
         
         StageScene *stageScene = amy::getGlobalStageScene();
         al::PlayerHolder *pHolder = al::getScenePlayerHolder(stageScene);
         PlayerActorHakoniwa *player = al::tryGetPlayerActor(pHolder, 0);
         al::LiveActor *curHack = player->getPlayerHackKeeper()->currentHackActor;
-        amy::RedeemInfo::state &ri = amy::getRedeemInfo();
 
-        if(ri.isRedeemsValid){
+        if(!ri.isRedeemsValid) amy::sendPacketStateNotice(true);
+        else {
+            amy::sendPacketStateNotice(false);
             switch(eventID){
                 case 1:{ //PrevScene - See Myself Out
                     stageScene->mHolder->returnPrevStage();
@@ -136,11 +146,23 @@ namespace smo
     }
 
     void InPacketResize::on(Server &server){
+        amy::RedeemInfo::state &ri = amy::getRedeemInfo();
+
+        ri.rejectionID++;
+        if(ri.rejectionID >= 10) ri.rejectionID = 1;
+
         if(!amy::getRedeemInfo().isTransition){
             amy::updateRedeemStatus();
-        } else return;
+        } else {
+            amy::sendPacketStateNotice(true);
+            return;
+        }
+
         amy::log("Resize Redeem Claimed! Rejected: %s", !amy::getRedeemInfo().isRedeemsValid ? "true" : "false");
-        if(amy::getRedeemInfo().isRedeemsValid){
+        
+        if(!amy::getRedeemInfo().isRedeemsValid) amy::sendPacketStateNotice(true);
+        else {
+            amy::sendPacketStateNotice(false);
             al::PlayerHolder *pHolder = al::getScenePlayerHolder(amy::getGlobalStageScene());
             PlayerActorHakoniwa *player = al::tryGetPlayerActor(pHolder, 0);
             al::LiveActor *curHack = player->getPlayerHackKeeper()->currentHackActor;
@@ -160,11 +182,23 @@ namespace smo
     }
 
     void InPacketPosRandomize::on(Server &server){
+        amy::RedeemInfo::state &ri = amy::getRedeemInfo();
+
+        ri.rejectionID++;
+        if(ri.rejectionID >= 10) ri.rejectionID = 1;
+
         if(!amy::getRedeemInfo().isTransition){
             amy::updateRedeemStatus();
-        } else return;
+        } else {
+            amy::sendPacketStateNotice(true);
+            return;
+        }
+
         amy::log("PosRandomize Redeem Claimed! Rejected: %s", !amy::getRedeemInfo().isRedeemsValid ? "true" : "false");
-        if(amy::getRedeemInfo().isRedeemsValid){
+        
+        if(!amy::getRedeemInfo().isRedeemsValid) amy::sendPacketStateNotice(true);
+        else {
+            amy::sendPacketStateNotice(false);
             al::PlayerHolder *pHolder = al::getScenePlayerHolder(amy::getGlobalStageScene());
             PlayerActorHakoniwa *player = al::tryGetPlayerActor(pHolder, 0);
             al::LiveActor *curHack = player->getPlayerHackKeeper()->currentHackActor;

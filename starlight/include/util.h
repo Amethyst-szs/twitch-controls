@@ -15,6 +15,7 @@ namespace amy
                     bool isInvalidStage = true;
                     bool isRedeemsValid = false;
                     bool isTransition = true;
+                    u8 rejectionID = 0;
             };
             class gravityState{
                 public:
@@ -68,6 +69,8 @@ namespace amy
     RedeemInfo::waterAreaState& getWaterAreaState();
 
     void updateServerDemoState();
+
+    void sendPacketStateNotice(bool rejectState);
     
     const char *getRandomHomeStage();
     sead::Vector3f getRandomGravity();
