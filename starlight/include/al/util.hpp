@@ -366,6 +366,8 @@ namespace al
     bool isActiveDemo(al::Scene const *);
 
     bool isInWaterPos(al::LiveActor const *, sead::Vector3f const &);
+    bool isInWater(al::LiveActor const*);
+    bool isInWaterArea(al::LiveActor const*);
 
     // interpolation functions
 

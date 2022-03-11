@@ -50,6 +50,13 @@ namespace amy
                     float comboDec = 1.15; //Amount of add time to remove on repeated calls
                     float comboLength; //Float to track current spam combo
             };
+            class waterAreaState{
+                public:
+                    float timer = -1;
+                    float addLength = 8; //Second of time added to timer when called
+                    float comboDec = 0.75; //Amount of add time to remove on repeated calls
+                    float comboLength; //Float to track current spam combo
+            };
     };
 
     RedeemInfo::state& getRedeemInfo();
@@ -58,6 +65,7 @@ namespace amy
     RedeemInfo::windState& getWindState();
     RedeemInfo::hotFloorState& getHotFloorState();
     RedeemInfo::stickInverState& getStickInverState();
+    RedeemInfo::waterAreaState& getWaterAreaState();
 
     void updateServerDemoState();
     

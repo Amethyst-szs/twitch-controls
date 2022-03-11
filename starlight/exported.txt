@@ -14,5 +14,6 @@
         _ZN19ProjectActorFactoryC2Ev;
         _Z12hotFloorHookP11PlayerInput;
         _Z14stickInverHooki;
+        _Z13waterAreaHookPKN2al9LiveActorERKN4sead7Vector3IfEE;
     local: *;
 };

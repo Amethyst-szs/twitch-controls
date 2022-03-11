@@ -141,3 +141,79 @@ B59E28: // sead::system::print
     BL stickInverHook
 009a3a2c:
     BL stickInverHook
+
+// Water Area Hook
+000619f8:
+    BL waterAreaHook
+0006a1b8:
+    BL waterAreaHook
+0011b7e8:
+    BL waterAreaHook
+0013e940:
+    BL waterAreaHook
+0014cf78:
+    BL waterAreaHook
+001547e8:
+    BL waterAreaHook
+0016003c:
+    BL waterAreaHook
+00160db0:
+    BL waterAreaHook
+00160ed8:
+    BL waterAreaHook
+00161870:
+    BL waterAreaHook
+001b64bc:
+    BL waterAreaHook
+001c620c:
+    BL waterAreaHook
+001c8480:
+    BL waterAreaHook
+001c84b8:
+    BL waterAreaHook
+001cf534:
+    BL waterAreaHook
+001d16ac:
+    BL waterAreaHook
+001d1ab4:
+    BL waterAreaHook
+001d26c8:
+    BL waterAreaHook
+001d27b0:
+    BL waterAreaHook
+001d298c:
+    BL waterAreaHook
+001d34f8:
+    BL waterAreaHook
+0021207c:
+    BL waterAreaHook
+002497f8:
+    BL waterAreaHook
+0025217c:
+    BL waterAreaHook
+00263f64:
+    BL waterAreaHook
+002640d0:
+    BL waterAreaHook
+002641c4:
+    BL waterAreaHook
+00264248:
+    BL waterAreaHook
+003ded50:
+    BL waterAreaHook
+0042d274:
+    B waterAreaHook
+0042d29c:
+    BL waterAreaHook
+0042d2ec:
+    BL waterAreaHook
+0042d394:
+    BL waterAreaHook
+00462be0:
+    BL waterAreaHook
+004c1024:
+    BL waterAreaHook
+00545060:
+    BL waterAreaHook
+00545070:
+    BL waterAreaHook

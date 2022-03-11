@@ -44,6 +44,10 @@ amy::RedeemInfo::stickInverState& amy::getStickInverState(){
     static RedeemInfo::stickInverState i;
     return i;
 }
+amy::RedeemInfo::waterAreaState& amy::getWaterAreaState(){
+    static RedeemInfo::waterAreaState i;
+    return i;
+}
 
 sead::Vector3f amy::getRandomGravity(){
     sead::Vector3f VectorOptions[] = {

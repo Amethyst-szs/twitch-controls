@@ -115,6 +115,14 @@ namespace smo
                     stick.comboLength++;
                     break;
                 }
+                case 10:{
+                    amy::RedeemInfo::waterAreaState &water = amy::getWaterAreaState();
+                    if(water.timer <= 0) water.comboLength = 0;
+                    if(water.comboLength >= 10) water.comboLength--;
+                    water.timer += (water.addLength-(water.comboLength*water.comboDec))*60;
+                    water.comboLength++;
+                    break;
+                }
                 default:{
                     amy::log("Invalid EventID sent? EventID: %i", eventID);
                     break;

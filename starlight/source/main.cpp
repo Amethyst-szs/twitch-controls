@@ -201,6 +201,7 @@ void drawMainHook(HakoniwaSequence *curSequence, sead::Viewport *viewport, sead:
                 gTextWriter->printf("Coin Tick Rate: %f\n", amy::getCoinTickState().speed);
                 gTextWriter->printf("Hot Floor Timer: %f\n", amy::getHotFloorState().timer);
                 gTextWriter->printf("Stick Inversion Timer: %f\n", amy::getStickInverState().timer);
+                gTextWriter->printf("Water Area Timer: %f\n", amy::getWaterAreaState().timer);
                 break;
             case 2:
                 gTextWriter->printf("Quick Functions:\n");
@@ -343,6 +344,10 @@ void stageSceneHook(StageScene* stageScene)
     if(amy::getStickInverState().timer > 0 && !isInterupted)
         amy::getStickInverState().timer--;
 
+    //Water Area updater
+    if(amy::getWaterAreaState().timer > 0 && !isInterupted)
+        amy::getWaterAreaState().timer--;
+
     //Activate home ship yes
     GameDataFunction::activateHome(holder);
     holder.mGameDataFile->mProgressData->talkCapNearHomeInWaterfall();
@@ -381,7 +386,7 @@ void stageSceneHook(StageScene* stageScene)
         if(debugPage < 0)
             debugPage = debugMax;
     }
-
+    
     // TESTING FUNCTIONS
     if(al::isPadHoldZR(-1) && al::isPadTriggerLeft(-1)){
         // rs::appearCapMsgTutorial(stageScene, "YukimaruTutorial");
@@ -412,4 +417,8 @@ sead::Vector2f* stickInverHook(int port)
         vec->y = vec->y*-1;
     }
     return vec;
+}
+
+bool waterAreaHook(al::LiveActor const* actor, sead::Vector3<float> const& vector){
+    return amy::getWaterAreaState().timer > 0 ? true : al::isInWaterPos(actor, vector);
 }
