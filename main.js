@@ -62,7 +62,7 @@ async function getStreamerAuth(){
 
     switch(choices.length){
         case 0:
-            console.log(`No twitch accounts avaliable, please make some JSONs`);
+            console.log(`No twitch accounts avaliable`);
             process.exit();
         case 1:
             console.log(chalk.magenta(`Only one user available, selected automatically`));
@@ -95,7 +95,7 @@ async function TwitchHandler() {
     const userId = await PubSubClient.registerUserListener(authProvider);
     log.log(2, `Subscribed to redeem alerts with channel:read:redemptions scope`);
 
-    //Once Twitch is authenticated and ready, launch UDP server
+    //Once Twitch is authenticated and ready, finish UDP server
     server.bind(7902);
 
     //Create listener that is triggered every channel point redeem
