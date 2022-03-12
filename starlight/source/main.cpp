@@ -231,11 +231,13 @@ void drawMainHook(HakoniwaSequence *curSequence, sead::Viewport *viewport, sead:
                 if (al::isPadTriggerRight(-1) && !al::isPadHoldZL(-1))
                     switch(debugSel){
                         case 0:
+                            amy::log("ClientDisconnect");
                             smo::Server::instance().connect(smo::getServerIp(true));
                             amy::updateServerDemoState();
                             ri.rejectionID = 0;
                             break;
                         case 1:
+                            amy::log("ClientDisconnect");
                             smo::Server::instance().connect(smo::getServerIp(false));
                             amy::updateServerDemoState();
                             ri.rejectionID = 0;

@@ -69,7 +69,6 @@ server.on('message', (msg, rinfo) => {
 server.on('listening', () => {
     const address = server.address();
     log.log(1, `Server listening on ${address.port}`);
-    console.log(server.remoteAddress);
 });
 
 //Close server on error
