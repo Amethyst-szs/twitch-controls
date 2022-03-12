@@ -49,3 +49,6 @@ romfs/
 
 # Starlight patch folder
 starlight/starlight_patch_100/
+
+# Redeem History Log
+server/settings/redeemHistory.txt
