@@ -33,7 +33,7 @@ int curWarpPoint = 0;
 
 static int debugPage = 0;
 static int debugSel = 0;
-static int debugMax = 2;
+static int debugMax = 3;
 static const char* page2Options[] {
     "Connect to local IP address\n",
     "Connect to private IP address\n",
@@ -41,6 +41,7 @@ static const char* page2Options[] {
     "Kill Player\n",
     "End Puppetable\n",
     "Complete Kingdom (EXPERIMENTAL)\n",
+    "Anim Player\n",
     "Plus 100 Coins\n"
 };
 static int page2Len = *(&page2Options + 1) - page2Options;
@@ -159,7 +160,7 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
         // al::Projection *CameraProjection = al::getProjection(curGlobalSequence->curScene, 0);
 
         // Header
-        gTextWriter->printf("Twitch Controls - Debug Menu\nPage %i/3\n\n", debugPage + 1);
+        gTextWriter->printf("Twitch Controls - Debug Menu\nPage %i/%i\n\n", debugPage + 1, debugMax + 1);
         // Scene Info
         switch (debugPage) {
         case 0:
@@ -191,6 +192,10 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
             gTextWriter->printf("\nLanguage: %s\n", amy::getGlobalStageScene()->mHolder->getLanguage());
             break;
         case 1:
+            gTextWriter->printf("Freecam DX Testing Page:\n");
+            gTextWriter->printf("Animation: %s\n", player->mPlayerAnimator->mAnimFrameCtrl->getActionName());
+            break;
+        case 2:
             gTextWriter->printf("Twitch Integration Values:\n");
             gTextWriter->printf("Reject Redeems: %s\n", !ri.isRedeemsValid ? "true" : "false");
             gTextWriter->printf("Invalid Stage: %s\n", ri.isInvalidStage ? "true" : "false");
@@ -201,7 +206,7 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
             gTextWriter->printf("Stick Inversion Timer: %f\n", amy::getStickInverState().timer);
             gTextWriter->printf("Water Area Timer: %f\n", amy::getWaterAreaState().timer);
             break;
-        case 2:
+        case 3:
             gTextWriter->printf("Quick Functions:\n");
 
             // Draw the page
@@ -251,7 +256,13 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
                 case 5:
                     GameDataFunction::addPayShine(holder, 30);
                     break;
-                case 6:
+                case 6: {
+                    sead::SafeString anim = "Jump3";
+                    player->startDemoPuppetable();
+                    player->mPlayerAnimator->startAnim(anim);
+                    break;
+                }
+                case 7:
                     stageScene->mHolder->mGameDataFile->addCoin(100);
                     break;
                 }
