@@ -52,7 +52,7 @@ void setupDebugMenu(GameSystem *gSys) {
     }
 
     smo::Server::instance().start();
-    smo::Server::instance().connect(smo::getServerIp(true));
+    smo::Server::instance().connect(smo::getServerIp(false));
 
     __asm("MOV W23, #0x3F800000");
     __asm("MOV W8, #0xFFFFFFFF");

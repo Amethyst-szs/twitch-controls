@@ -230,13 +230,13 @@ void drawMainHook(HakoniwaSequence *curSequence, sead::Viewport *viewport, sead:
                 //Process a selection
                 if (al::isPadTriggerRight(-1) && !al::isPadHoldZL(-1))
                     switch(debugSel){
-                        case 0:
+                        case 0: //Connect to local server
                             amy::log("ClientDisconnect");
                             smo::Server::instance().connect(smo::getServerIp(true));
                             amy::updateServerDemoState();
                             ri.rejectionID = 0;
                             break;
-                        case 1:
+                        case 1: //Connect to private server
                             amy::log("ClientDisconnect");
                             smo::Server::instance().connect(smo::getServerIp(false));
                             amy::updateServerDemoState();

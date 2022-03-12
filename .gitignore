@@ -46,3 +46,6 @@ server/node_modules/
 
 # Project Manager
 romfs/
+
+# Starlight patch folder
+starlight/starlight_patch_100/
