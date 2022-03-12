@@ -119,7 +119,11 @@ async function getStreamerAuth() {
 }
 
 async function refundRedeem(streamerID, rewardId, id) {
-  redemption = api.channelPoints.getRedemptionById(streamerID, rewardId, id);
+  redemption = await api.channelPoints.getRedemptionById(
+    streamerID,
+    rewardId,
+    id
+  );
   if ((await redemption).isFulfilled || (await redemption).isCanceled) {
     log.log(1, `Redeem ${id} came back from the past`);
     return;
@@ -134,7 +138,11 @@ async function refundRedeem(streamerID, rewardId, id) {
 }
 
 async function approveRedeem(streamerID, rewardId, id) {
-  redemption = api.channelPoints.getRedemptionById(streamerID, rewardId, id);
+  redemption = await api.channelPoints.getRedemptionById(
+    streamerID,
+    rewardId,
+    id
+  );
   if ((await redemption).isFulfilled || (await redemption).isCanceled) {
     log.log(1, `Redeem ${id} came back from the past`);
     return;
