@@ -32,6 +32,7 @@
 *.app
 
 # Tokens
+server/notes.txt
 server/settings/notes.txt
 server/settings/secret.json
 server/settings/tokens.json
