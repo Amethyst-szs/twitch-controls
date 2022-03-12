@@ -12,8 +12,8 @@ class Server;
 enum OutPacketType : u8 {
     DummyInit = (u8)-1,
     Init = (u8)-2,
-    Log = (u8)-3//,
-    //DemoToggle = (u8)-4
+    Log = (u8)-3 //,
+    // DemoToggle = (u8)-4
 };
 
 class OutPacket {
@@ -55,22 +55,25 @@ public:
 //     void construct(u8* dst);
 // };
 
-class InPacketEvent : public InPacket{
-u8 eventID;
+class InPacketEvent : public InPacket {
+    u8 eventID;
+
 public:
     void parse(const u8* data, u32 len);
     void on(Server& server);
 };
 
-class InPacketResize : public InPacket{
-sead::Vector3f scaleVector;
+class InPacketResize : public InPacket {
+    sead::Vector3f scaleVector;
+
 public:
     void parse(const u8* data, u32 len);
     void on(Server& server);
 };
 
-class InPacketPosRandomize : public InPacket{
-sead::Vector3f posVector;
+class InPacketPosRandomize : public InPacket {
+    sead::Vector3f posVector;
+
 public:
     void parse(const u8* data, u32 len);
     void on(Server& server);

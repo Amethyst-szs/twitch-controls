@@ -1,37 +1,34 @@
 #pragma once
 
-namespace al
-{
-    class LiveActor;
+namespace al {
+class LiveActor;
 
-    class AreaObj
-    {
-    };
+class AreaObj {
+};
 
 }
 
-namespace sead
-{
-    class LogicalFrameBuffer;
+namespace sead {
+class LogicalFrameBuffer;
 }
 
-#include "sead/math/seadVector.h"
-#include "sead/prim/seadSafeString.h"
-#include "sead/heap/seadHeap.h"
 #include "sead/basis/seadNew.hpp"
 #include "sead/gfx/seadContext.h"
+#include "sead/heap/seadHeap.h"
+#include "sead/math/seadVector.h"
+#include "sead/prim/seadSafeString.h"
 
-#include "al/scene/Scene.h"
 #include "al/PlayerHolder/PlayerHolder.h"
+#include "al/area/AreaObjGroup.h"
 #include "al/audio/AudioKeeper.h"
-#include "al/camera/Projection.h"
 #include "al/camera/CameraTargetBase.h"
+#include "al/camera/Projection.h"
 #include "al/layout/IUseLayout.h"
-#include "al/layout/LayoutKit.h"
 #include "al/layout/LayoutActor.h"
+#include "al/layout/LayoutKit.h"
+#include "al/scene/Scene.h"
 #include "al/sensor/SensorMsg.h"
 #include "al/stage/StageInfo.h"
-#include "al/area/AreaObjGroup.h"
 
 #include "game/Player/PlayerActorHakoniwa.h"
 
@@ -42,356 +39,356 @@ namespace sead
 #include "types.h"
 
 template <class T>
-al::LiveActor *createActorFunction(const char *name);
+al::LiveActor* createActorFunction(const char* name);
 
-namespace al
-{
+namespace al {
 
-    // General Input functions
+// General Input functions
 
-    bool isPadTriggerUp(int port);
-    bool isPadTriggerDown(int port);
-    bool isPadTriggerLeft(int port);
-    bool isPadTriggerRight(int port);
+bool isPadTriggerUp(int port);
+bool isPadTriggerDown(int port);
+bool isPadTriggerLeft(int port);
+bool isPadTriggerRight(int port);
 
-    bool isPadTriggerA(int port);
-    bool isPadTriggerB(int port);
-    bool isPadTriggerX(int port);
-    bool isPadTriggerY(int port);
+bool isPadTriggerA(int port);
+bool isPadTriggerB(int port);
+bool isPadTriggerX(int port);
+bool isPadTriggerY(int port);
 
-    bool isPadTriggerZL(int port);
-    bool isPadTriggerZR(int port);
+bool isPadTriggerZL(int port);
+bool isPadTriggerZR(int port);
 
-    bool isPadTriggerL(int port);
-    bool isPadTriggerR(int port);
+bool isPadTriggerL(int port);
+bool isPadTriggerR(int port);
 
-    bool isPadHoldUp(int port);
-    bool isPadHoldDown(int port);
-    bool isPadHoldLeft(int port);
-    bool isPadHoldRight(int port);
+bool isPadHoldUp(int port);
+bool isPadHoldDown(int port);
+bool isPadHoldLeft(int port);
+bool isPadHoldRight(int port);
 
-    bool isPadHoldA(int port);
-    bool isPadHoldB(int port);
-    bool isPadHoldX(int port);
-    bool isPadHoldY(int port);
+bool isPadHoldA(int port);
+bool isPadHoldB(int port);
+bool isPadHoldX(int port);
+bool isPadHoldY(int port);
 
-    bool isPadHoldL(int port);
-    bool isPadHoldR(int port);
+bool isPadHoldL(int port);
+bool isPadHoldR(int port);
 
-    bool isPadHoldZL(int port);
-    bool isPadHoldZR(int port);
+bool isPadHoldZL(int port);
+bool isPadHoldZR(int port);
 
-    sead::Vector2f *getLeftStick(int);
-    sead::Vector2f *getRightStick(int);
+sead::Vector2f* getLeftStick(int);
+sead::Vector2f* getRightStick(int);
 
-    // getters
+// getters
 
-    sead::Vector3f *getTrans(al::LiveActor const *);
+sead::Vector3f* getTrans(al::LiveActor const*);
 
-    sead::Vector3f *getTransPtr(al::LiveActor *);
+sead::Vector3f* getTransPtr(al::LiveActor*);
 
-    sead::Vector3f *getGravity(al::LiveActor const *);
+sead::Vector3f* getGravity(al::LiveActor const*);
 
-    sead::Vector3f *getUp(al::LiveActor const *);
+sead::Vector3f* getUp(al::LiveActor const*);
 
-    sead::Vector3f *getUpPtr(al::LiveActor *);
+sead::Vector3f* getUpPtr(al::LiveActor*);
 
-    sead::Vector3f *getFront(al::LiveActor const *);
+sead::Vector3f* getFront(al::LiveActor const*);
 
-    sead::Vector3f *getCameraUp(al::IUseCamera const *, int);
+sead::Vector3f* getCameraUp(al::IUseCamera const*, int);
 
-    sead::Vector3f *getScale(al::LiveActor const *);
+sead::Vector3f* getScale(al::LiveActor const*);
 
-    float *getScaleX(al::LiveActor const *);
+float* getScaleX(al::LiveActor const*);
 
-    float *getScaleY(al::LiveActor const *);
+float* getScaleY(al::LiveActor const*);
 
-    float *getScaleZ(al::LiveActor const *);
+float* getScaleZ(al::LiveActor const*);
 
-    al::PlayerHolder *getScenePlayerHolder(al::Scene const *);
+al::PlayerHolder* getScenePlayerHolder(al::Scene const*);
 
-    PlayerActorHakoniwa *getPlayerActor(al::LiveActor const *, int);
+PlayerActorHakoniwa* getPlayerActor(al::LiveActor const*, int);
 
-    PlayerActorHakoniwa *tryGetPlayerActor(al::PlayerHolder const *, int);
+PlayerActorHakoniwa* tryGetPlayerActor(al::PlayerHolder const*, int);
 
-    sead::Heap *getCurrentHeap(void);
+sead::Heap* getCurrentHeap(void);
 
-    al::Projection *getProjection(al::IUseCamera const *, int);
+al::Projection* getProjection(al::IUseCamera const*, int);
 
-    int getSubActorNum(al::LiveActor const *);
+int getSubActorNum(al::LiveActor const*);
 
-    al::LiveActor *getSubActor(al::LiveActor const *, int);
+al::LiveActor* getSubActor(al::LiveActor const*, int);
 
-    sead::Vector3f *getVelocity(al::LiveActor const *);
+sead::Vector3f* getVelocity(al::LiveActor const*);
 
-    sead::Quatf *getQuat(al::LiveActor const *);
+sead::Quatf* getQuat(al::LiveActor const*);
 
-    int getPlayerControllerPort(int);
+int getPlayerControllerPort(int);
 
-    char const *getActionName(al::LiveActor const *);
+char const* getActionName(al::LiveActor const*);
 
-    float getActionFrame(al::LiveActor const *);
+float getActionFrame(al::LiveActor const*);
 
-    int getActionFrameMax(al::LiveActor const *);
+int getActionFrameMax(al::LiveActor const*);
 
-    bool isActionEnd(al::LiveActor const *);
+bool isActionEnd(al::LiveActor const*);
 
-    // setters
+// setters
 
-    void setActionFrameRate(al::LiveActor *, float);
+void setActionFrameRate(al::LiveActor*, float);
 
-    void setTransY(al::LiveActor *, float);
+void setTransY(al::LiveActor*, float);
 
-    void setTrans(al::LiveActor *, sead::Vector3f const &);
+void setTrans(al::LiveActor*, sead::Vector3f const&);
 
-    void setScale(al::LiveActor*, const sead::Vector3f&);
+void setScale(al::LiveActor*, const sead::Vector3f&);
 
-    void setScaleAll(al::LiveActor *, float);
+void setScaleAll(al::LiveActor*, float);
 
-    void setGravity(al::LiveActor const *, sead::Vector3f const &);
+void setGravity(al::LiveActor const*, sead::Vector3f const&);
 
-    void setFront(al::LiveActor *, sead::Vector3f const &);
+void setFront(al::LiveActor*, sead::Vector3f const&);
 
-    void setQuat(al::LiveActor *, const sead::Quatf &);
+void setQuat(al::LiveActor*, const sead::Quatf&);
 
-    void setVelocityZero(al::LiveActor *);
+void setVelocityZero(al::LiveActor*);
 
-    void setEffectParticleScale(al::IUseEffectKeeper *actor, char const *effectName, float scale);
+void setEffectParticleScale(al::IUseEffectKeeper* actor, char const* effectName, float scale);
 
-    // layout stuff
+// layout stuff
 
-    void setPaneTexture(al::IUseLayout *, char const *, nn::ui2d::TextureInfo const *);
+void setPaneTexture(al::IUseLayout*, char const*, nn::ui2d::TextureInfo const*);
 
-    //void setPaneString(al::IUseLayout *layout, char const *paneName, char16_t const *, ushort);
+// void setPaneString(al::IUseLayout *layout, char const *paneName, char16_t const *, ushort);
 
-    void setPaneStringFormat(al::IUseLayout *layout, char const *paneName, char const *format, ...);
+void setPaneStringFormat(al::IUseLayout* layout, char const* paneName, char const* format, ...);
 
-    void setPaneLocalTrans(al::IUseLayout *layout, const char *paneName, sead::Vector3f const &);
-    void setPaneLocalTrans(al::IUseLayout *layout, const char *paneName, sead::Vector2f const &);
-    void setPaneLocalSize(al::IUseLayout *layout, const char *paneName, sead::Vector2f const &);
-    void setPaneLocalScale(al::IUseLayout *layout, const char *paneName, sead::Vector2f const &);
-    void setPaneLocalRotate(al::IUseLayout *layout, const char *paneName, sead::Vector3f const &);
+void setPaneLocalTrans(al::IUseLayout* layout, const char* paneName, sead::Vector3f const&);
+void setPaneLocalTrans(al::IUseLayout* layout, const char* paneName, sead::Vector2f const&);
+void setPaneLocalSize(al::IUseLayout* layout, const char* paneName, sead::Vector2f const&);
+void setPaneLocalScale(al::IUseLayout* layout, const char* paneName, sead::Vector2f const&);
+void setPaneLocalRotate(al::IUseLayout* layout, const char* paneName, sead::Vector3f const&);
 
-    sead::Vector2f getPaneLocalTrans(al::IUseLayout *layout, const char *paneName);
-    sead::Vector2f getPaneLocalSize(al::IUseLayout *layout, const char *paneName);
-    sead::Vector2f getPaneLocalScale(al::IUseLayout *layout, const char *paneName);
-    sead::Vector2f getPaneLocalRotate(al::IUseLayout *layout, const char *paneName);
+sead::Vector2f getPaneLocalTrans(al::IUseLayout* layout, const char* paneName);
+sead::Vector2f getPaneLocalSize(al::IUseLayout* layout, const char* paneName);
+sead::Vector2f getPaneLocalScale(al::IUseLayout* layout, const char* paneName);
+sead::Vector2f getPaneLocalRotate(al::IUseLayout* layout, const char* paneName);
 
-    bool killLayoutIfActive(al::LayoutActor *);
+bool killLayoutIfActive(al::LayoutActor*);
 
-    void hidePane(al::IUseLayout *lyt, const char *paneName);
+void hidePane(al::IUseLayout* lyt, const char* paneName);
 
-    bool isHidePane(al::IUseLayout const *lyt, const char *paneName);
+bool isHidePane(al::IUseLayout const* lyt, const char* paneName);
 
-    void showPane(al::IUseLayout *lyt, const char *paneName);
+void showPane(al::IUseLayout* lyt, const char* paneName);
 
-    // camera stuff
+// camera stuff
 
-    void setCameraTarget(al::IUseCamera *, al::CameraTargetBase *);
+void setCameraTarget(al::IUseCamera*, al::CameraTargetBase*);
+int getFovyDegree(IUseCamera* useCamera, int value);
 
-    // calc functions
+// calc functions
 
-    f32 calcDistance(al::LiveActor const *, al::LiveActor const *); // calculates distance between two actors
+f32 calcDistance(al::LiveActor const*, al::LiveActor const*); // calculates distance between two actors
 
-    f32 calcDistance(al::LiveActor const *, sead::Vector3f const &); // calculates distance between an actor and a position in the world
+f32 calcDistance(al::LiveActor const*, sead::Vector3f const&); // calculates distance between an actor and a position in the world
 
-    void calcFrontDir(sead::Vector3f *result, al::LiveActor const *actor);
+void calcFrontDir(sead::Vector3f* result, al::LiveActor const* actor);
 
-    // velocity stuff
+// velocity stuff
 
-    void addVelocity(al::LiveActor *, sead::Vector3f const &);
+void addVelocity(al::LiveActor*, sead::Vector3f const&);
 
-    void setVelocity(al::LiveActor *, sead::Vector3f const &);
+void setVelocity(al::LiveActor*, sead::Vector3f const&);
 
-    void scaleVelocityExceptDirection(al::LiveActor *, sead::Vector3f const &, float);
+void scaleVelocityExceptDirection(al::LiveActor*, sead::Vector3f const&, float);
 
-    void addVelocityToGravity(al::LiveActor *, float);
+void addVelocityToGravity(al::LiveActor*, float);
 
-    // animation stuff
+// animation stuff
 
-    const char *getPlayingSklAnimName(const al::LiveActor *actor, int index);
+const char* getPlayingSklAnimName(const al::LiveActor* actor, int index);
 
-    bool tryStartSklAnimIfNotPlaying(al::LiveActor *actor, const char *animName);
+bool tryStartSklAnimIfNotPlaying(al::LiveActor* actor, const char* animName);
 
-    bool tryStartSklAnimIfExist(al::LiveActor *actor, const char *animName);
+bool tryStartSklAnimIfExist(al::LiveActor* actor, const char* animName);
 
-    // byml stuff
+// byml stuff
 
-    bool tryGetByamlF32(float *, al::ByamlIter const &, char const *);
+bool tryGetByamlF32(float*, al::ByamlIter const&, char const*);
 
-    f32 findActorParamF32(al::LiveActor const *, char const *);
-    s32 findActorParamS32(al::LiveActor const *, char const *);
+f32 findActorParamF32(al::LiveActor const*, char const*);
+s32 findActorParamS32(al::LiveActor const*, char const*);
 
-    // nerve stuff
+// nerve stuff
 
-    bool isLessStep(al::IUseNerve const *, int); // checks if the current nerve has been activated for a certain amount of frames(?)
+bool isLessStep(al::IUseNerve const*, int); // checks if the current nerve has been activated for a certain amount of frames(?)
 
-    bool isFirstStep(al::IUseNerve const *);
+bool isFirstStep(al::IUseNerve const*);
 
-    bool isNerve(al::IUseNerve const *, al::Nerve const *);
+bool isNerve(al::IUseNerve const*, al::Nerve const*);
 
-    void setNerve(al::IUseNerve *, al::Nerve const *);
+void setNerve(al::IUseNerve*, al::Nerve const*);
 
-    // effect stuff
+// effect stuff
 
-    void emitEffect(al::IUseEffectKeeper *effectKeeper, char const *effectName, sead::Vector3f const *effectPosition);
+void emitEffect(al::IUseEffectKeeper* effectKeeper, char const* effectName, sead::Vector3f const* effectPosition);
 
-    bool tryEmitEffect(al::IUseEffectKeeper *effectKeeper, char const *effectName, sead::Vector3f const *effectPosition);
+bool tryEmitEffect(al::IUseEffectKeeper* effectKeeper, char const* effectName, sead::Vector3f const* effectPosition);
 
-    void tryDeleteEffect(al::IUseEffectKeeper *effectKeeper, char const *effectName);
+void tryDeleteEffect(al::IUseEffectKeeper* effectKeeper, char const* effectName);
 
-    // sensor stuff
+// sensor stuff
 
-    // enum SensorType {
-    //     Unknown, // 0
-    //     Player, // 1
-    //     PlayerAttack, // 2
-    //     PlayerFoot // 3
-    // };
+// enum SensorType {
+//     Unknown, // 0
+//     Player, // 1
+//     PlayerAttack, // 2
+//     PlayerFoot // 3
+// };
 
-    void addHitSensor(al::LiveActor *actor, al::ActorInitInfo const &initInfo, char const *sensorName, uint typeEnum, float radius, ushort maxCount, sead::Vector3f const &position);
+void addHitSensor(al::LiveActor* actor, al::ActorInitInfo const& initInfo, char const* sensorName, uint typeEnum, float radius, ushort maxCount, sead::Vector3f const& position);
 
-    bool isMsgPlayerTrampleReflect(al::SensorMsg const *);
+bool isMsgPlayerTrampleReflect(al::SensorMsg const*);
 
-    bool isSensorPlayerAttack(al::HitSensor const *targetSensor);
+bool isSensorPlayerAttack(al::HitSensor const* targetSensor);
 
-    bool sendMsgPlayerHipDropKnockDown(al::HitSensor *target, al::HitSensor *source);
+bool sendMsgPlayerHipDropKnockDown(al::HitSensor* target, al::HitSensor* source);
 
-    bool sendMsgPlayerDamageTouch(al::HitSensor *target, al::HitSensor *source);
+bool sendMsgPlayerDamageTouch(al::HitSensor* target, al::HitSensor* source);
 
-    // audio
+// audio
 
-    void tryPauseBgmIfLowPriority(al::IUseAudioKeeper const *keeper, const char *audioName, int unk);
+void tryPauseBgmIfLowPriority(al::IUseAudioKeeper const* keeper, const char* audioName, int unk);
 
-    // player stuff
+// player stuff
 
-    void getClassName(const char **namePtr, const al::ActorInitInfo &info);
+void getClassName(const char** namePtr, const al::ActorInitInfo& info);
 
-    void getDisplayName(const char **namePtr, const al::ActorInitInfo &info);
+void getDisplayName(const char** namePtr, const al::ActorInitInfo& info);
 
-    // stage switch stuff
+// stage switch stuff
 
-    // stage init stuff
+// stage init stuff
 
-    al::StageInfo *getStageInfoMap(al::Scene const *, int);
+al::StageInfo* getStageInfoMap(al::Scene const*, int);
 
-    void tryGetPlacementInfoAndCount(al::PlacementInfo *, int *, al::StageInfo const *, char const *);
+void tryGetPlacementInfoAndCount(al::PlacementInfo*, int*, al::StageInfo const*, char const*);
 
-    void getPlacementInfoByIndex(al::PlacementInfo *, al::PlacementInfo const &, int);
+void getPlacementInfoByIndex(al::PlacementInfo*, al::PlacementInfo const&, int);
 
-    void getObjectName(const char **namePtr, const al::PlacementInfo &placementInfo);
+void getObjectName(const char** namePtr, const al::PlacementInfo& placementInfo);
 
-    bool tryGetObjectName(const char **namePtr, const al::PlacementInfo &placementInfo);
+bool tryGetObjectName(const char** namePtr, const al::PlacementInfo& placementInfo);
 
-    bool tryGetStringArg(const char **namePtr, const al::PlacementInfo &info, const char *key);
+bool tryGetStringArg(const char** namePtr, const al::PlacementInfo& info, const char* key);
 
-    bool tryGetClassName(const char **namePtr, const al::PlacementInfo &info);
+bool tryGetClassName(const char** namePtr, const al::PlacementInfo& info);
 
-    bool tryGetDisplayName(const char **namePtr, const al::PlacementInfo &info);
+bool tryGetDisplayName(const char** namePtr, const al::PlacementInfo& info);
 
-    bool tryGetTrans(sead::Vector3f *, al::PlacementInfo const &);
+bool tryGetTrans(sead::Vector3f*, al::PlacementInfo const&);
 
-    // actor init stuff
+// actor init stuff
 
-    void initCreateActorWithPlacementInfo(LiveActor *, const al::ActorInitInfo &);
+void initCreateActorWithPlacementInfo(LiveActor*, const al::ActorInitInfo&);
 
-    void initMapPartsActor(LiveActor *, const al::ActorInitInfo &, const char *);
+void initMapPartsActor(LiveActor*, const al::ActorInitInfo&, const char*);
 
-    void initActorWithArchiveName(LiveActor *, const al::ActorInitInfo &, const sead::SafeString &, const char *);
+void initActorWithArchiveName(LiveActor*, const al::ActorInitInfo&, const sead::SafeString&, const char*);
 
-    void initJointControllerKeeper(const LiveActor *, int);
+void initJointControllerKeeper(const LiveActor*, int);
 
-    void initJointGlobalQuatController(const LiveActor *, const sead::Quatf *, const char *);
+void initJointGlobalQuatController(const LiveActor*, const sead::Quatf*, const char*);
 
-    // misc
+// misc
 
-    al::AreaObjGroup *tryFindAreaObjGroup(al::IUseAreaObj const *, const char *areaName);
+al::AreaObjGroup* tryFindAreaObjGroup(al::IUseAreaObj const*, const char* areaName);
 
-    sead::DrawContext *getSceneDrawContext(al::Scene const *); // these two things are all thats needed to setup text writer in the right context
+sead::DrawContext* getSceneDrawContext(al::Scene const*); // these two things are all thats needed to setup text writer in the right context
 
-    sead::LogicalFrameBuffer *getSceneFrameBufferMain(al::Scene const *);
+sead::LogicalFrameBuffer* getSceneFrameBufferMain(al::Scene const*);
 
-    int getLayoutDisplayWidth();
-    int getLayoutDisplayHeight();
+int getLayoutDisplayWidth();
+int getLayoutDisplayHeight();
 
-    void executeDraw(al::LayoutKit const *, char const *);
+void executeDraw(al::LayoutKit const*, char const*);
 
-    bool isExistFile(sead::SafeString const &filePath);
+bool isExistFile(sead::SafeString const& filePath);
 
-    al::StageInfo *getStageInfoMap(al::Scene const *, int);
+al::StageInfo* getStageInfoMap(al::Scene const*, int);
 
-    void tryGetObjectName(const char **, al::ActorInitInfo const &);
+void tryGetObjectName(const char**, al::ActorInitInfo const&);
 
-    bool isVisAnimExist(const al::LiveActor *, const char *);
+bool isVisAnimExist(const al::LiveActor*, const char*);
 
-    bool isInAreaObj(al::LiveActor const *, const char *);
+bool isInAreaObj(al::LiveActor const*, const char*);
 
-    al::AreaObj *tryFindAreaObj(al::LiveActor const *, const char *);
+al::AreaObj* tryFindAreaObj(al::LiveActor const*, const char*);
 
-    void tryGetAreaObjArg(int *, al::AreaObj const *, const char *);
-    void tryGetAreaObjArg(float *, al::AreaObj const *, const char *);
-    void tryGetAreaObjArg(bool *, al::AreaObj const *, const char *);
+void tryGetAreaObjArg(int*, al::AreaObj const*, const char*);
+void tryGetAreaObjArg(float*, al::AreaObj const*, const char*);
+void tryGetAreaObjArg(bool*, al::AreaObj const*, const char*);
 
-    void tryGetAreaObjStringArg(const char **, al::AreaObj const *, const char *);
+void tryGetAreaObjStringArg(const char**, al::AreaObj const*, const char*);
 
-    void offCollide(al::LiveActor *);
-    void onCollide(al::LiveActor *);
+void offCollide(al::LiveActor*);
+void onCollide(al::LiveActor*);
 
-    void startAction(al::LiveActor *, char const *);
+void startAction(al::LiveActor*, char const*);
 
-    bool tryStartSe(al::IUseAudioKeeper const *, sead::SafeStringBase<char> const &);
+bool tryStartSe(al::IUseAudioKeeper const*, sead::SafeStringBase<char> const&);
 
-    void startSe(al::IUseAudioKeeper const *, sead::SafeStringBase<char> const &);
+void startSe(al::IUseAudioKeeper const*, sead::SafeStringBase<char> const&);
 
-    void startHitReaction(al::LiveActor const *, char const *);
+void startHitReaction(al::LiveActor const*, char const*);
 
-    bool isInDeathArea(al::LiveActor const *);
+bool isInDeathArea(al::LiveActor const*);
 
-    void calcCameraUpDir(sead::Vector3f *, al::IUseCamera const *, int);
+void calcCameraUpDir(sead::Vector3f*, al::IUseCamera const*, int);
 
-    const unsigned char *tryGetBymlFromArcName(sead::SafeStringBase<char> const &, sead::SafeStringBase<char> const &);
+const unsigned char* tryGetBymlFromArcName(sead::SafeStringBase<char> const&, sead::SafeStringBase<char> const&);
 
-    class ActorInitInfo;
+class ActorInitInfo;
 
-    bool getArg(int *, const al::ActorInitInfo &, const char *);
+bool getArg(int*, const al::ActorInitInfo&, const char*);
 
-    bool isActiveDemo(const al::Scene *);
+bool isActiveDemo(const al::Scene*);
 
-    bool isEqualString(char const *, char const *);
+bool isEqualString(char const*, char const*);
 
-    bool isEqualSubString(char const *, char const *);
+bool isEqualSubString(char const*, char const*);
 
-    bool isOnGround(al::LiveActor const *, uint);
+bool isOnGround(al::LiveActor const*, uint);
 
-    bool isActiveDemo(al::Scene const *);
+bool isActiveDemo(al::Scene const*);
 
-    bool isInWaterPos(al::LiveActor const *, sead::Vector3f const &);
-    bool isInWater(al::LiveActor const*);
-    bool isInWaterArea(al::LiveActor const*);
+bool isInWaterPos(al::LiveActor const*, sead::Vector3f const&);
+bool isInWater(al::LiveActor const*);
+bool isInWaterArea(al::LiveActor const*);
 
-    // interpolation functions
+// interpolation functions
 
-    void lerpVec(sead::Vector3f *result, sead::Vector3f const &from, sead::Vector3f const &to, float rate);
+void lerpVec(sead::Vector3f* result, sead::Vector3f const& from, sead::Vector3f const& to, float rate);
 
-    void slerpQuat(sead::Quatf *result, sead::Quatf const &from, sead::Quatf const &to, float rate);
+void slerpQuat(sead::Quatf* result, sead::Quatf const& from, sead::Quatf const& to, float rate);
 
-    // dither anim stuff
+// dither anim stuff
 
-    bool isExistDitherAnimator(al::LiveActor const *);
+bool isExistDitherAnimator(al::LiveActor const*);
 
-    void stopDitherAnimAutoCtrl(al::LiveActor *);
-    void restartDitherAnimAutoCtrl(al::LiveActor *);
+void stopDitherAnimAutoCtrl(al::LiveActor*);
+void restartDitherAnimAutoCtrl(al::LiveActor*);
 
-    void validateDitherAnim(al::LiveActor *);
-    void invalidateDitherAnim(al::LiveActor *);
+void validateDitherAnim(al::LiveActor*);
+void invalidateDitherAnim(al::LiveActor*);
 
-    float getDitherAnimNearClipStartDistance(al::LiveActor const *);
-    float getDitherAnimNearClipEndDistance(al::LiveActor const *);
+float getDitherAnimNearClipStartDistance(al::LiveActor const*);
+float getDitherAnimNearClipEndDistance(al::LiveActor const*);
 
-    void setDitherAnimSphereRadius(al::LiveActor *, float);
-    void setDitherAnimBoundingBox(al::LiveActor *, sead::Vector3f const &);
-    void setDitherAnimMaxAlpha(al::LiveActor *, float);
-    void setDitherAnimClippingJudgeLocalOffset(al::LiveActor *, sead::Vector3f const &);
-    void setDitherAnimClippingJudgeParam(al::LiveActor *, const char *);
+void setDitherAnimSphereRadius(al::LiveActor*, float);
+void setDitherAnimBoundingBox(al::LiveActor*, sead::Vector3f const&);
+void setDitherAnimMaxAlpha(al::LiveActor*, float);
+void setDitherAnimClippingJudgeLocalOffset(al::LiveActor*, sead::Vector3f const&);
+void setDitherAnimClippingJudgeParam(al::LiveActor*, const char*);
 
 }

@@ -42,7 +42,7 @@
     "2": {
         "autoFulfill:": true,
         "backgroundColor": "#543d5a",
-        "cost": 10,
+        "cost": 20,
         "globalCooldown": 2,
         "isEnabled": true,
         "isPaused": false,
@@ -55,7 +55,7 @@
     "3":{
         "autoFulfill:": true,
         "backgroundColor": "#aa6d6d",
-        "cost": 500,
+        "cost": 750,
         "globalCooldown": 90,
         "isEnabled": true,
         "isPaused": false,
@@ -68,7 +68,7 @@
     "4":{
         "autoFulfill:": true,
         "backgroundColor": "#4888ad",
-        "cost": 75,
+        "cost": 100,
         "globalCooldown": null,
         "isEnabled": true,
         "isPaused": false,
@@ -94,7 +94,7 @@
     "6":{
         "autoFulfill:": true,
         "backgroundColor": "#480e0e",
-        "cost": 200,
+        "cost": 400,
         "globalCooldown": 150,
         "isEnabled": true,
         "isPaused": false,
@@ -107,7 +107,7 @@
     "7":{
         "autoFulfill:": true,
         "backgroundColor": "#b3a32b",
-        "cost": 1000,
+        "cost": 1750,
         "globalCooldown": 210,
         "isEnabled": true,
         "isPaused": false,
@@ -120,8 +120,8 @@
     "8":{
         "autoFulfill:": true,
         "backgroundColor": "#a1274b",
-        "cost": 300,
-        "globalCooldown": 90,
+        "cost": 500,
+        "globalCooldown": 120,
         "isEnabled": true,
         "isPaused": false,
         "maxRedemptionsPerStream": null,
@@ -133,7 +133,7 @@
     "9":{
         "autoFulfill:": true,
         "backgroundColor": "#a1ccbd",
-        "cost": 50,
+        "cost": 75,
         "globalCooldown": null,
         "isEnabled": true,
         "isPaused": false,
@@ -145,9 +145,9 @@
     },
     "10":{
         "autoFulfill:": true,
-        "backgroundColor": "#962a0c",
+        "backgroundColor": "#6e463f",
         "cost": 40,
-        "globalCooldown": 1,
+        "globalCooldown": 3,
         "isEnabled": true,
         "isPaused": false,
         "maxRedemptionsPerStream": null,
@@ -158,9 +158,9 @@
     },
     "11":{
         "autoFulfill:": true,
-        "backgroundColor": "#000000",
-        "cost": 25,
-        "globalCooldown": null,
+        "backgroundColor": "#64368d",
+        "cost": 50,
+        "globalCooldown": 3,
         "isEnabled": true,
         "isPaused": false,
         "maxRedemptionsPerStream": null,
@@ -171,14 +171,14 @@
     },
     "12":{
         "autoFulfill:": true,
-        "backgroundColor": "#000000",
-        "cost": 69,
-        "globalCooldown": null,
+        "backgroundColor": "#2daba7",
+        "cost": 25,
+        "globalCooldown": 1,
         "isEnabled": true,
         "isPaused": false,
         "maxRedemptionsPerStream": null,
         "maxRedemptionsPerUserPerStream": null,
-        "prompt": "Unfinished redeem",
+        "prompt": "Makes me start to swim through the air for 8 seconds! (Continues adding time if redeemed multiple times)",
         "title": "Hot Tub Stream",
         "userInputRequired": false
     }
