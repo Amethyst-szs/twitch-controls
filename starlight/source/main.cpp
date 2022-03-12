@@ -35,7 +35,8 @@ static int debugPage = 0;
 static int debugSel = 0;
 static int debugMax = 2;
 static const char* page2Options[] {
-        "Connect to Server\n",
+        "Connect to local IP address\n",
+        "Connect to private IP address\n",
         "Disconnect from Server\n",
         "Kill Player\n",
         "End Puppetable\n",
@@ -230,20 +231,25 @@ void drawMainHook(HakoniwaSequence *curSequence, sead::Viewport *viewport, sead:
                 if (al::isPadTriggerRight(-1) && !al::isPadHoldZL(-1))
                     switch(debugSel){
                         case 0:
-                            smo::Server::instance().connect(smo::getServerIp().serverIp);
+                            smo::Server::instance().connect(smo::getServerIp(true));
                             amy::updateServerDemoState();
                             ri.rejectionID = 0;
                             break;
                         case 1:
-                            amy::log("ClientDisconnect");
+                            smo::Server::instance().connect(smo::getServerIp(false));
+                            amy::updateServerDemoState();
+                            ri.rejectionID = 0;
                             break;
                         case 2:
-                            GameDataFunction::killPlayer(*stageScene->mHolder);
+                            amy::log("ClientDisconnect");
                             break;
                         case 3:
-                            player->endDemoPuppetable();
+                            GameDataFunction::killPlayer(*stageScene->mHolder);
                             break;
                         case 4:
+                            player->endDemoPuppetable();
+                            break;
+                        case 5:
                             stageScene->mHolder->mGameDataFile->addCoin(100);
                             break;
                     }

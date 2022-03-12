@@ -40,7 +40,7 @@
 
 #include "helpers.hpp"
 #include "debugMenu.hpp"
-#include "ipAddress.hpp"
+#include "ips.hpp"
 
 #define RAD(deg) (deg * (M_PI / 180))        // converts Degrees to Radians
 #define DEG(rad) (rad * (180 / M_PI))        // converts Radians to Degrees

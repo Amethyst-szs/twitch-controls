@@ -1,5 +1,5 @@
 #include "debugMenu.hpp"
-#include "ipAddress.hpp"
+#include "ips.hpp"
 #include "fl/server.h"
 
 static const char *DBG_FONT_PATH = "DebugData/Font/nvn_font_jis1.ntx";
@@ -52,7 +52,7 @@ void setupDebugMenu(GameSystem *gSys) {
     }
 
     smo::Server::instance().start();
-    smo::Server::instance().connect(smo::getServerIp().serverIp);
+    smo::Server::instance().connect(smo::getServerIp(true));
 
     __asm("MOV W23, #0x3F800000");
     __asm("MOV W8, #0xFFFFFFFF");

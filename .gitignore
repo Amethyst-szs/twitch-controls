@@ -31,6 +31,9 @@
 *.out
 *.app
 
+# IPs
+starlight/include/ips.hpp
+
 # Tokens
 server/notes.txt
 server/settings/notes.txt
