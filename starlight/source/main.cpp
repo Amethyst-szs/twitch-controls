@@ -40,6 +40,7 @@ static const char* page2Options[] {
     "Disconnect from Server\n",
     "Kill Player\n",
     "End Puppetable\n",
+    "Complete Kingdom (EXPERIMENTAL)\n",
     "Plus 100 Coins\n"
 };
 static int page2Len = *(&page2Options + 1) - page2Options;
@@ -248,6 +249,9 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
                     player->endDemoPuppetable();
                     break;
                 case 5:
+                    GameDataFunction::addPayShine(holder, 30);
+                    break;
+                case 6:
                     stageScene->mHolder->mGameDataFile->addCoin(100);
                     break;
                 }
@@ -356,7 +360,7 @@ void stageSceneHook(StageScene* stageScene)
     // Activate home ship yes
     GameDataFunction::activateHome(holder);
     holder.mGameDataFile->mProgressData->talkCapNearHomeInWaterfall();
-    GameDataFunction::repairHome(holder);
+    // GameDataFunction::repairHome(holder);
     GameDataFunction::enableCap(holder);
 
     // PLAN FOR SHINE STUFF!

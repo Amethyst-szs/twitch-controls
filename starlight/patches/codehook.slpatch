@@ -59,12 +59,12 @@ B59E28: // sead::system::print
 // 52A140: // forces isUnlockedCurrentWorld to always return true
     // MOV X0, #1
     // RET
-// 52C2C0: // forces isExistHome to always return true
-    // MOV X0, #1
-    // RET
+52C2C0: // forces isExistHome to always return true
+    MOV X0, #1
+    RET
 
-//52AE10: // sets world index for cityWorld to 0
-//    MOV X0, #0
+// 52AE10: // sets world index for cityWorld to 0
+    // MOV X0, #0
 
 // These hooks essentially forces the odyssey to never kill itself when its in a kingdom that it "shouldnt" be in
 309254: // ShineTowerRocket::init+3F4

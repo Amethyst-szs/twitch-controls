@@ -8,7 +8,6 @@
 #include "util.h"
 #include <string.h>
 
-
 namespace smo {
 u32 OutPacketLog::calcLen()
 {
@@ -61,7 +60,10 @@ void InPacketEvent::on(Server& server)
     if (!ri.isRedeemsValid)
         amy::sendPacketStateNotice(true);
     else {
-        amy::sendPacketStateNotice(false);
+        // Send an update about successful packet
+        // UNLESS it is a random kingdom redeem, as those are SpEcIaL
+        if (eventID != 5)
+            amy::sendPacketStateNotice(false);
         switch (eventID) {
         case 1: { // PrevScene - See Myself Out
             stageScene->mHolder->returnPrevStage();
@@ -93,7 +95,15 @@ void InPacketEvent::on(Server& server)
         }
         case 5: {
             if (!stageScene->mHolder->mGameDataFile->isUnlockedWorld(2)) {
+                amy::sendPacketStateNotice(true);
                 amy::log("Rejected random kingdom because Sand Kingdom isn't unlocked yet!");
+                break;
+            }
+
+            int worldID = GameDataFunction::getCurrentWorldId(*stageScene->mHolder);
+            if (worldID == 5 || worldID == 6 || worldID == 11) { // 5Cloud 6Lost 11Ruined
+                amy::sendPacketStateNotice(true);
+                amy::log("Rejected random kingdom because the player is in a kingdom that is invalid");
                 break;
             }
 

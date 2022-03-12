@@ -10,88 +10,98 @@
 //     smo::Server::instance().sendPacket(p, smo::OutPacketType::DemoToggle);
 // }
 
-void amy::updateServerDemoState(){
+void amy::updateServerDemoState()
+{
     amy::log("Demo%i", amy::getRedeemInfo().isInvalidStage);
 }
 
-StageScene*& amy::getGlobalStageScene(){
+StageScene*& amy::getGlobalStageScene()
+{
     static StageScene* stageScene;
     return stageScene;
 }
 
-//Redeem info handlers
-amy::RedeemInfo::state& amy::getRedeemInfo(){
+// Redeem info handlers
+amy::RedeemInfo::state& amy::getRedeemInfo()
+{
     static RedeemInfo::state i;
     return i;
 }
-amy::RedeemInfo::gravityState& amy::getGravityState(){
+amy::RedeemInfo::gravityState& amy::getGravityState()
+{
     static RedeemInfo::gravityState i;
     return i;
 }
-amy::RedeemInfo::coinTickState& amy::getCoinTickState(){
+amy::RedeemInfo::coinTickState& amy::getCoinTickState()
+{
     static RedeemInfo::coinTickState i;
     return i;
 }
-amy::RedeemInfo::windState& amy::getWindState(){
+amy::RedeemInfo::windState& amy::getWindState()
+{
     static RedeemInfo::windState i;
     return i;
 }
-amy::RedeemInfo::hotFloorState& amy::getHotFloorState(){
+amy::RedeemInfo::hotFloorState& amy::getHotFloorState()
+{
     static RedeemInfo::hotFloorState i;
     return i;
 }
-amy::RedeemInfo::stickInverState& amy::getStickInverState(){
+amy::RedeemInfo::stickInverState& amy::getStickInverState()
+{
     static RedeemInfo::stickInverState i;
     return i;
 }
-amy::RedeemInfo::waterAreaState& amy::getWaterAreaState(){
+amy::RedeemInfo::waterAreaState& amy::getWaterAreaState()
+{
     static RedeemInfo::waterAreaState i;
     return i;
 }
 
-void amy::sendPacketStateNotice(bool rejectState){
-    amy::RedeemInfo::state &ri = amy::getRedeemInfo();
+void amy::sendPacketStateNotice(bool rejectState)
+{
+    amy::RedeemInfo::state& ri = amy::getRedeemInfo();
     amy::log("Reject/%u/%u", ri.rejectionID, rejectState);
 }
 
-sead::Vector3f amy::getRandomGravity(){
+sead::Vector3f amy::getRandomGravity()
+{
     sead::Vector3f VectorOptions[] = {
-        {-1,0,0},
-        {1,0,0},
-        {0,0,-1},
-        {0,0,1},
-        {0,1,0},
+        { -1, 0, 0 },
+        { 1, 0, 0 },
+        { 0, 0, -1 },
+        { 0, 0, 1 },
+        { 0, 1, 0 },
     };
-    return VectorOptions[sead::GlobalRandom::instance()->getU32()%(sizeof(VectorOptions)/sizeof(sead::Vector3f))];
+    return VectorOptions[sead::GlobalRandom::instance()->getU32() % (sizeof(VectorOptions) / sizeof(sead::Vector3f))];
 }
 
-const char* amy::getRandomHomeStage(){
+const char* amy::getRandomHomeStage()
+{
     constexpr static const char* stageNames[] = {
         "CapWorldHomeStage",
         "WaterfallWorldHomeStage",
         "SandWorldHomeStage",
         "ForestWorldHomeStage",
         "LakeWorldHomeStage",
-        "ClashWorldHomeStage",
-        "CloudWorldHomeStage",
         "CityWorldHomeStage",
         "SnowWorldHomeStage",
         "SeaWorldHomeStage",
         "LavaWorldHomeStage",
-        "BossRaidWorldHomeStage",
         "SkyWorldHomeStage",
         "MoonWorldHomeStage",
         "Special1WorldHomeStage",
         "Special2WorldHomeStage"
     };
 
-    return stageNames[sead::GlobalRandom::instance()->getU32()%(sizeof(stageNames)/sizeof(const char *))];
+    return stageNames[sead::GlobalRandom::instance()->getU32() % (sizeof(stageNames) / sizeof(const char*))];
 }
 
-void amy::updateRedeemStatus(){
-    StageScene *stageScene = amy::getGlobalStageScene();
-    al::PlayerHolder *pHolder = al::getScenePlayerHolder(stageScene);
-    PlayerActorHakoniwa *player = al::tryGetPlayerActor(pHolder, 0);
+void amy::updateRedeemStatus()
+{
+    StageScene* stageScene = amy::getGlobalStageScene();
+    al::PlayerHolder* pHolder = al::getScenePlayerHolder(stageScene);
+    PlayerActorHakoniwa* player = al::tryGetPlayerActor(pHolder, 0);
     amy::getRedeemInfo().isRedeemsValid = !(stageScene->isPause() || PlayerFunction::isPlayerDeadStatus(player) || rs::isActiveDemo(player));
     // amy::log("Info: %i %i %s", amy::getRedeemInfo().isRedeemsValid, amy::getRedeemInfo().isInvalidStage, GameDataFunction::getCurrentStageName(*amy::getGlobalStageScene()->mHolder));
     return;
