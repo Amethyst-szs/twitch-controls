@@ -11,7 +11,8 @@
         "Whispy Winds",
         "Hot Floor",
         "Stick Flip",
-        "Hot Tub Stream"
+        "Hot Tub Stream",
+        "Dance Party"
     ],
     "Test": {
         "autoFulfill:": true,
@@ -180,6 +181,19 @@
         "maxRedemptionsPerUserPerStream": null,
         "prompt": "Makes me start to swim through the air for 8 seconds! (Continues adding time if redeemed multiple times)",
         "title": "Hot Tub Stream",
+        "userInputRequired": false
+    },
+    "13":{
+        "autoFulfill:": true,
+        "backgroundColor": "#000000",
+        "cost": 2000,
+        "globalCooldown": 600,
+        "isEnabled": true,
+        "isPaused": false,
+        "maxRedemptionsPerStream": 10,
+        "maxRedemptionsPerUserPerStream": 1,
+        "prompt": "START THE PARTY! (1 redeem per person)",
+        "title": "Dance Party",
         "userInputRequired": false
     }
 }

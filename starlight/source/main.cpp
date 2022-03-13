@@ -12,6 +12,7 @@
 #include "game/GameData/GameDataHolderAccessor.h"
 #include "game/GameData/GameDataHolderBase.h"
 #include "game/GameData/GameDataHolderWriter.h"
+#include "game/Info/ShineInfo.h"
 #include "game/Player/PlayerActorHakoniwa.h"
 #include "game/Player/PlayerFunction.h"
 #include "game/Player/PlayerInput.h"
@@ -33,16 +34,15 @@ int curWarpPoint = 0;
 
 static int debugPage = 0;
 static int debugSel = 0;
-static int debugMax = 3;
+static int debugMax = 2;
 static const char* page2Options[] {
-    "Connect to local IP address\n",
-    "Connect to private IP address\n",
-    "Disconnect from Server\n",
-    "Kill Player\n",
-    "End Puppetable\n",
-    "Complete Kingdom (EXPERIMENTAL)\n",
-    "Anim Player\n",
-    "Plus 100 Coins\n"
+    "Connect to local server\n",
+    "Connect to private server\n",
+    "Disconnect from current server\n",
+    "Kill player\n",
+    "End puppetable\n",
+    "Complete kingdom (Glitch central)\n",
+    "Plus 100 coins\n"
 };
 static int page2Len = *(&page2Options + 1) - page2Options;
 
@@ -169,33 +169,20 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
             gTextWriter->printf("Coin Counter: %i\n", GameDataFunction::getCoinNum(*stageScene->mHolder));
             gTextWriter->printf("Stage Name: %s\n", stageScene->mHolder->getCurrentStageName());
             gTextWriter->printf("Scenario: %i\n", GameDataFunction::getScenarioNo(player));
+            gTextWriter->printf("Language: %s\n", amy::getGlobalStageScene()->mHolder->getLanguage());
             gTextWriter->printf("Total Shines in Kingdom: %i\n", GameDataFunction::getWorldTotalShineNum(GameData, GameDataFunction::getCurrentWorldId(GameData)));
-
-            // Camera information
-            gTextWriter->printf("\nCamera FOV: %f\n", CamProject->getFovy());
-
+            gTextWriter->printf("Animation: %s\n", player->mPlayerAnimator->mAnimFrameCtrl->getActionName());
             // Player Information
             if (player->getPlayerHackKeeper()->getCurrentHackName() != nullptr) {
-                gTextWriter->printf("\nCurrent Capture: %s\n", player->getPlayerHackKeeper()->getCurrentHackName());
+                gTextWriter->printf("Current Capture: %s\n", player->getPlayerHackKeeper()->getCurrentHackName());
             }
-
+            gTextWriter->printf("Left Stick: %fx %fy\n", al::getLeftStick(-1)->x, al::getLeftStick(-1)->y);
             // Game flow information
-            gTextWriter->printf("\nIn game? %s\n", isInGame ? "true" : "false");
+            gTextWriter->printf("In game? %s\n", isInGame ? "true" : "false");
             gTextWriter->printf("Is paused? %s\n", amy::getGlobalStageScene()->isPause() ? "true" : "false");
             gTextWriter->printf("Is dead? %s\n", PlayerFunction::isPlayerDeadStatus(player) ? "true" : "false");
-
-            // Control stick inputs
-            //  gTextWriter->printf("\nLeft Stick: %fx %fy\n", lStick->x, lStick->y);
-            //  gTextWriter->printf("Right Stick: %fx %fy\n", rStick->x, rStick->y);
-
-            // Save file info stuff
-            gTextWriter->printf("\nLanguage: %s\n", amy::getGlobalStageScene()->mHolder->getLanguage());
             break;
         case 1:
-            gTextWriter->printf("Freecam DX Testing Page:\n");
-            gTextWriter->printf("Animation: %s\n", player->mPlayerAnimator->mAnimFrameCtrl->getActionName());
-            break;
-        case 2:
             gTextWriter->printf("Twitch Integration Values:\n");
             gTextWriter->printf("Reject Redeems: %s\n", !ri.isRedeemsValid ? "true" : "false");
             gTextWriter->printf("Invalid Stage: %s\n", ri.isInvalidStage ? "true" : "false");
@@ -205,8 +192,9 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
             gTextWriter->printf("Hot Floor Timer: %f\n", amy::getHotFloorState().timer);
             gTextWriter->printf("Stick Inversion Timer: %f\n", amy::getStickInverState().timer);
             gTextWriter->printf("Water Area Timer: %f\n", amy::getWaterAreaState().timer);
+            gTextWriter->printf("Dance Party Timer: %f\n", amy::getDancePartyState().timer);
             break;
-        case 3:
+        case 2:
             gTextWriter->printf("Quick Functions:\n");
 
             // Draw the page
@@ -256,13 +244,7 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
                 case 5:
                     GameDataFunction::addPayShine(holder, 30);
                     break;
-                case 6: {
-                    sead::SafeString anim = "Jump3";
-                    player->startDemoPuppetable();
-                    player->mPlayerAnimator->startAnim(anim);
-                    break;
-                }
-                case 7:
+                case 6:
                     stageScene->mHolder->mGameDataFile->addCoin(100);
                     break;
                 }
@@ -313,7 +295,7 @@ void stageSceneHook(StageScene* stageScene)
     bool isPause = stageScene->isPause();
     bool isDemo = rs::isActiveDemo(player);
     bool isDead = PlayerFunction::isPlayerDeadStatus(player);
-    bool isInterupted = isDead || isDemo || isPause;
+    bool isInterupted = isDead || isDemo || isPause || amy::getDancePartyState().timer > 0;
 
     ri.isTransition = false;
 
@@ -367,6 +349,27 @@ void stageSceneHook(StageScene* stageScene)
     // Water Area updater
     if (amy::getWaterAreaState().timer > 0 && !isInterupted)
         amy::getWaterAreaState().timer--;
+
+    // Dance Party updater
+    amy::RedeemInfo::dancePartyState& dp = amy::getDancePartyState();
+    if (dp.timer > 0 && !isPause && !isDead) {
+        dp.timer--;
+        rs::faceToCamera(player);
+
+        if (dp.enableFrame) {
+            player->startDemoPuppetable();
+            player->mPlayerAnimator->startAnim(dp.selectedAnim);
+            stageScene->stageSceneLayout->end();
+        }
+
+        dp.enableFrame = false;
+    }
+
+    if (dp.timer == 0) {
+        dp.timer--;
+        player->endDemoPuppetable();
+        stageScene->stageSceneLayout->start();
+    }
 
     // Activate home ship yes
     GameDataFunction::activateHome(holder);
@@ -442,3 +445,20 @@ bool waterAreaHook(al::LiveActor const* actor, sead::Vector3<float> const& vecto
 {
     return amy::getWaterAreaState().timer > 0 ? true : al::isInWaterPos(actor, vector);
 }
+
+uint32_t shineInitHook(Shine* shine, al::ActorInitInfo* actorInitInfo)
+{ // bryce code
+    // al::ActorInitInfo* shineInitInfo;
+    // shineInitInfo = actorInitInfo;
+
+    // const char* stageName = shine->curShineInfo->stageName.cstr();
+
+    // if (!shine || !stageName || !actorInitInfo) {
+    //     return 0;
+    // }
+    amy::log("Shine Init Hook Called HBUIDSFIBDHSUFDSFJBHK");
+    // int shineID = shine->curShineInfo->shineId;
+    // amy::log("%i", shineID);
+    return 0;
+    // return rs::getStageShineAnimFrame(shine, stageName);
+};

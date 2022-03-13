@@ -58,6 +58,12 @@ amy::RedeemInfo::waterAreaState& amy::getWaterAreaState()
     return i;
 }
 
+amy::RedeemInfo::dancePartyState& amy::getDancePartyState()
+{
+    static RedeemInfo::dancePartyState i;
+    return i;
+}
+
 void amy::sendPacketStateNotice(bool rejectState)
 {
     amy::RedeemInfo::state& ri = amy::getRedeemInfo();
@@ -102,7 +108,7 @@ void amy::updateRedeemStatus()
     StageScene* stageScene = amy::getGlobalStageScene();
     al::PlayerHolder* pHolder = al::getScenePlayerHolder(stageScene);
     PlayerActorHakoniwa* player = al::tryGetPlayerActor(pHolder, 0);
-    amy::getRedeemInfo().isRedeemsValid = !(stageScene->isPause() || PlayerFunction::isPlayerDeadStatus(player) || rs::isActiveDemo(player));
+    amy::getRedeemInfo().isRedeemsValid = !(stageScene->isPause() || PlayerFunction::isPlayerDeadStatus(player) || rs::isActiveDemo(player) || amy::getDancePartyState().timer > 0);
     // amy::log("Info: %i %i %s", amy::getRedeemInfo().isRedeemsValid, amy::getRedeemInfo().isInvalidStage, GameDataFunction::getCurrentStageName(*amy::getGlobalStageScene()->mHolder));
     return;
 }

@@ -1,3 +1,4 @@
+const { HelixEventSubApi } = require("@twurple/api/lib");
 const RedeemSet = require("../settings/redeem_set.json");
 const Rand = require("./advancedRand");
 const bufferTool = require("./bufferTool");
@@ -73,6 +74,9 @@ module.exports = {
         break;
       case "Hot Tub Stream": //Event ID 10
         Events(server, 10, client);
+        break;
+      case "Dance Party": //Event ID 11
+        Events(server, 11, client);
         break;
       default:
         //Generic reward

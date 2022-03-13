@@ -64,6 +64,7 @@ void InPacketEvent::on(Server& server)
         // UNLESS it is a random kingdom redeem, as those are SpEcIaL
         if (eventID != 5)
             amy::sendPacketStateNotice(false);
+
         switch (eventID) {
         case 1: { // PrevScene - See Myself Out
             stageScene->mHolder->returnPrevStage();
@@ -155,6 +156,19 @@ void InPacketEvent::on(Server& server)
                 water.comboLength--;
             water.timer += (water.addLength - (water.comboLength * water.comboDec)) * 60;
             water.comboLength++;
+            break;
+        }
+        case 11: {
+            if (rs::isPlayer2D(player)) {
+                al::setTransY(player, al::getTrans(player)->y + 2000.f);
+                break;
+            }
+            amy::RedeemInfo::dancePartyState& party = amy::getDancePartyState();
+            party.timer += party.addLength * 60;
+
+            if (party.enableFrame == false)
+                party.enableFrame = true;
+
             break;
         }
         default: {

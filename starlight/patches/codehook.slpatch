@@ -217,3 +217,13 @@ B59E28: // sead::system::print
     BL waterAreaHook
 00545070:
     BL waterAreaHook
+
+// always call getStageShineAnimFrame
+001CD92C:
+    NOP
+
+// Run our hook instead of rs::getStageShineAnimFrame
+1CD944:
+    MOV X0, X19
+    MOV X1, X20
+    BL shineInitHook
