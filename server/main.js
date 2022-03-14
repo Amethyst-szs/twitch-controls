@@ -20,6 +20,7 @@ const inPackets = require("./server_bin/inPackets");
 const log = require("./server_bin/console");
 const bufferTool = require("./server_bin/bufferTool");
 const redeemHistory = require("./server_bin/recentHandler");
+const twitchInit = require("./server_bin/twitchInit");
 const chalk = require("chalk");
 
 let invalidStage = false;
@@ -27,6 +28,9 @@ let streamerID = null;
 
 let rejectionID = 0;
 let rejectionList = require("./settings/rejectionListBase.json");
+
+let refreshSettings = require("./settings/refresh_set.json");
+let costFactor;
 
 //Respond to packets from the switch
 server.on("message", (msg, rinfo) => {
@@ -51,13 +55,13 @@ server.on("message", (msg, rinfo) => {
       if (isReject.wasRejectLog) {
         if (!isReject.rejectionState) {
           refundRedeem(
-            streamerID,
+            api, streamerID,
             rejectionList[isReject.rejectionID].rewardID,
             rejectionList[isReject.rejectionID].ID
           );
         } else {
           approveRedeem(
-            streamerID,
+            api, streamerID,
             rejectionList[isReject.rejectionID].rewardID,
             rejectionList[isReject.rejectionID].ID
           );
@@ -102,6 +106,11 @@ async function getStreamerAuth() {
       break;
   }
 
+  //Get streamer auth and update the cost factor accordingly
+  const streamerAuth = JSON.parse(fs.readFileSync(`${CurDir}/settings/users/${selection}`));
+  costFactor = streamerAuth.costFactor;
+  console.log(`Current Price Factor: ${costFactor}`);
+
   const authProvider = new AuthAPI.RefreshingAuthProvider(
     {
       clientId,
@@ -112,13 +121,13 @@ async function getStreamerAuth() {
           JSON.stringify(newTokenData, null, 4)
         ),
     },
-    JSON.parse(fs.readFileSync(`${CurDir}/settings/users/${selection}`))
+    streamerAuth
   );
 
   return authProvider;
 }
 
-async function refundRedeem(streamerID, rewardId, id) {
+async function refundRedeem(api, streamerID, rewardId, id) {
   redemption = await api.channelPoints.getRedemptionById(
     streamerID,
     rewardId,
@@ -137,7 +146,7 @@ async function refundRedeem(streamerID, rewardId, id) {
   return;
 }
 
-async function approveRedeem(streamerID, rewardId, id) {
+async function approveRedeem(api, streamerID, rewardId, id) {
   redemption = await api.channelPoints.getRedemptionById(
     streamerID,
     rewardId,
@@ -156,7 +165,12 @@ async function approveRedeem(streamerID, rewardId, id) {
   return;
 }
 
-async function backupCheck(streamerID, listID) {
+async function viewerUpdate(streamerMe) {
+  let stream = await streamerMe.getStream();
+  console.log(stream.viewers);
+}
+
+async function backupCheck(api, streamerID, listID) {
   let redeemInfo = await api.channelPoints.getRedemptionById(
     streamerID,
     rejectionList[listID].rewardID,
@@ -173,7 +187,7 @@ async function backupCheck(streamerID, listID) {
 async function TwitchHandler() {
   //Create an authProvider and API access client
   let authProvider = await getStreamerAuth();
-  api = new BaseAPI.ApiClient({ authProvider });
+  let api = new BaseAPI.ApiClient({ authProvider });
 
   //Collect some data about the streamer
   let streamerMe = await api.users.getMe(false); //The argument here is to NOT grab the streamer's email!
@@ -182,7 +196,6 @@ async function TwitchHandler() {
   //Quick menu check to see what the user is looking to do
   runType = await input.select(["Run Server", "Initalize Twitch Account"]);
   if (runType == "Initalize Twitch Account") {
-    const twitchInit = require("./server_bin/twitchInit");
     await twitchInit.Main(api, streamerID);
   }
 
@@ -193,6 +206,9 @@ async function TwitchHandler() {
     2,
     `Subscribed to redeem alerts with channel:read:redemptions scope!\nWelcome ${streamerMe.displayName}`
   );
+
+  twitchInit.priceUpdate(api, streamerID, streamerMe, CurDir, costFactor);
+  setInterval(twitchInit.priceUpdate, refreshSettings.RefreshRate*1000, api, streamerID, streamerMe, CurDir, costFactor);
 
   //Once Twitch is authenticated and ready, finish UDP server
   server.bind(7902);
@@ -205,7 +221,7 @@ async function TwitchHandler() {
         2,
         `${message.rewardTitle} from ${message.userDisplayName} but no client connected yet!`
       );
-      refundRedeem(streamerID, message.rewardId, message.id);
+      refundRedeem(api, streamerID, message.rewardId, message.id);
       return;
     }
 
@@ -215,7 +231,7 @@ async function TwitchHandler() {
         2,
         `${message.rewardTitle} from ${message.userDisplayName} but the player is in a demo scene`
       );
-      refundRedeem(streamerID, message.rewardId, message.id);
+      refundRedeem(api, streamerID, message.rewardId, message.id);
       return;
     }
 
@@ -230,7 +246,7 @@ async function TwitchHandler() {
     rejectionList[rejectionID].rewardID = message.rewardId;
     rejectionList[rejectionID].ID = message.id;
     tempVal = rejectionID;
-    setTimeout(backupCheck, 1500, streamerID, tempVal);
+    setTimeout(backupCheck, 1500, api, streamerID, tempVal);
 
     //Handle redeem in the out packet handler
     outPackets.outHandler(message.rewardTitle, server, client);

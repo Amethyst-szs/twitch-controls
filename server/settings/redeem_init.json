@@ -1,33 +1,5 @@
 {
-    "FullList": [
-        "Resize",
-        "Position Randomizer",
-        "See Myself Out",
-        "Change Gravity",
-        "Up we go",
-        "Cappy? Nah",
-        "Random Kingdom",
-        "Highway to Death",
-        "Whispy Winds",
-        "Hot Floor",
-        "Stick Flip",
-        "Hot Tub Stream",
-        "Dance Party"
-    ],
-    "Test": {
-        "autoFulfill:": true,
-        "backgroundColor": "#FF0000",
-        "cost": 10,
-        "globalCooldown": 5,
-        "isEnabled": false,
-        "isPaused": true,
-        "maxRedemptionsPerStream": null,
-        "maxRedemptionsPerUserPerStream": null,
-        "prompt": "This is the description",
-        "title": "Title",
-        "userInputRequired": false
-    },
-    "1": {
+    "Resize": {
         "autoFulfill:": true,
         "backgroundColor": "#84BDA3",
         "cost": 10,
@@ -40,7 +12,7 @@
         "title": "Resize",
         "userInputRequired": false
     },
-    "2": {
+    "Position Randomizer": {
         "autoFulfill:": true,
         "backgroundColor": "#543d5a",
         "cost": 20,
@@ -53,7 +25,7 @@
         "title": "Position Randomizer",
         "userInputRequired": false
     },
-    "3":{
+    "See Myself Out": {
         "autoFulfill:": true,
         "backgroundColor": "#aa6d6d",
         "cost": 750,
@@ -66,7 +38,7 @@
         "title": "See Myself Out",
         "userInputRequired": false
     },
-    "4":{
+    "Change Gravity": {
         "autoFulfill:": true,
         "backgroundColor": "#4888ad",
         "cost": 100,
@@ -79,7 +51,7 @@
         "title": "Change Gravity",
         "userInputRequired": false
     },
-    "5":{
+    "Up we go": {
         "autoFulfill:": true,
         "backgroundColor": "#91BA74",
         "cost": 30,
@@ -92,7 +64,7 @@
         "title": "Up we go",
         "userInputRequired": false
     },
-    "6":{
+    "Cappy? Nah": {
         "autoFulfill:": true,
         "backgroundColor": "#480e0e",
         "cost": 400,
@@ -105,7 +77,7 @@
         "title": "Cappy? Nah",
         "userInputRequired": false
     },
-    "7":{
+    "Random Kingdom": {
         "autoFulfill:": true,
         "backgroundColor": "#b3a32b",
         "cost": 1750,
@@ -118,7 +90,7 @@
         "title": "Random Kingdom",
         "userInputRequired": false
     },
-    "8":{
+    "Highway to Death": {
         "autoFulfill:": true,
         "backgroundColor": "#a1274b",
         "cost": 500,
@@ -131,7 +103,7 @@
         "title": "Highway to Death",
         "userInputRequired": false
     },
-    "9":{
+    "Whispy Winds": {
         "autoFulfill:": true,
         "backgroundColor": "#a1ccbd",
         "cost": 75,
@@ -144,7 +116,7 @@
         "title": "Whispy Winds",
         "userInputRequired": false
     },
-    "10":{
+    "Hot Floor": {
         "autoFulfill:": true,
         "backgroundColor": "#6e463f",
         "cost": 40,
@@ -157,7 +129,7 @@
         "title": "Hot Floor",
         "userInputRequired": false
     },
-    "11":{
+    "Stick Flip": {
         "autoFulfill:": true,
         "backgroundColor": "#64368d",
         "cost": 50,
@@ -170,7 +142,7 @@
         "title": "Stick Flip",
         "userInputRequired": false
     },
-    "12":{
+    "Hot Tub Stream": {
         "autoFulfill:": true,
         "backgroundColor": "#2daba7",
         "cost": 25,
@@ -183,7 +155,7 @@
         "title": "Hot Tub Stream",
         "userInputRequired": false
     },
-    "13":{
+    "Dance Party": {
         "autoFulfill:": true,
         "backgroundColor": "#000000",
         "cost": 2000,
