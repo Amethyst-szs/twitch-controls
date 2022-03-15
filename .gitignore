@@ -35,6 +35,12 @@
 starlight/include/ips.hpp
 
 # Tokens
+notes.txt
+settings/notes.txt
+settings/secret.json
+settings/tokens.json
+settings/users/*
+
 server/notes.txt
 server/settings/notes.txt
 server/settings/secret.json
@@ -42,6 +48,7 @@ server/settings/tokens.json
 server/settings/users/*
 
 # Node
+node_modules/
 server/node_modules/
 
 # Project Manager
