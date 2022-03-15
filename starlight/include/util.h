@@ -7,62 +7,57 @@
 #include <cstdio>
 
 namespace amy {
-class RedeemInfo {
-public:
-    class state {
-    public:
+struct RedeemInfo {
+    struct state {
         bool isInvalidStage = true;
         bool isRedeemsValid = false;
         bool isTransition = true;
         u8 rejectionID = 0;
     };
-    class gravityState {
-    public:
+    struct gravityState {
         float timer = -1;
         float addLength = 3; // Second of time added to timer when called
         float comboDec = 0.25; // Amount of add time to remove on repeated calls
         float comboLength; // Float to track current spam combo
     };
-    class coinTickState {
-    public:
+    struct coinTickState {
         float timer = -1;
         float speed = 240.f;
     };
-    class windState {
-    public:
+    struct windState {
         float timer;
         float addLength = 10; // Second of time added to timer when called
         float comboDec = 0.95; // Amount of add time to remove on repeated calls
         float comboLength; // Float to track current spam combo
         sead::Vector3f vect;
     };
-    class hotFloorState {
-    public:
+    struct hotFloorState {
         float timer = -1;
         float addLength = 10; // Second of time added to timer when called
         float comboDec = 0.9; // Amount of add time to remove on repeated calls
         float comboLength; // Float to track current spam combo
     };
-    class stickInverState {
-    public:
+    struct stickInverState {
         float timer = -1;
         float addLength = 12.5; // Second of time added to timer when called
         float comboDec = 1.15; // Amount of add time to remove on repeated calls
         float comboLength; // Float to track current spam combo
     };
-    class waterAreaState {
-    public:
+    struct waterAreaState {
         float timer = -1;
         float addLength = 8; // Second of time added to timer when called
         float comboDec = 0.75; // Amount of add time to remove on repeated calls
         float comboLength; // Float to track current spam combo
     };
-    class dancePartyState {
-    public:
+    struct dancePartyState {
         float timer = -1;
         float addLength = 20; // Second of time added to timer when called
         sead::SafeString selectedAnim = "AreaWaitDance01";
         bool enableFrame = false;
+    };
+    struct shineWarpState {
+        bool isWarp = false;
+        int targetShineID = -1;
     };
 };
 
@@ -74,6 +69,7 @@ RedeemInfo::hotFloorState& getHotFloorState();
 RedeemInfo::stickInverState& getStickInverState();
 RedeemInfo::waterAreaState& getWaterAreaState();
 RedeemInfo::dancePartyState& getDancePartyState();
+RedeemInfo::shineWarpState& getShineWarpState();
 
 void updateServerDemoState();
 

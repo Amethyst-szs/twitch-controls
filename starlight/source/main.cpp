@@ -21,6 +21,7 @@
 #include "sead/prim/seadSafeString.h"
 #include "util.h"
 #include <string>
+#include <typeinfo>
 
 static bool showMenu = false;
 static bool isInGame = false;
@@ -193,6 +194,8 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
             gTextWriter->printf("Stick Inversion Timer: %f\n", amy::getStickInverState().timer);
             gTextWriter->printf("Water Area Timer: %f\n", amy::getWaterAreaState().timer);
             gTextWriter->printf("Dance Party Timer: %f\n", amy::getDancePartyState().timer);
+            gTextWriter->printf("Shine Warp: %s\n", amy::getShineWarpState().isWarp ? "true" : "false");
+            gTextWriter->printf("Shine Warp Target: %i\n", amy::getShineWarpState().targetShineID);
             break;
         case 2:
             gTextWriter->printf("Quick Functions:\n");
@@ -456,9 +459,44 @@ uint32_t shineInitHook(Shine* shine, al::ActorInitInfo* actorInitInfo)
     // if (!shine || !stageName || !actorInitInfo) {
     //     return 0;
     // }
-    amy::log("Shine Init Hook Called HBUIDSFIBDHSUFDSFJBHK");
+    // amy::log("Shine Init Hook Called HBUIDSFIBDHSUFDSFJBHK");
     // int shineID = shine->curShineInfo->shineId;
     // amy::log("%i", shineID);
     return 0;
     // return rs::getStageShineAnimFrame(shine, stageName);
 };
+
+HOOK_ATTR
+bool shineControl(Shine* actor, sead::Vector3f const& location)
+{
+    amy::RedeemInfo::shineWarpState& info = amy::getShineWarpState();
+
+    // Disable teleport if the target shine is collected
+    if (info.targetShineID == actor->shineId && actor->isGot()) {
+        amy::getShineWarpState().isWarp = false;
+        info.targetShineID = -1;
+    }
+
+    // Set the target if there is no set target
+    if (info.isWarp && !actor->isGot() && info.targetShineID == -1 && !rs::isPlayer2D(rs::getPlayerActor(amy::getGlobalStageScene())))
+        info.targetShineID = actor->shineId;
+
+    // Check if an active shine is loaded
+    if (info.targetShineID == actor->shineId) {
+        // Get player
+        StageScene* stageScene = amy::getGlobalStageScene();
+        al::PlayerHolder* pHolder = al::getScenePlayerHolder(stageScene);
+        PlayerActorHakoniwa* player = al::tryGetPlayerActor(pHolder, 0);
+
+        // Calculate position
+        sead::Vector3f target = location;
+        target.y += 0.f;
+
+        // Update
+        al::setVelocityZero(player);
+        al::setTrans(actor, *al::getTrans(player));
+    }
+
+    // Return the original result
+    return al::isInWaterPos(actor, location);
+}

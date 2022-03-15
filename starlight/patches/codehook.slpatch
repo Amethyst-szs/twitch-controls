@@ -227,3 +227,7 @@ B59E28: // sead::system::print
     MOV X0, X19
     MOV X1, X20
     BL shineInitHook
+
+// Shine control update
+001CF534:
+    BL shineControl

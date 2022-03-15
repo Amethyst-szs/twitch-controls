@@ -167,5 +167,18 @@
         "prompt": "START THE PARTY! (1 redeem per person)",
         "title": "Dance Party",
         "userInputRequired": false
+    },
+    "Moon Magnet": {
+        "autoFulfill:": true,
+        "backgroundColor": "#000000",
+        "cost": 200,
+        "globalCooldown": 20,
+        "isEnabled": true,
+        "isPaused": false,
+        "maxRedemptionsPerStream": null,
+        "maxRedemptionsPerUserPerStream": null,
+        "prompt": "Warps the closest moon to me!",
+        "title": "Moon Magnet",
+        "userInputRequired": false
     }
 }

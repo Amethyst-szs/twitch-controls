@@ -171,6 +171,10 @@ void InPacketEvent::on(Server& server)
 
             break;
         }
+        case 12: {
+            amy::getShineWarpState().isWarp = true;
+            break;
+        }
         default: {
             amy::log("Invalid EventID sent? EventID: %i", eventID);
             break;

@@ -38,6 +38,7 @@ public:
     void startDemoMainShineGet();
     void endDemoMainShineGet();
     void startDemoShineGet();
+    void endDemoShineGet();
     void initPlayer(al::ActorInitInfo const&, PlayerInitInfo const&);
 
     unsigned char padding[0x18]; // 0x108

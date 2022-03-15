@@ -50,6 +50,13 @@ async function publishNewRedeems(streamerID, redeemInits, api) {
   log.log(1, `Completed publishing!`);
 }
 
+async function updateRedeemCost(twitchRedeem, redeem, api, streamerID){
+  if(redeem!=null){
+    log.log(2, `Updated pricing of ${redeem.title}`);
+    await api.channelPoints.updateCustomReward(streamerID, twitchRedeem.id, redeem);
+  }
+}
+
 module.exports = {
   Main: async function (api, streamerID) {
     //Create inital variables
@@ -94,19 +101,16 @@ module.exports = {
     for (twitchListing = 0; twitchListing < preExistIndexList.length; twitchListing++) {
       let twitchRedeem = twitchRedeems[preExistIndexList[twitchListing]]
       let title = twitchRedeem.title;
-
-      redeem = redeemInits[title];
+      let redeem = redeemInits[title];
       redeem.cost *= factor*Math.max(1,Math.log10(viewers)/2);
       redeem.cost = Math.floor(redeem.cost/10)*10;
       
       if(redeem.cost==0)
         redeem.cost = 10;
 
-      if(redeem!=null){
-          console.log(`${redeem.title} ${twitchRedeem.id}`);
-          await api.channelPoints.updateCustomReward(streamerID, twitchRedeem.id, redeemInits[title]);
-      }
+      if(redeem.cost!=twitchRedeem.cost)
+        setTimeout(updateRedeemCost, (twitchListing+1)*1000, twitchRedeem, redeem, api, streamerID);
     }
-    log.log(1, `Completed price update!`);
+    log.log(1, `Finished queuing price updates!`);
   },
 };

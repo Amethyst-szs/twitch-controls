@@ -109,17 +109,21 @@ async function getStreamerAuth() {
   //Get streamer auth and update the cost factor accordingly
   const streamerAuth = JSON.parse(fs.readFileSync(`${CurDir}/settings/users/${selection}`));
   costFactor = streamerAuth.costFactor;
+  if(costFactor == NaN || costFactor == undefined)
+    costFactor = 1;
+  
   console.log(`Current Price Factor: ${costFactor}`);
 
   const authProvider = new AuthAPI.RefreshingAuthProvider(
     {
       clientId,
       clientSecret,
-      onRefresh: async (newTokenData) =>
+      onRefresh: async (newTokenData) => {
+        newTokenData.costFactor = costFactor;
         await fs.writeFileSync(
           `${CurDir}/settings/users/${selection}`,
           JSON.stringify(newTokenData, null, 4)
-        ),
+        );},
     },
     streamerAuth
   );
@@ -187,7 +191,7 @@ async function backupCheck(api, streamerID, listID) {
 async function TwitchHandler() {
   //Create an authProvider and API access client
   let authProvider = await getStreamerAuth();
-  let api = new BaseAPI.ApiClient({ authProvider });
+  api = new BaseAPI.ApiClient({ authProvider });
 
   //Collect some data about the streamer
   let streamerMe = await api.users.getMe(false); //The argument here is to NOT grab the streamer's email!

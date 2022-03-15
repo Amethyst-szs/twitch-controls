@@ -64,6 +64,12 @@ amy::RedeemInfo::dancePartyState& amy::getDancePartyState()
     return i;
 }
 
+amy::RedeemInfo::shineWarpState& amy::getShineWarpState()
+{
+    static RedeemInfo::shineWarpState i;
+    return i;
+}
+
 void amy::sendPacketStateNotice(bool rejectState)
 {
     amy::RedeemInfo::state& ri = amy::getRedeemInfo();
@@ -95,7 +101,6 @@ const char* amy::getRandomHomeStage()
         "SeaWorldHomeStage",
         "LavaWorldHomeStage",
         "SkyWorldHomeStage",
-        "MoonWorldHomeStage",
         "Special1WorldHomeStage",
         "Special2WorldHomeStage"
     };

@@ -16,5 +16,6 @@
         _Z14stickInverHooki;
         _Z13waterAreaHookPKN2al9LiveActorERKN4sead7Vector3IfEE;
         _Z13shineInitHookP5ShinePN2al13ActorInitInfoE;
+        _Z12shineControlP5ShineRKN4sead7Vector3IfEE;
     local: *;
 };
