@@ -62,7 +62,7 @@ void InPacketEvent::on(Server& server)
     else {
         // Send an update about successful packet
         // UNLESS it is a random kingdom redeem, as those are SpEcIaL
-        if (eventID != 5)
+        if (eventID != 5 && eventID != 13)
             amy::sendPacketStateNotice(false);
 
         switch (eventID) {
@@ -173,6 +173,24 @@ void InPacketEvent::on(Server& server)
         }
         case 12: {
             amy::getShineWarpState().isWarp = true;
+            break;
+        }
+        case 13: {
+            if (!stageScene->mHolder->mGameDataFile->isUnlockedWorld(2)) {
+                amy::sendPacketStateNotice(true);
+                amy::log("Rejected random kingdom because Sand Kingdom isn't unlocked yet!");
+                break;
+            }
+
+            int worldID = GameDataFunction::getCurrentWorldId(*stageScene->mHolder);
+            if (worldID == 5 || worldID == 6 || worldID == 11) { // 5Cloud 6Lost 11Ruined
+                amy::sendPacketStateNotice(true);
+                amy::log("Rejected random kingdom because the player is in a kingdom that is invalid");
+                break;
+            }
+
+            ChangeStageInfo stageInfo(stageScene->mHolder, "start", "MoonWorldHomeStage", false, -1, ChangeStageInfo::SubScenarioType::UNK);
+            stageScene->mHolder->changeNextStage(&stageInfo, 0);
             break;
         }
         default: {

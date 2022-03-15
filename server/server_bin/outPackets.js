@@ -81,6 +81,9 @@ module.exports = {
       case "Moon Magnet": //Event ID 12
         Events(server, 12, client);
         break;
+      case "Fly me to the Moon": //Event ID 13
+        Events(server, 13, client);
+        break;
       default:
         //Generic reward
         log.log(2, `Generic reward ${message.rewardTitle} redeemed`);

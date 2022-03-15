@@ -91,6 +91,7 @@ sead::Vector3f amy::getRandomGravity()
 const char* amy::getRandomHomeStage()
 {
     constexpr static const char* stageNames[] = {
+        "PeachWorldHomeStage",
         "CapWorldHomeStage",
         "WaterfallWorldHomeStage",
         "SandWorldHomeStage",

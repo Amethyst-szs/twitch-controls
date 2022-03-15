@@ -92,10 +92,14 @@ module.exports = {
     );
 
     let stream = await streamerMe.getStream();
+
+    if(stream == null)
+      stream = {"viewers": 0}
+
     let viewers = stream.viewers;
 
     if(viewers == null)
-      return;
+      viewers = 0;
 
     //Update price listing
     for (twitchListing = 0; twitchListing < preExistIndexList.length; twitchListing++) {
@@ -107,8 +111,8 @@ module.exports = {
       
       if(redeem.cost==0)
         redeem.cost = 10;
-
-      if(redeem.cost!=twitchRedeem.cost)
+      
+      if(redeem.cost!=twitchRedeem.cost && twitchRedeem.isEnabled)
         setTimeout(updateRedeemCost, (twitchListing+1)*1000, twitchRedeem, redeem, api, streamerID);
     }
     log.log(1, `Finished queuing price updates!`);

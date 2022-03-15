@@ -3,8 +3,8 @@
 namespace al {
 class LiveActor;
 
-class AreaObj {
-};
+// class AreaObj {
+// };
 
 }
 

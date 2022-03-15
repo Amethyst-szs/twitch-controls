@@ -171,7 +171,7 @@
     "Moon Magnet": {
         "autoFulfill:": true,
         "backgroundColor": "#000000",
-        "cost": 200,
+        "cost": 300,
         "globalCooldown": 20,
         "isEnabled": true,
         "isPaused": false,
@@ -179,6 +179,19 @@
         "maxRedemptionsPerUserPerStream": null,
         "prompt": "Warps the closest moon to me!",
         "title": "Moon Magnet",
+        "userInputRequired": false
+    },
+    "Fly me to the Moon": {
+        "autoFulfill:": true,
+        "backgroundColor": "#000000",
+        "cost": 10000,
+        "globalCooldown": null,
+        "isEnabled": true,
+        "isPaused": false,
+        "maxRedemptionsPerStream": 1,
+        "maxRedemptionsPerUserPerStream": null,
+        "prompt": "Sends me straight to Moon Kingdom!",
+        "title": "Fly me to the Moon",
         "userInputRequired": false
     }
 }

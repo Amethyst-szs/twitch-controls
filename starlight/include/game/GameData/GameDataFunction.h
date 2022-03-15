@@ -5,14 +5,15 @@
 
 #pragma once
 
-#include <al/LiveActor/LiveActor.h>
 #include "GameDataHolderAccessor.h"
 #include "GameDataHolderWriter.h"
 #include "al/area/ChangeStageInfo.h"
+#include <al/LiveActor/LiveActor.h>
 
-class GameDataFunction
-{
+class GameDataFunction {
 public:
+    // Checks if a shine ID is a main shine
+    static bool isMainShine(GameDataHolderAccessor, int);
 
     // restarts current stage
     static void restartStage(GameDataHolderWriter);
@@ -21,13 +22,13 @@ public:
     static void missAndRestartStage(GameDataHolderWriter);
 
     // attempts to change the current stage the player is in
-    static bool tryChangeNextStage(GameDataHolderWriter, ChangeStageInfo const *);
+    static bool tryChangeNextStage(GameDataHolderWriter, ChangeStageInfo const*);
 
     // gets current save file's current world id
     static s32 getCurrentWorldId(GameDataHolderAccessor);
 
     // gets current save file's current stage scenario no
-    static s32 getScenarioNo(al::LiveActor const *);
+    static s32 getScenarioNo(al::LiveActor const*);
 
     static char* getCurrentStageName(GameDataHolderAccessor);
 
@@ -37,7 +38,7 @@ public:
     static s32 getTotalShineNum(GameDataHolderAccessor, int);
 
     // gets the total amount of moons available in a kingdom
-    static s32 getWorldTotalShineNum(GameDataHolderAccessor, int); 
+    static s32 getWorldTotalShineNum(GameDataHolderAccessor, int);
     void getTotalPayShineNum(GameDataHolderAccessor);
     static u64 getTotalPayShineNumClamp(GameDataHolderAccessor);
     static void addPayShine(GameDataHolderWriter, int);
@@ -54,7 +55,7 @@ public:
 
     // gets the current level of the Odyssey
     static int getHomeLevel(GameDataHolderAccessor);
-    
+
     // checks if cappy is enabled
     static bool isEnableCap(GameDataHolderAccessor);
     // enables cappy if not enabled already
@@ -62,9 +63,9 @@ public:
     // remove cappy
     static void disableCapByPlacement(al::LiveActor const*);
 
-    //unlocks a kingdom based off index
-    // static void unlockWorld(GameDataHolderWriter, int);
-    //sets the scenario of the specified kingdom
+    // unlocks a kingdom based off index
+    //  static void unlockWorld(GameDataHolderWriter, int);
+    // sets the scenario of the specified kingdom
     static void setMainScenarioNo(GameDataHolderWriter, int scenarioNo);
 
     // kills the player
@@ -76,7 +77,7 @@ public:
     // upgrades the odyssey
     static void upHomeLevel(GameDataHolderWriter);
 
-    //unlocks a kingdom based off index
+    // unlocks a kingdom based off index
     static void unlockWorld(GameDataHolderWriter, int);
 
     // checks if odyssey is/needs a repair
@@ -87,7 +88,7 @@ public:
     static bool isCrashHome(GameDataHolderAccessor);
     static void crashHome(GameDataHolderWriter);
 
-    // checks if odyssey is activated 
+    // checks if odyssey is activated
     static bool isActivateHome(GameDataHolderAccessor);
     static void activateHome(GameDataHolderWriter);
 
@@ -95,13 +96,13 @@ public:
     static bool isLaunchHome(GameDataHolderAccessor);
     static void launchHome(GameDataHolderWriter);
 
-    static bool isHomeShipStage(GameDataHolder const *);
+    static bool isHomeShipStage(GameDataHolder const*);
 
     // used during the event that enables the odyssey to be used (enables the globe for the odyssey)
     static void talkCapNearHomeInWaterfall(al::LiveActor const*);
 
     // gives the player a life up heart
-    static void getLifeMaxUpItem(al::LiveActor const *);
+    static void getLifeMaxUpItem(al::LiveActor const*);
 
     // gets current coin count
     static s32 getCoinNum(GameDataHolderAccessor);
@@ -113,9 +114,8 @@ public:
     static void saveObjS32(GameDataHolderWriter, al::PlacementId const*, int);
 
     // gets the value stored in the unique obj info that matches placement id and curstage
-    static bool tryFindSaveObjS32Value(int *value, GameDataHolderAccessor accessor, al::PlacementId const* objId);
+    static bool tryFindSaveObjS32Value(int* value, GameDataHolderAccessor accessor, al::PlacementId const* objId);
 
     // subtracts the supplied int value from the current coin count
     static void subCoin(GameDataHolderWriter, int value);
-
 };

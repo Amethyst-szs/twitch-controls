@@ -1,5 +1,7 @@
 #include "main.hpp"
+#include "al/LiveActor/LiveActor.h"
 #include "al/PlayerHolder/PlayerHolder.h"
+#include "al/area/AreaObjGroup.h"
 #include "al/area/ChangeStageInfo.h"
 #include "al/camera/CameraDirector.h"
 #include "al/camera/Projection.h"
@@ -121,7 +123,7 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
         prevFrameInvalidScene = ri.isInvalidStage;
     }
 
-    if (!showMenu) {
+    if (!showMenu && amy::getDancePartyState().timer <= 0) {
         al::executeDraw(curSequence->mLytKit, "２Ｄバック（メイン画面）");
         return;
     }
@@ -139,6 +141,38 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
 
     al::Scene* curScene = curSequence->curScene;
 
+    // Dance party overlay
+    if (curScene && amy::getDancePartyState().timer > 0) {
+        amy::RedeemInfo::dancePartyState& dp = amy::getDancePartyState();
+
+        // Update the max screen edges
+        dp.overlayMaxPos.x = dispWidth - 440.f;
+        dp.overlayMaxPos.y = dispHeight - 80.f;
+
+        // Changes the direction if it goes off the edge
+        if (dp.overlayPos.x >= dp.overlayMaxPos.x || dp.overlayPos.x < 0)
+            dp.overlayDirecton.x *= -1;
+
+        if (dp.overlayPos.y >= dp.overlayMaxPos.y || dp.overlayPos.y < 0)
+            dp.overlayDirecton.y *= -1;
+
+        // Move the current position based on the direction and speed
+        dp.overlayPos.x += dp.overlayDirecton.x * dp.overlaySpeed;
+        dp.overlayPos.y += dp.overlayDirecton.y * dp.overlaySpeed;
+
+        // Draws to the screen
+        gTextWriter->beginDraw();
+        gTextWriter->setCursorFromTopLeft(dp.overlayPos);
+        gTextWriter->setScaleFromFontHeight(80.f);
+        gTextWriter->printf("DANCE PARTY!");
+
+        // End
+        gTextWriter->endDraw();
+        al::executeDraw(curSequence->mLytKit, "２Ｄバック（メイン画面）");
+        return;
+    }
+
+    // Standard debug menu
     if (curScene && isInGame) {
         drawBackground((agl::DrawContext*)drawContext);
 
@@ -471,6 +505,14 @@ bool shineControl(Shine* actor, sead::Vector3f const& location)
 {
     amy::RedeemInfo::shineWarpState& info = amy::getShineWarpState();
 
+    // Get 2D areas and check it isn't a 2D moon
+    // al::AreaObjGroup* area2Ds = al::tryFindAreaObjGroup(player, "2DMoveArea");
+    // if (area2Ds) {
+    //     al::AreaObj* targetArea = area2Ds->getInVolumeAreaObj(location);
+    //     if (targetArea)
+    //         return al::isInWaterPos(actor, location);
+    // }
+
     // Disable teleport if the target shine is collected
     if (info.targetShineID == actor->shineId && actor->isGot()) {
         amy::getShineWarpState().isWarp = false;
@@ -478,7 +520,12 @@ bool shineControl(Shine* actor, sead::Vector3f const& location)
     }
 
     // Set the target if there is no set target
-    if (info.isWarp && !actor->isGot() && info.targetShineID == -1 && !rs::isPlayer2D(rs::getPlayerActor(amy::getGlobalStageScene())))
+    if (
+        info.isWarp
+        && !actor->isGot()
+        && !rs::isMainShine(actor)
+        && info.targetShineID == -1
+        && !rs::isPlayer2D(rs::getPlayerActor(amy::getGlobalStageScene())))
         info.targetShineID = actor->shineId;
 
     // Check if an active shine is loaded
@@ -493,8 +540,9 @@ bool shineControl(Shine* actor, sead::Vector3f const& location)
         target.y += 0.f;
 
         // Update
-        al::setVelocityZero(player);
-        al::setTrans(actor, *al::getTrans(player));
+        if (player) {
+            al::setTrans(actor, *al::getTrans(player));
+        }
     }
 
     // Return the original result

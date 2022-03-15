@@ -53,6 +53,10 @@ struct RedeemInfo {
         float timer = -1;
         float addLength = 20; // Second of time added to timer when called
         sead::SafeString selectedAnim = "AreaWaitDance01";
+        sead::Vector2f overlayPos = { 0.f, 0.f };
+        sead::Vector2f overlayDirecton = { 1.f, 1.f };
+        sead::Vector2f overlayMaxPos = { 0.f, 0.f };
+        float overlaySpeed = 15.f;
         bool enableFrame = false;
     };
     struct shineWarpState {
