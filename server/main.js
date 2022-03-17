@@ -31,6 +31,8 @@ let rejectionList = require("./settings/rejectionListBase.json");
 
 let refreshSettings = require("./settings/refresh_set.json");
 let costFactor;
+let comboTargetBase;
+let comboTargetRate;
 
 //Respond to packets from the switch
 server.on("message", (msg, rinfo) => {
@@ -109,8 +111,18 @@ async function getStreamerAuth() {
   //Get streamer auth and update the cost factor accordingly
   const streamerAuth = JSON.parse(fs.readFileSync(`${CurDir}/settings/users/${selection}`));
   costFactor = streamerAuth.costFactor;
+  comboTargetBase = streamerAuth.comboTargetBase;
+  comboTargetRate = streamerAuth.comboTargetRate;
+
   if(costFactor == NaN || costFactor == undefined)
     costFactor = 1;
+
+  if(comboTargetBase == NaN || comboTargetBase == undefined)
+    comboTargetBase = 100;
+
+  if(comboTargetRate == NaN || comboTargetRate == undefined)
+    comboTargetRate = 2.5;
+
   
   console.log(`Current Price Factor: ${costFactor}`);
 
