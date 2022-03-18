@@ -47,6 +47,8 @@ server/settings/secret.json
 server/settings/tokens.json
 server/settings/users/*
 
+server/discord/config.json
+
 # Node
 node_modules/
 server/node_modules/
