@@ -2,14 +2,20 @@
 	"Version": "10",
 	"PName": "twitch-controls",
 	"DumpStats": {
-		"Time": "3-18-2022 22:44:53",
-		"Amount": 526,
+		"Time": "3-19-2022 10:28:43",
+		"Amount": 530,
 		"isUndumped": false,
 		"Type": "Complete"
 	},
 	"songs": {},
 	"dates": {
 		"2i6owudm0": {
+			"LayoutData": {
+				"CounterLife.szs": 1647710300107.7505,
+				"CounterLifeKids.szs": 1647710921135.1274,
+				"KidsMode.szs": 1619387757107.188,
+				"NyLifeShadow00^s.png": 1647710290652.9404
+			},
 			"ObjectData": {
 				"PlayerActorHakoniwa.szs": 1647322668943.5361,
 				"PlayerConst.txt": 1646959632182.1106
