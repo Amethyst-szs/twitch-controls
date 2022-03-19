@@ -32,7 +32,7 @@ let rejectionID = 0;
 let rejectionList = require("./settings/rejectionListBase.json");
 
 let refreshSettings = require("./settings/refresh_set.json");
-let costFactor;
+let costFactor = 1;
 let costDisabled = false;
 let cooldownMulti = 1;
 
@@ -57,8 +57,7 @@ module.exports={
     //Collect some data about the streamer
     let streamerMe = await api.users.getMe(false); //The argument here is to NOT grab the streamer's email!
     streamerID = streamerMe.id;
-    
-    costFactor = amount;
+
     twitchInit.priceUpdate(api, streamerID, streamerMe, CurDir, costFactor, costDisabled, cooldownMulti);
   },
   disCooldownUpdate: async function(amount){
@@ -148,19 +147,12 @@ async function getStreamerAuth() {
 
   //Get streamer auth and update the cost factor accordingly
   const streamerAuth = JSON.parse(fs.readFileSync(`${CurDir}/settings/users/${selection}`));
-  costFactor = streamerAuth.costFactor;
-
-  if(costFactor == NaN || costFactor == undefined)
-    costFactor = 1;
-  
-  console.log(`Current Price Factor: ${costFactor}`);
 
   const authProvider = new AuthAPI.RefreshingAuthProvider(
     {
       clientId,
       clientSecret,
       onRefresh: async (newTokenData) => {
-        newTokenData.costFactor = costFactor;
         await fs.writeFileSync(
           `${CurDir}/settings/users/${selection}`,
           JSON.stringify(newTokenData, null, 4)
@@ -228,6 +220,10 @@ async function backupCheck(api, streamerID, listID) {
   }
 }
 
+async function preparePriceUpdate(api, streamerID, streamerMe, CurDir){
+  twitchInit.priceUpdate(api, streamerID, streamerMe, CurDir, costFactor, costDisabled, cooldownMulti);
+}
+
 //Twitch root function
 async function TwitchHandler() {
   //Create an authProvider and API access client
@@ -252,8 +248,8 @@ async function TwitchHandler() {
     `Subscribed to redeem alerts with channel:read:redemptions scope!\nWelcome ${streamerMe.displayName}`
   );
 
-  twitchInit.priceUpdate(api, streamerID, streamerMe, CurDir, costFactor, costDisabled, cooldownMulti);
-  setInterval(twitchInit.priceUpdate, refreshSettings.RefreshRate*1000, api, streamerID, streamerMe, CurDir, costFactor, costDisabled, cooldownMulti);
+  preparePriceUpdate(api, streamerID, streamerMe, CurDir);
+  setInterval(preparePriceUpdate, refreshSettings.RefreshRate*1000, api, streamerID, streamerMe, CurDir);
 
   //Once Twitch is authenticated and ready, finish UDP server
   server.bind(7902);
