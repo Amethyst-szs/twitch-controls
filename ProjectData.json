@@ -2,16 +2,16 @@
 	"Version": "10",
 	"PName": "twitch-controls",
 	"DumpStats": {
-		"Time": "3-19-2022 10:28:43",
-		"Amount": 530,
+		"Time": "3-19-2022 10:37:12",
+		"Amount": 531,
 		"isUndumped": false,
-		"Type": "Complete"
+		"Type": "Quick"
 	},
 	"songs": {},
 	"dates": {
 		"2i6owudm0": {
 			"LayoutData": {
-				"CounterLife.szs": 1647710300107.7505,
+				"CounterLife.szs": 1647711428865.75,
 				"CounterLifeKids.szs": 1647710921135.1274,
 				"KidsMode.szs": 1619387757107.188,
 				"NyLifeShadow00^s.png": 1647710290652.9404
