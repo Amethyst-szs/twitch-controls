@@ -79,7 +79,7 @@ module.exports = {
     return;
   },
 
-  priceUpdate: async function (api, streamerID, streamerMe, CurDir, factor) {
+  priceUpdate: async function (api, streamerID, streamerMe, CurDir, factor, disabled, cooldownMulti) {
     //Get a list of Twitch Controls redeems
     const redeemInits = JSON.parse(fs.readFileSync(`${CurDir}/settings/redeem_init.json`));
     let twitchRedeems = await api.channelPoints.getCustomRewards(
@@ -112,8 +112,13 @@ module.exports = {
       if(redeem.cost==0)
         redeem.cost = 10;
       
-      if(redeem.cost!=twitchRedeem.cost && twitchRedeem.isEnabled)
-        setTimeout(updateRedeemCost, (twitchListing+1)*1000, twitchRedeem, redeem, api, streamerID);
+      if(disabled)
+        redeem.cost = 1;
+      
+      redeem.globalCooldown *= cooldownMulti;
+      
+      if((redeem.cost!=twitchRedeem.cost) || (redeem.globalCooldown != twitchRedeem.globalCooldown) && twitchRedeem.isEnabled)
+        setTimeout(updateRedeemCost, (twitchListing+1)*2000, twitchRedeem, redeem, api, streamerID);
     }
     log.log(1, `Finished queuing price updates!`);
   },

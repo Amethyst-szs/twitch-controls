@@ -7,13 +7,16 @@ module.exports = {
         console.log(chalk.green.bold("[CLIENT] ") + Message);
         break;
       case 1:
-        console.log(chalk.cyanBright.bold("[SERVER] ") + Message);
+        console.log(chalk.yellow.bold("[SERVER] ") + Message);
         break;
       case 2:
         console.log(chalk.magentaBright.bold("[TWITCH] ") + Message);
         break;
+      case 3:
+        console.log(chalk.blue.bold("[DISCORD] ") + Message);
+        break;
       default:
-        console.log(`[INVALID] ` + Message);
+        console.log(chalk.red.bgBlack(`[INVALID] ` + Message));
         break;
     }
   },

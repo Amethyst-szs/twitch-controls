@@ -14,6 +14,8 @@ const CurDir = process.cwd();
 const Codes = require("./settings/secret.json");
 const clientId = Codes.ClientID;
 const clientSecret = Codes.Secret;
+//Discord module code
+const discordHandler = require('./discord_bin/handler');
 //Module code
 const outPackets = require("./server_bin/outPackets");
 const inPackets = require("./server_bin/inPackets");
@@ -31,8 +33,43 @@ let rejectionList = require("./settings/rejectionListBase.json");
 
 let refreshSettings = require("./settings/refresh_set.json");
 let costFactor;
-let comboTargetBase;
-let comboTargetRate;
+let costDisabled = false;
+let cooldownMulti = 1;
+
+module.exports={
+  disCostUpdate: async function(type, amount){
+    //Handle the type
+    switch(type){
+      case "inc": //Increases the cost by amount
+        costFactor += amount;
+        break;
+      case "dec": //Decreases the cost by amount
+        costFactor -= amount;
+        break;
+      case "set": //Sets the cost to the amount
+        costFactor = amount;
+        break;
+      case "dis": //Toggles the cost disabled bool
+        costDisabled = !costDisabled;
+        break;
+    }
+
+    //Collect some data about the streamer
+    let streamerMe = await api.users.getMe(false); //The argument here is to NOT grab the streamer's email!
+    streamerID = streamerMe.id;
+
+    twitchInit.priceUpdate(api, streamerID, streamerMe, CurDir, costFactor, costDisabled, cooldownMulti);
+  },
+  disCooldownUpdate: async function(amount){
+    cooldownMulti = amount;
+
+    //Collect some data about the streamer
+    let streamerMe = await api.users.getMe(false); //The argument here is to NOT grab the streamer's email!
+    streamerID = streamerMe.id;
+
+    twitchInit.priceUpdate(api, streamerID, streamerMe, CurDir, costFactor, costDisabled, cooldownMulti);
+  }
+};
 
 //Respond to packets from the switch
 server.on("message", (msg, rinfo) => {
@@ -111,18 +148,9 @@ async function getStreamerAuth() {
   //Get streamer auth and update the cost factor accordingly
   const streamerAuth = JSON.parse(fs.readFileSync(`${CurDir}/settings/users/${selection}`));
   costFactor = streamerAuth.costFactor;
-  comboTargetBase = streamerAuth.comboTargetBase;
-  comboTargetRate = streamerAuth.comboTargetRate;
 
   if(costFactor == NaN || costFactor == undefined)
     costFactor = 1;
-
-  if(comboTargetBase == NaN || comboTargetBase == undefined)
-    comboTargetBase = 100;
-
-  if(comboTargetRate == NaN || comboTargetRate == undefined)
-    comboTargetRate = 2.5;
-
   
   console.log(`Current Price Factor: ${costFactor}`);
 
@@ -223,11 +251,15 @@ async function TwitchHandler() {
     `Subscribed to redeem alerts with channel:read:redemptions scope!\nWelcome ${streamerMe.displayName}`
   );
 
-  twitchInit.priceUpdate(api, streamerID, streamerMe, CurDir, costFactor);
-  setInterval(twitchInit.priceUpdate, refreshSettings.RefreshRate*1000, api, streamerID, streamerMe, CurDir, costFactor);
+  twitchInit.priceUpdate(api, streamerID, streamerMe, CurDir, costFactor, costDisabled, cooldownMulti);
+  setInterval(twitchInit.priceUpdate, refreshSettings.RefreshRate*1000, api, streamerID, streamerMe, CurDir, costFactor, costDisabled, cooldownMulti);
 
   //Once Twitch is authenticated and ready, finish UDP server
   server.bind(7902);
+
+  //Once both the UDP server and Twitch is ready, launch discord bot
+  discordHandler.slashCommandInit();
+  discordHandler.botManage();
 
   //Create listener that is triggered every channel point redeem
   const listener = await PubSubClient.onRedemption(userId, (message) => {

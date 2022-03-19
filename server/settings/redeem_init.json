@@ -3,7 +3,7 @@
         "autoFulfill:": true,
         "backgroundColor": "#84BDA3",
         "cost": 10,
-        "globalCooldown": null,
+        "globalCooldown": 1,
         "isEnabled": true,
         "isPaused": false,
         "maxRedemptionsPerStream": null,

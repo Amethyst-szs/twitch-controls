@@ -1,4 +1,3 @@
-const { HelixEventSubApi } = require("@twurple/api/lib");
 const RedeemSet = require("../settings/redeem_set.json");
 const Rand = require("./advancedRand");
 const bufferTool = require("./bufferTool");
