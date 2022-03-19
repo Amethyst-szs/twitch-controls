@@ -157,7 +157,7 @@
     },
     "Dance Party": {
         "autoFulfill:": true,
-        "backgroundColor": "#000000",
+        "backgroundColor": "#dc865b",
         "cost": 2000,
         "globalCooldown": 600,
         "isEnabled": true,
@@ -170,7 +170,7 @@
     },
     "Moon Magnet": {
         "autoFulfill:": true,
-        "backgroundColor": "#000000",
+        "backgroundColor": "#ad9446",
         "cost": 300,
         "globalCooldown": 20,
         "isEnabled": true,
@@ -183,7 +183,7 @@
     },
     "Fly me to the Moon": {
         "autoFulfill:": true,
-        "backgroundColor": "#000000",
+        "backgroundColor": "#D9D9D9",
         "cost": 20000,
         "globalCooldown": 9999,
         "isEnabled": true,

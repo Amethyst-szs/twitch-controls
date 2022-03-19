@@ -57,7 +57,8 @@ module.exports={
     //Collect some data about the streamer
     let streamerMe = await api.users.getMe(false); //The argument here is to NOT grab the streamer's email!
     streamerID = streamerMe.id;
-
+    
+    costFactor = amount;
     twitchInit.priceUpdate(api, streamerID, streamerMe, CurDir, costFactor, costDisabled, cooldownMulti);
   },
   disCooldownUpdate: async function(amount){
