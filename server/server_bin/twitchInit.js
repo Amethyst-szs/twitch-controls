@@ -116,7 +116,7 @@ module.exports = {
       if(disabled)
         redeem.cost = 1;
       
-      redeem.globalCooldown *= cooldownMulti;
+      redeem.globalCooldown = Math.floor(redeem.globalCooldown*cooldownMulti);
       
       if((redeem.cost!=twitchRedeem.cost) || (redeem.globalCooldown != twitchRedeem.globalCooldown) && twitchRedeem.isEnabled)
         setTimeout(updateRedeemCost, (twitchListing+1)*2000, twitchRedeem, redeem, api, streamerID);

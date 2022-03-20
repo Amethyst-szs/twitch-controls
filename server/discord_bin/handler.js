@@ -46,10 +46,12 @@ module.exports = {
 					writeStatus();
 					break;
 				case "cooldown":
-					main.disCooldownUpdate(interaction.options.getNumber('value', true));
+					value = interaction.options.getNumber('value', true);
+
+					main.disCooldownUpdate(value);
 					log.log(3, `Pushing a cooldown update from ${interaction.user.username}`);
-					interaction.reply(`Setting the cooldown multiplier to **${interaction.options.getNumber('value', true)}**!`);
-					cooldownMulti = interaction.options.getNumber('value', false);
+					interaction.reply(`Setting the cooldown multiplier to **${value}**!`);
+					cooldownMulti = value;
 					writeStatus();
 					break;
 				default:
