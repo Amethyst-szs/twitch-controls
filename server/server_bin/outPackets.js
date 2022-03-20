@@ -85,7 +85,7 @@ module.exports = {
         break;
       default:
         //Generic reward
-        log.log(2, `Generic reward ${message.rewardTitle} redeemed`);
+        log.log(2, `Generic reward ${redeemName} redeemed`);
         break;
     }
   },

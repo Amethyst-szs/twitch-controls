@@ -53,7 +53,8 @@ async function publishNewRedeems(streamerID, redeemInits, api) {
 async function updateRedeemCost(twitchRedeem, redeem, api, streamerID){
   if(redeem!=null){
     log.log(2, `Updated pricing of ${redeem.title}`);
-    await api.channelPoints.updateCustomReward(streamerID, twitchRedeem.id, redeem);
+    await api.channelPoints.updateCustomReward(streamerID, twitchRedeem.id, redeem)
+    .catch(console.error);
   }
 }
 

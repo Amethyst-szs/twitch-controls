@@ -23,6 +23,7 @@ const log = require("./server_bin/console");
 const bufferTool = require("./server_bin/bufferTool");
 const redeemHistory = require("./server_bin/recentHandler");
 const twitchInit = require("./server_bin/twitchInit");
+const { FullRedeemList } = require("./settings/redeem_list.json");
 const chalk = require("chalk");
 
 let invalidStage = false;
@@ -179,7 +180,8 @@ async function refundRedeem(api, streamerID, rewardId, id) {
     rewardId,
     id,
     "CANCELED"
-  );
+  )
+  .catch(console.error);
   return;
 }
 
@@ -198,7 +200,8 @@ async function approveRedeem(api, streamerID, rewardId, id) {
     rewardId,
     id,
     "FULFILLED"
-  );
+  )
+  .catch(console.error);
   return;
 }
 
@@ -212,16 +215,19 @@ async function backupCheck(api, streamerID, listID) {
     streamerID,
     rejectionList[listID].rewardID,
     rejectionList[listID].ID
-  );
+  )
+  .catch(console.error);
   let isAlreadyDone =
     (await redeemInfo).isFulfilled || (await redeemInfo).isCanceled;
   if (!isAlreadyDone) {
-    await redeemInfo.updateStatus("CANCELED");
+    await redeemInfo.updateStatus("CANCELED")
+    .catch(console.error);
   }
 }
 
 async function preparePriceUpdate(api, streamerID, streamerMe, CurDir){
-  twitchInit.priceUpdate(api, streamerID, streamerMe, CurDir, costFactor, costDisabled, cooldownMulti);
+  twitchInit.priceUpdate(api, streamerID, streamerMe, CurDir, costFactor, costDisabled, cooldownMulti)
+  .catch(console.error);
 }
 
 //Twitch root function
@@ -286,15 +292,17 @@ async function TwitchHandler() {
       `${message.rewardTitle} < ${message.userDisplayName}`
     );
 
-    rejectionID++;
-    if (rejectionID >= 10) rejectionID = 1;
-    rejectionList[rejectionID].rewardID = message.rewardId;
-    rejectionList[rejectionID].ID = message.id;
-    tempVal = rejectionID;
-    setTimeout(backupCheck, 1500, api, streamerID, tempVal);
+    if(FullRedeemList.includes(message.rewardTitle)){
+      rejectionID++;
+      if (rejectionID >= 10) rejectionID = 1;
+      rejectionList[rejectionID].rewardID = message.rewardId;
+      rejectionList[rejectionID].ID = message.id;
+      tempVal = rejectionID;
+      setTimeout(backupCheck, 1500, api, streamerID, tempVal);
 
-    //Handle redeem in the out packet handler
-    outPackets.outHandler(message.rewardTitle, server, client);
+      //Handle redeem in the out packet handler
+      outPackets.outHandler(message.rewardTitle, server, client);
+    }
   });
 }
 

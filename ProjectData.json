@@ -2,10 +2,10 @@
 	"Version": "10",
 	"PName": "twitch-controls",
 	"DumpStats": {
-		"Time": "3-19-2022 10:37:12",
-		"Amount": 531,
+		"Time": "3-19-2022 17:38:5",
+		"Amount": 532,
 		"isUndumped": false,
-		"Type": "Quick"
+		"Type": "Complete"
 	},
 	"songs": {},
 	"dates": {
@@ -13,8 +13,7 @@
 			"LayoutData": {
 				"CounterLife.szs": 1647711428865.75,
 				"CounterLifeKids.szs": 1647710921135.1274,
-				"KidsMode.szs": 1619387757107.188,
-				"NyLifeShadow00^s.png": 1647710290652.9404
+				"KidsMode.szs": 1619387757107.188
 			},
 			"ObjectData": {
 				"PlayerActorHakoniwa.szs": 1647322668943.5361,
