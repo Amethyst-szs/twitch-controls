@@ -13,6 +13,7 @@ struct RedeemInfo {
         bool isRedeemsValid = false;
         bool isTransition = true;
         u8 rejectionID = 0;
+        u8 restrictionTier = 0;
     };
     struct gravityState {
         float timer = -1;
@@ -75,8 +76,10 @@ RedeemInfo::waterAreaState& getWaterAreaState();
 RedeemInfo::dancePartyState& getDancePartyState();
 RedeemInfo::shineWarpState& getShineWarpState();
 
-void updateServerDemoState();
+// Restriction functions
+void setRestrictionTier(u8 tier);
 
+void updateServerDemoState();
 void sendPacketStateNotice(bool rejectState);
 
 const char* getRandomHomeStage();

@@ -45,6 +45,7 @@ static const char* page2Options[] {
     "Kill player\n",
     "End puppetable\n",
     "Complete kingdom (Glitch central)\n",
+    "Restriction Tier (Temp)\n",
     "Plus 100 coins\n"
 };
 static int page2Len = *(&page2Options + 1) - page2Options;
@@ -185,14 +186,6 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
         PlayerActorHakoniwa* player = al::tryGetPlayerActor(pHolder, 0);
         GameDataHolderAccessor GameData = *stageScene->mHolder;
         GameDataHolderWriter holder = *stageScene->mHolder;
-        al::IUseCamera* UseCamera = stageScene;
-        al::Projection* CamProject = al::getProjection(UseCamera, 0);
-
-        // sead::Vector2f *lStick = al::getLeftStick(-1);
-        // sead::Vector2f *rStick = al::getRightStick(-1);
-
-        // curGlobalSequence = curSequence;
-        // al::Projection *CameraProjection = al::getProjection(curGlobalSequence->curScene, 0);
 
         // Header
         gTextWriter->printf("Twitch Controls - Debug Menu\nPage %i/%i\n\n", debugPage + 1, debugMax + 1);
@@ -221,6 +214,7 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
             gTextWriter->printf("Twitch Integration Values:\n");
             gTextWriter->printf("Reject Redeems: %s\n", !ri.isRedeemsValid ? "true" : "false");
             gTextWriter->printf("Invalid Stage: %s\n", ri.isInvalidStage ? "true" : "false");
+            gTextWriter->printf("Restriction Tier: %i\n", ri.restrictionTier);
             gTextWriter->printf("Gravity Timer: %f\n", amy::getGravityState().timer);
             gTextWriter->printf("Wind Timer: %f\n", amy::getWindState().timer);
             gTextWriter->printf("Coin Tick Rate: %f\n", amy::getCoinTickState().speed);
@@ -282,6 +276,10 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
                     GameDataFunction::addPayShine(holder, 30);
                     break;
                 case 6:
+                    amy::setRestrictionTier(ri.restrictionTier + 1);
+                    amy::log("%u", ri.restrictionTier);
+                    break;
+                case 7:
                     stageScene->mHolder->mGameDataFile->addCoin(100);
                     break;
                 }
@@ -413,16 +411,6 @@ void stageSceneHook(StageScene* stageScene)
     holder.mGameDataFile->mProgressData->talkCapNearHomeInWaterfall();
     // GameDataFunction::repairHome(holder);
     GameDataFunction::enableCap(holder);
-
-    // PLAN FOR SHINE STUFF!
-    // Take Crafty's code and take his shine init hook
-    // Create a list of init-ed shines in the scene
-    // Can add a random shine to play by getting the player's hit sensor
-    // and the shine's hit sensor and calling
-    //_ZN2rs15sendMsgShineGetEPN2al9HitSensorES2_
-    // rs::sendMsgShineGet
-
-    // Removing a shine... idk figure it out
 
     if (!isInGame) {
         isInGame = true;

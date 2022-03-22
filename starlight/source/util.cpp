@@ -70,6 +70,17 @@ amy::RedeemInfo::shineWarpState& amy::getShineWarpState()
     return i;
 }
 
+void amy::setRestrictionTier(u8 tier)
+{
+    // Start by limiting the int
+    if (tier > 5)
+        tier = 5;
+
+    amy::RedeemInfo::state& ri = amy::getRedeemInfo();
+    ri.restrictionTier = tier;
+    return;
+}
+
 void amy::sendPacketStateNotice(bool rejectState)
 {
     amy::RedeemInfo::state& ri = amy::getRedeemInfo();
