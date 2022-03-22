@@ -1,7 +1,17 @@
 const BaseAPI = require("@twurple/api");
 const AuthAPI = require("@twurple/auth");
 const log = require("./console");
+const twitchInit = require('./twitchinit');
+
 const fs = require('fs');
+const restrictions = require("./restrictions");
+
+let costFactor = 1;
+let costDisabled = false;
+let cooldownMulti = 1;
+
+let refreshTotalTimer = 180;
+let refreshTimer = 0;
 
 async function createAlreadyExistsList(redeemInits, twitchRedeems) {
   let preExistIndexList = [];
@@ -52,10 +62,81 @@ async function publishNewRedeems(streamerID, redeemInits, api) {
 
 async function updateRedeemCost(twitchRedeem, redeem, api, streamerID){
   if(redeem!=null){
-    log.log(2, `Updated pricing of ${redeem.title}`);
-    await api.channelPoints.updateCustomReward(streamerID, twitchRedeem.id, redeem)
+    log.log(2, `Updating status of ${redeem.title}`);
+    await api.channelPoints.updateCustomReward(streamerID, twitchRedeem, redeem)
     .catch(console.error);
   }
+}
+
+function RefreshTimer(api, streamerID, streamerMe, CurDir){
+  if(refreshTimer <= 0){
+    refreshTimer = refreshTotalTimer;
+    priceUpdate(api, streamerID, streamerMe, CurDir)
+    .catch(console.error);
+    setTimeout(RefreshTimer, 1000, api, streamerID, streamerMe, CurDir);
+  } else {
+    refreshTimer--;
+    setTimeout(RefreshTimer, 1000, api, streamerID, streamerMe, CurDir);
+  }
+  return;
+}
+
+async function priceUpdate(api, streamerID, streamerMe, CurDir) {
+  //Get a list of Twitch Controls redeems
+  const redeemInits = JSON.parse(fs.readFileSync(`${CurDir}/settings/redeem_init.json`));
+  let twitchRedeems = await api.channelPoints.getCustomRewards(
+    streamerID,
+    false
+  );
+  let preExistIndexList = await createAlreadyExistsList(
+    redeemInits,
+    twitchRedeems
+  );
+
+  let stream = await streamerMe.getStream();
+
+  if(stream == null)
+    stream = {"viewers": 0}
+
+  let viewers = stream.viewers;
+
+  if(viewers == null)
+    viewers = 0;
+  
+  let updatedAmount = 0;
+
+  //Update price listing
+  for (twitchListing = 0; twitchListing < preExistIndexList.length; twitchListing++) {
+    let twitchRedeem = twitchRedeems[preExistIndexList[twitchListing]]
+    let title = twitchRedeem.title;
+    let redeem = redeemInits[title];
+    let restrictedRedeems = restrictions.getRestrictedRedeems();
+
+    //Handle the dynamic cost
+    redeem.cost *= costFactor*Math.max(1,Math.log10(viewers)/2);
+    redeem.cost = Math.floor(redeem.cost/10)*10;
+
+    //In these edge cases, fix it
+    if(redeem.cost==0)
+      redeem.cost = 10;
+    if(costDisabled)
+      redeem.cost = 1;
+    
+    //Sets the global cooldown based on the base and cooldown multiplier
+    redeem.globalCooldown = Math.floor(redeem.globalCooldown*cooldownMulti);
+
+    //Sets if the redeem is enabled based on the restriction list
+    redeem.isEnabled = !restrictedRedeems.includes(title);
+
+    //Check if the cost, global cooldown, or enabled status has changed
+    if((redeem.cost != twitchRedeem.cost)
+    || (redeem.globalCooldown != twitchRedeem.globalCooldown)
+    || (redeem.isEnabled != twitchRedeem.isEnabled)){
+      updatedAmount++;
+      setTimeout(updateRedeemCost, (updatedAmount+1)*2000, twitchRedeem.id, redeem, api, streamerID);
+    }
+  }
+  log.log(1, `Finished queuing price updates!`);
 }
 
 module.exports = {
@@ -80,47 +161,38 @@ module.exports = {
     return;
   },
 
-  priceUpdate: async function (api, streamerID, streamerMe, CurDir, factor, disabled, cooldownMulti) {
-    //Get a list of Twitch Controls redeems
-    const redeemInits = JSON.parse(fs.readFileSync(`${CurDir}/settings/redeem_init.json`));
-    let twitchRedeems = await api.channelPoints.getCustomRewards(
-      streamerID,
-      false
-    );
-    let preExistIndexList = await createAlreadyExistsList(
-      redeemInits,
-      twitchRedeems
-    );
-
-    let stream = await streamerMe.getStream();
-
-    if(stream == null)
-      stream = {"viewers": 0}
-
-    let viewers = stream.viewers;
-
-    if(viewers == null)
-      viewers = 0;
-
-    //Update price listing
-    for (twitchListing = 0; twitchListing < preExistIndexList.length; twitchListing++) {
-      let twitchRedeem = twitchRedeems[preExistIndexList[twitchListing]]
-      let title = twitchRedeem.title;
-      let redeem = redeemInits[title];
-      redeem.cost *= factor*Math.max(1,Math.log10(viewers)/2);
-      redeem.cost = Math.floor(redeem.cost/10)*10;
-      
-      if(redeem.cost==0)
-        redeem.cost = 10;
-      
-      if(disabled)
-        redeem.cost = 1;
-      
-      redeem.globalCooldown = Math.floor(redeem.globalCooldown*cooldownMulti);
-      
-      if((redeem.cost!=twitchRedeem.cost) || (redeem.globalCooldown != twitchRedeem.globalCooldown) && twitchRedeem.isEnabled)
-        setTimeout(updateRedeemCost, (twitchListing+1)*2000, twitchRedeem, redeem, api, streamerID);
+  disCostUpdate: async function(type, amount){
+    //Handle the type
+    switch(type){
+      case "inc": //Increases the cost by amount
+        costFactor += amount;
+        break;
+      case "dec": //Decreases the cost by amount
+        costFactor -= amount;
+        break;
+      case "set": //Sets the cost to the amount
+        costFactor = amount;
+        break;
+      case "dis": //Toggles the cost disabled bool
+        costDisabled = !costDisabled;
+        break;
     }
-    log.log(1, `Finished queuing price updates!`);
+
+    refreshTimer = 0;
   },
+
+  disCooldownUpdate: async function(amount){
+    cooldownMulti = amount;
+    refreshTimer = 0;
+  },
+
+  startRefreshTimer: function(api, streamerID, streamerMe, CurDir){
+    RefreshTimer(api, streamerID, streamerMe, CurDir);
+    return;
+  },
+
+  skipRefreshTimer: function(){
+    refreshTimer = 0;
+    return;
+  }
 };

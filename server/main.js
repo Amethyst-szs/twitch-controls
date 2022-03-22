@@ -23,7 +23,6 @@ const log = require("./server_bin/console");
 const bufferTool = require("./server_bin/bufferTool");
 const redeemHistory = require("./server_bin/recentHandler");
 const twitchInit = require("./server_bin/twitchInit");
-const { FullRedeemList } = require("./settings/redeem_list.json");
 const chalk = require("chalk");
 
 let invalidStage = false;
@@ -32,45 +31,8 @@ let streamerID = null;
 let rejectionID = 0;
 let rejectionList = require("./settings/rejectionListBase.json");
 
-let refreshSettings = require("./settings/refresh_set.json");
-let costFactor = 1;
-let costDisabled = false;
-let cooldownMulti = 1;
-
-module.exports={
-  disCostUpdate: async function(type, amount){
-    //Handle the type
-    switch(type){
-      case "inc": //Increases the cost by amount
-        costFactor += amount;
-        break;
-      case "dec": //Decreases the cost by amount
-        costFactor -= amount;
-        break;
-      case "set": //Sets the cost to the amount
-        costFactor = amount;
-        break;
-      case "dis": //Toggles the cost disabled bool
-        costDisabled = !costDisabled;
-        break;
-    }
-
-    //Collect some data about the streamer
-    let streamerMe = await api.users.getMe(false); //The argument here is to NOT grab the streamer's email!
-    streamerID = streamerMe.id;
-
-    twitchInit.priceUpdate(api, streamerID, streamerMe, CurDir, costFactor, costDisabled, cooldownMulti);
-  },
-  disCooldownUpdate: async function(amount){
-    cooldownMulti = amount;
-
-    //Collect some data about the streamer
-    let streamerMe = await api.users.getMe(false); //The argument here is to NOT grab the streamer's email!
-    streamerID = streamerMe.id;
-
-    twitchInit.priceUpdate(api, streamerID, streamerMe, CurDir, costFactor, costDisabled, cooldownMulti);
-  }
-};
+const { FullRedeemList } = require("./settings/redeem_list.json");
+const restrictions = require("./server_bin/restrictions");
 
 //Respond to packets from the switch
 server.on("message", (msg, rinfo) => {
@@ -225,11 +187,6 @@ async function backupCheck(api, streamerID, listID) {
   }
 }
 
-async function preparePriceUpdate(api, streamerID, streamerMe, CurDir){
-  twitchInit.priceUpdate(api, streamerID, streamerMe, CurDir, costFactor, costDisabled, cooldownMulti)
-  .catch(console.error);
-}
-
 //Twitch root function
 async function TwitchHandler() {
   //Create an authProvider and API access client
@@ -254,8 +211,8 @@ async function TwitchHandler() {
     `Subscribed to redeem alerts with channel:read:redemptions scope!\nWelcome ${streamerMe.displayName}`
   );
 
-  preparePriceUpdate(api, streamerID, streamerMe, CurDir);
-  setInterval(preparePriceUpdate, refreshSettings.RefreshRate*1000, api, streamerID, streamerMe, CurDir);
+  //Starts a timer tracking automatic refreshing of costs, cooldowns, and enabled status
+  twitchInit.startRefreshTimer(api, streamerID, streamerMe, CurDir);
 
   //Once Twitch is authenticated and ready, finish UDP server
   server.bind(7902);
@@ -266,21 +223,31 @@ async function TwitchHandler() {
 
   //Create listener that is triggered every channel point redeem
   const listener = await PubSubClient.onRedemption(userId, (message) => {
-    //Check and make sure a switch has connected already
-    if (client.address == undefined) {
-      log.log(
-        2,
-        `${message.rewardTitle} from ${message.userDisplayName} but no client connected yet!`
-      );
-      refundRedeem(api, streamerID, message.rewardId, message.id);
-      return;
-    }
-
     //Check if the player is currently in a demo scene, if so, STOP
     if (invalidStage) {
       log.log(
         2,
         `${message.rewardTitle} from ${message.userDisplayName} but the player is in a demo scene`
+      );
+      refundRedeem(api, streamerID, message.rewardId, message.id);
+      return;
+    }
+
+    //If a redeem that is the the restriction list is redeemed, refund it!
+    if (restrictions.getRestrictedRedeems().includes(message.rewardTitle)) {
+      log.log(
+        2,
+        `${message.rewardTitle} from ${message.userDisplayName} was redeemed even though it was restricted! Refunded, no big deal!`
+      );
+      refundRedeem(api, streamerID, message.rewardId, message.id);
+      return;
+    }
+
+    //Check and make sure a switch has connected already
+    if (client.address == undefined) {
+      log.log(
+        2,
+        `${message.rewardTitle} from ${message.userDisplayName} but no client connected yet!`
       );
       refundRedeem(api, streamerID, message.rewardId, message.id);
       return;

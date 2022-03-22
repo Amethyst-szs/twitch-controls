@@ -7,6 +7,8 @@ const { disclientid, disguildid, distoken } = require('../settings/secret.json')
 
 //Require other modules
 const log = require('../server_bin/console');
+const twitchInit = require('../server_bin/twitchInit');
+const restrictions = require('../server_bin/restrictions');
 
 // Create a new client instance
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
@@ -31,7 +33,6 @@ module.exports = {
 			if (!interaction.isCommand()) return;
 			interaction.options.getString()
 			const { commandName } = interaction;
-			const main = require('../main');
 			
 			switch(commandName){
 				case "ping":
@@ -39,7 +40,7 @@ module.exports = {
 					await interaction.reply('Pong!');
 					break;
 				case "cost":
-					main.disCostUpdate(interaction.options.getString('modification', true), interaction.options.getNumber('value', true));
+					twitchInit.disCostUpdate(interaction.options.getString('modification', true), interaction.options.getNumber('value', true));
 					log.log(3, `Pushing a cost update from ${interaction.user.username}`);
 					interaction.reply(`Performing **${interaction.options.getString('modification', true)}** operation on cost!!`);
 					costFact = interaction.options.getNumber('value', false);
@@ -48,11 +49,24 @@ module.exports = {
 				case "cooldown":
 					value = interaction.options.getNumber('value', true);
 
-					main.disCooldownUpdate(value);
+					twitchInit.disCooldownUpdate(value);
 					log.log(3, `Pushing a cooldown update from ${interaction.user.username}`);
 					interaction.reply(`Setting the cooldown multiplier to **${value}**!`);
 					cooldownMulti = value;
 					writeStatus();
+					break;
+				case "enabled":
+					value = interaction.options.getString('redeem', true);
+					restrictions.updateForcedRestriction(value);
+					twitchInit.skipRefreshTimer();
+					log.log(3, `Toggling a forced restriction from ${interaction.user.username}`);
+					interaction.reply(`Toggling the state of **${value}** for you!`);
+					break;
+				case "toggle-all":
+					restrictions.toggleAllDisabled();
+					twitchInit.skipRefreshTimer();
+					log.log(3, `Toggling all redeems from ${interaction.user.username}`);
+					interaction.reply(`Toggling every single Twitch Controls redeem for you!`);
 					break;
 				default:
 					interaction.reply("**ERROR**\nDunno what you did, but it didn't work");
@@ -66,6 +80,18 @@ module.exports = {
 	},
 	
 	slashCommandInit: function(){
+		//Get a list of the current redeems
+		const { FullRedeemList } = require("../settings/redeem_list.json");
+		let formattedRedeems = [];
+
+		//Format this list into a weird formatted redeems array for the twitch API
+		for(i=0;i<FullRedeemList.length;i++){
+			formattedRedeems.push([
+				FullRedeemList[i],
+				FullRedeemList[i]
+			])
+		}
+
 		const commands = [
 			new SlashCommandBuilder()
 				.setName('ping')
@@ -94,7 +120,19 @@ module.exports = {
 					option.setName('value')
 						.setDescription('What should the multiplier for cooldowns be?')
 						.setRequired(true)
-				)
+				),
+			new SlashCommandBuilder()
+				.setName('enabled')
+				.setDescription('Toggles on and off specific redeems')
+				.addStringOption(option =>
+					option.setName('redeem')
+					.setDescription('Which redeem are you toggling')
+					.setRequired(true)
+					.addChoices(formattedRedeems)
+				),
+			new SlashCommandBuilder()
+				.setName('toggle-all')
+				.setDescription('Turns on or off every single Twitch Controls redeem on your channel')
 		]
 			.map(command => command.toJSON());
 		
