@@ -1,8 +1,8 @@
-const { FullRedeemList } = require("../settings/redeem_list.json");
-const restrictionTiers = require("../settings/redeem_restrictions.json");
-let allDisabled = false;
-let restrictionList = new Array(FullRedeemList.length).fill(false, 0, FullRedeemList.length);
-let forcedRestrictionList = new Array(FullRedeemList.length).fill(false, 0, FullRedeemList.length);
+// const { FullRedeemList } = require("../settings/redeem_list.json");
+// const restrictionTiers = require("../settings/redeem_restrictions.json");
+// let allDisabled = false;
+// let restrictionList = new Array(FullRedeemList.length).fill(false, 0, FullRedeemList.length);
+// let forcedRestrictionList = new Array(FullRedeemList.length).fill(false, 0, FullRedeemList.length);
 
 module.exports = {
     getRestrictedRedeems: function(){

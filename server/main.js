@@ -15,7 +15,7 @@ const Codes = require("./settings/secret.json");
 const clientId = Codes.ClientID;
 const clientSecret = Codes.Secret;
 //Discord module code
-const discordHandler = require('./discord_bin/handler');
+// const discordHandler = require('./discord_bin/handler');
 //Module code
 const outPackets = require("./server_bin/outPackets");
 const inPackets = require("./server_bin/inPackets");
@@ -31,7 +31,7 @@ let streamerID = null;
 let rejectionID = 0;
 let rejectionList = require("./settings/rejectionListBase.json");
 
-const { FullRedeemList } = require("./settings/redeem_list.json");
+const FullRedeemList = [];
 const restrictions = require("./server_bin/restrictions");
 
 //Respond to packets from the switch
@@ -127,6 +127,34 @@ async function getStreamerAuth() {
   return authProvider;
 }
 
+async function langSelect(){
+  //Get list of language definition files
+  let langFiles = fs.readdirSync(`${CurDir}/settings/localize/`);
+  let languages = [];
+
+  //Run through this list and chop off details, creating a list of languages WITH DUPLICATES
+  for(curLang in langFiles){
+    languages.push(langFiles[curLang].slice(0, langFiles[curLang].indexOf(`_`)));
+  }
+
+  //Now remove all duplicates
+  let uniqueLangs = [...new Set(languages)];
+
+  //Let the user select if more than one language is available
+  switch (uniqueLangs.length) {
+    case 0:
+      console.log(`No languages exist!!`);
+      process.exit();
+    case 1:
+      console.log(
+        chalk.magenta(`Only one language exists, skipping language selection`)
+      );
+      return uniqueLangs[0];
+    default:
+      return await input.select(uniqueLangs);
+  }
+}
+
 async function refundRedeem(api, streamerID, rewardId, id) {
   redemption = await api.channelPoints.getRedemptionById(
     streamerID,
@@ -190,18 +218,21 @@ async function backupCheck(api, streamerID, listID) {
 //Twitch root function
 async function TwitchHandler() {
   //Create an authProvider and API access client
-  let authProvider = await getStreamerAuth();
-  api = new BaseAPI.ApiClient({ authProvider });
+  // let authProvider = await getStreamerAuth();
+  // api = new BaseAPI.ApiClient({ authProvider });
 
-  //Collect some data about the streamer
-  let streamerMe = await api.users.getMe(false); //The argument here is to NOT grab the streamer's email!
-  streamerID = streamerMe.id;
+  // //Collect some data about the streamer
+  // let streamerMe = await api.users.getMe(false); //The argument here is to NOT grab the streamer's email!
+  // streamerID = streamerMe.id;
 
   //Quick menu check to see what the user is looking to do
   runType = await input.select(["Run Server", "Initalize Twitch Account"]);
   if (runType == "Initalize Twitch Account") {
     await twitchInit.Main(api, streamerID);
   }
+
+  //Let the client language be selected
+  langType = await langSelect();
 
   //Create a subscription client to the channel point redeems
   const PubSubClient = new PubSub.PubSubClient();
@@ -218,8 +249,8 @@ async function TwitchHandler() {
   server.bind(7902);
 
   //Once both the UDP server and Twitch is ready, launch discord bot
-  discordHandler.slashCommandInit();
-  discordHandler.botManage();
+  // discordHandler.slashCommandInit();
+  // discordHandler.botManage();
 
   //Create listener that is triggered every channel point redeem
   const listener = await PubSubClient.onRedemption(userId, (message) => {

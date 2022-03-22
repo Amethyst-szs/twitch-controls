@@ -1,0 +1,62 @@
+{
+    "Resize": {
+        "prompt": "Randomly changes the size of Mario or the current capture!",
+        "title": "Resize"
+    },
+    "Position Randomizer": {
+        "prompt": "Teleports me randomly somewhere else",
+        "title": "Position Randomizer"
+    },
+    "See Myself Out": {
+        "prompt": "Kicks me out the stage I'm in right now and sends me wherever I was before",
+        "title": "See Myself Out"
+    },
+    "Change Gravity": {
+        "prompt": "Changes my gravity to a random direction for 3 seconds (Continues adding time if redeemed multiple times)",
+        "title": "Change Gravity"
+    },
+    "Up we go": {
+        "prompt": "Flings me upward into the air!",
+        "title": "Up we go"
+    },
+    "Cappy? Nah": {
+        "prompt": "Deletes Cappy from existence... Can only be restored by dying, warping to a checkpoint, or entering a sub area!",
+        "title": "Cappy? Nah"
+    },
+    "Random Kingdom": {
+        "prompt": "Sends me off to a completely random kingdom!",
+        "title": "Random Kingdom"
+    },
+    "Highway to Death": {
+        "prompt": "Starts counting down my coin counter. If it hits zero, I die! If it's already started and it is redeemed again, the coins start draining faster!",
+        "title": "Highway to Death"
+    },
+    "Whispy Winds": {
+        "prompt": "Starts blowing the player with wind in a random direction for 9 seconds (Continues adding time if redeemed multiple times)",
+        "title": "Whispy Winds"
+    },
+    "Hot Floor": {
+        "prompt": "Makes Mario constantly jump to get off the ground for 10 seconds! (Continues adding time if redeemed multiple times)",
+        "title": "Hot Floor"
+    },
+    "Stick Flip": {
+        "prompt": "Inverts my control sticks for 10 seconds! (Continues adding time if redeemed multiple times)",
+        "title": "Stick Flip"
+    },
+    "Hot Tub Stream": {
+        "prompt": "Makes me start to swim through the air for 8 seconds! (Continues adding time if redeemed multiple times)",
+        "title": "Hot Tub Stream"
+    },
+    "Dance Party": {
+        "prompt": "START THE PARTY! (1 redeem per person)",
+        "title": "Dance Party"
+    },
+    "Moon Magnet": {
+        "prompt": "Warps the closest moon to me!",
+        "title": "Moon Magnet"
+    },
+    "Fly me to the Moon": {
+        "prompt": "Sends me straight to Moon Kingdom!",
+        "title": "Fly me to the Moon"
+    }
+}
