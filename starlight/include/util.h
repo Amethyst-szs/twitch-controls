@@ -14,6 +14,7 @@ struct RedeemInfo {
         bool isTransition = true;
         u8 rejectionID = 0;
         u8 restrictionTier = 0;
+        u8 lastPublishRestrictionTier = 0;
     };
     struct gravityState {
         float timer = -1;
@@ -78,6 +79,7 @@ RedeemInfo::shineWarpState& getShineWarpState();
 
 // Restriction functions
 void setRestrictionTier(u8 tier);
+void calcWorldTier(s32 worldID, const char* stageName);
 
 void updateServerDemoState();
 void sendPacketStateNotice(bool rejectState);

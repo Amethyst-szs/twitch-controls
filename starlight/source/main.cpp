@@ -254,14 +254,14 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
                     amy::log("ClientDisconnect");
                     smo::Server::instance().connect(smo::getServerIp(true));
                     amy::updateServerDemoState();
-                    amy::setRestrictionTier(ri.restrictionTier);
+                    amy::log("Restrict%u", ri.restrictionTier);
                     ri.rejectionID = 0;
                     break;
                 case 1: // Connect to private server
                     amy::log("ClientDisconnect");
                     smo::Server::instance().connect(smo::getServerIp(false));
                     amy::updateServerDemoState();
-                    amy::setRestrictionTier(ri.restrictionTier);
+                    amy::log("Restrict%u", ri.restrictionTier);
                     ri.rejectionID = 0;
                     break;
                 case 2:
@@ -329,6 +329,18 @@ void stageSceneHook(StageScene* stageScene)
     bool isDead = PlayerFunction::isPlayerDeadStatus(player);
     bool isInterupted = isDead || isDemo || isPause || amy::getDancePartyState().timer > 0;
 
+    // Calculate the restriction tiers if it's the first frame in the full scene
+    if (ri.isTransition) {
+        ri.restrictionTier = 0;
+        amy::calcWorldTier(GameDataFunction::getCurrentWorldId(*stageScene->mHolder), holder.getCurrentStageName());
+        // In the event that the restriction tier has changed from the last scene to this one, publish the change
+        if (ri.restrictionTier != ri.lastPublishRestrictionTier) {
+            amy::log("Restrict%u", ri.restrictionTier);
+            ri.lastPublishRestrictionTier = ri.restrictionTier;
+        }
+    }
+
+    // Once the restriction test is done, make sure to set the transition state to false!
     ri.isTransition = false;
 
     // Gravity timer updater

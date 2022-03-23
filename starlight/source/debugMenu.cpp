@@ -1,6 +1,7 @@
 #include "debugMenu.hpp"
 #include "fl/server.h"
 #include "ips.hpp"
+#include "util.h"
 
 static const char* DBG_FONT_PATH = "DebugData/Font/nvn_font_jis1.ntx";
 static const char* DBG_SHADER_PATH = "DebugData/Font/nvn_font_shader_jis1.bin";
@@ -53,6 +54,7 @@ void setupDebugMenu(GameSystem* gSys)
 
     smo::Server::instance().start();
     smo::Server::instance().connect(smo::getServerIp(true));
+    amy::log("Restrict%u", amy::getRedeemInfo().restrictionTier);
 
     __asm("MOV W23, #0x3F800000");
     __asm("MOV W8, #0xFFFFFFFF");
