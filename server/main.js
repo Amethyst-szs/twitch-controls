@@ -223,6 +223,9 @@ async function backupCheck(api, streamerID, listID) {
 
 //Twitch root function
 async function TwitchHandler() {
+  process.stdout.write(
+    String.fromCharCode(27) + "]0;" + `Title Test` + String.fromCharCode(7)
+  );
   //Create an authProvider and API access client
   let authProvider = await getStreamerAuth();
   api = new BaseAPI.ApiClient({ authProvider });
