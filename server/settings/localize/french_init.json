@@ -1,0 +1,77 @@
+{
+    "Redimensionner": {
+        "prompt": "Change aléatoirement la taille de Mario, ou de la capture actuelle !",
+        "title": "Redimensionner",
+        "original": "Resize"
+    },
+    "Position Aléatoire": {
+        "prompt": "Me téléporte à une position aléatoire dans le niveau actuel.",
+        "title": "Position Aléatoire",
+        "original": "Position Randomizer"
+    },
+    "Tu Sors!": {
+        "prompt": "Me vire du stage où je suis actuellement et me renvoie au stage précédent.",
+        "title": "Tu Sors!",
+        "original": "See Myself Out"
+    },
+    "Changement de Gravité": {
+        "prompt": "Change la gravité vers une direction aléatoire pendant 3 secondes. (la durée augmente si récompense obtenue plusieurs fois)",
+        "title": "Changement de Gravité",
+        "original": "Change Gravity"
+    },
+    "Vers l'infini et l'au-delà!": {
+        "prompt": "Me projette dans les airs !",
+        "title": "Vers l'infini et l'au-delà !",
+        "original": "Up we go"
+    },
+    "Pas de Cappy? Pas si mal!": {
+        "prompt": "Me prive de Cappy... Il peut uniquement être restauré en mourrant, se téléportant à un Checkpoint, où en entrant une salle bonus.",
+        "title": "Pas de Cappy? Pas si mal!",
+        "original": "Cappy? Nah"
+    },
+    "Billet d'Avion aller simple": {
+        "prompt": "M'envoie dans un Pays aléatoire !",
+        "title": "Billet d'Avion aller simple",
+        "original": "Random Kingdom"
+    },
+    "La Mort à l'Appel": {
+        "prompt": "Le compteur de pièce baisse lentement. Si il atteint zéro, je meurs ! Si le compteur est déjà actif et que la récompense est obtenue à nouveau, la vitesse augmente !",
+        "title": "La Mort à l'Appel",
+        "original": "Highway to Death"
+    },
+    "Vigilance Rouge selon Météo France": {
+        "prompt": "Crée un effet de vent qui pousse le joueur dans une direction aléatoire pendant 9 secondes. (La durée augmente si la récompense est obtenue plusieurs fois)",
+        "title": "Vigilance Rouge selon Météo France",
+        "original": "Whispy Winds"
+    },
+    "Sol Brûlant": {
+        "prompt": "Mario saute constament pendant 10 secondes ! (La durée augmente si la récompense est obtenue plusieurs fois)",
+        "title": "Sol Brûlant",
+        "original": "Hot Floor"
+    },
+    "Stick Inversé": {
+        "prompt": "Inverse les Sticks Directionels pendant 10 secondes ! (La durée augmente si la récompense est obtenue plusieurs fois)",
+        "title": "Stick Inversé",
+        "original": "Stick Flip"
+    },
+    "Stream Jacuzzi": {
+        "prompt": "Transforme le niveau en piscine géante pendant 8 secondes ! (La durée augmente si la récompense est obtenue plusieurs fois)",
+        "title": "Stream Jacuzzi",
+        "original": "Hot Tub Stream"
+    },
+    "Fiesta": {
+        "prompt": "C'EST LA FIESTA! (1 par personne)",
+        "title": "Fiesta",
+        "original": "Dance Party"
+    },
+    "Aimant à Lune": {
+        "prompt": "Téléporte la Lune la plus proche vers moi !",
+        "title": "Aimant à Lune",
+        "original": "Moon Magnet"
+    },
+    "Objectif Lune": {
+        "prompt": "M'envoie directement sur la lune !",
+        "title": "Objectif Lune",
+        "original": "Fly me to the Moon"
+    }
+}
