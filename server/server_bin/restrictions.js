@@ -1,10 +1,20 @@
-// const { FullRedeemList } = require("../settings/redeem_list.json");
-// const restrictionTiers = require("../settings/redeem_restrictions.json");
-// let allDisabled = false;
-// let restrictionList = new Array(FullRedeemList.length).fill(false, 0, FullRedeemList.length);
-// let forcedRestrictionList = new Array(FullRedeemList.length).fill(false, 0, FullRedeemList.length);
+let FullRedeemList = [];
+
+const restrictionTiers = require("../settings/redeem_restrictions.json");
+const fs = require('fs');
+
+let allDisabled = false;
+let restrictionList = [];
+let forcedRestrictionList = [];
 
 module.exports = {
+    setupRedeemList: function(CurDir, lang){
+        FullRedeemList = JSON.parse(fs.readFileSync(`${CurDir}/settings/localize/${langType}_list.json`)).FullRedeemList;
+        restrictionList = new Array(FullRedeemList.length).fill(false, 0, FullRedeemList.length);
+        forcedRestrictionList = new Array(FullRedeemList.length).fill(false, 0, FullRedeemList.length);
+        return;
+    },
+
     getRestrictedRedeems: function(){
         let returnList = [];
         for(entry in FullRedeemList){

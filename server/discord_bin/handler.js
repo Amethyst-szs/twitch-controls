@@ -3,6 +3,7 @@ const { Client, Intents } = require('discord.js');
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
+const fs = require('fs');
 const { disclientid, disguildid, distoken } = require('../settings/secret.json');
 
 //Require other modules
@@ -79,9 +80,9 @@ module.exports = {
 		client.login(distoken);
 	},
 	
-	slashCommandInit: function(){
+	slashCommandInit: function(CurDir){
 		//Get a list of the current redeems
-		const { FullRedeemList } = require("../settings/redeem_list.json");
+		const FullRedeemList = JSON.parse(fs.readFileSync(`${CurDir}/settings/localize/${twitchInit.getLang()}_list.json`)).FullRedeemList;
 		let formattedRedeems = [];
 
 		//Format this list into a weird formatted redeems array for the twitch API

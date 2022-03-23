@@ -15,7 +15,7 @@ const Codes = require("./settings/secret.json");
 const clientId = Codes.ClientID;
 const clientSecret = Codes.Secret;
 //Discord module code
-// const discordHandler = require('./discord_bin/handler');
+const discordHandler = require('./discord_bin/handler');
 //Module code
 const outPackets = require("./server_bin/outPackets");
 const inPackets = require("./server_bin/inPackets");
@@ -31,7 +31,7 @@ let streamerID = null;
 let rejectionID = 0;
 let rejectionList = require("./settings/rejectionListBase.json");
 
-const FullRedeemList = [];
+let FullRedeemList = [];
 const restrictions = require("./server_bin/restrictions");
 
 //Respond to packets from the switch
@@ -218,21 +218,30 @@ async function backupCheck(api, streamerID, listID) {
 //Twitch root function
 async function TwitchHandler() {
   //Create an authProvider and API access client
-  // let authProvider = await getStreamerAuth();
-  // api = new BaseAPI.ApiClient({ authProvider });
+  let authProvider = await getStreamerAuth();
+  api = new BaseAPI.ApiClient({ authProvider });
 
   // //Collect some data about the streamer
-  // let streamerMe = await api.users.getMe(false); //The argument here is to NOT grab the streamer's email!
-  // streamerID = streamerMe.id;
-
-  //Quick menu check to see what the user is looking to do
-  runType = await input.select(["Run Server", "Initalize Twitch Account"]);
-  if (runType == "Initalize Twitch Account") {
-    await twitchInit.Main(api, streamerID);
-  }
+  let streamerMe = await api.users.getMe(false); //The argument here is to NOT grab the streamer's email!
+  streamerID = streamerMe.id;
 
   //Let the client language be selected
   langType = await langSelect();
+  twitchInit.setLang(langType);
+  FullRedeemList = JSON.parse(fs.readFileSync(`${CurDir}/settings/localize/${langType}_list.json`)).FullRedeemList;
+  restrictions.setupRedeemList(CurDir, langType);
+
+  //Quick menu check to see what the user is looking to do
+  runType = await input.select(["Run Server", "Initalize Twitch Account", "Remove Redeems"]);
+  switch(runType){
+    case "Initalize Twitch Account": 
+      await twitchInit.Main(api, streamerID, CurDir, langType, true);
+      break;
+    case "Remove Redeems":
+      await twitchInit.Main(api, streamerID, CurDir, langType, false);
+      log.log(1, `Thank you!`);
+      process.exit();
+  }
 
   //Create a subscription client to the channel point redeems
   const PubSubClient = new PubSub.PubSubClient();
@@ -249,11 +258,20 @@ async function TwitchHandler() {
   server.bind(7902);
 
   //Once both the UDP server and Twitch is ready, launch discord bot
-  // discordHandler.slashCommandInit();
-  // discordHandler.botManage();
+  discordHandler.slashCommandInit(CurDir);
+  discordHandler.botManage();
 
   //Create listener that is triggered every channel point redeem
   const listener = await PubSubClient.onRedemption(userId, (message) => {
+    //Start by verifying the redeem here is actually an SMO point redeem just to avoid altering redeems it can't
+    if(!FullRedeemList.includes(message.rewardTitle)){
+      log.log(
+        2,
+        `Generic ${message.rewardTitle} from ${message.userDisplayName}`
+      );
+      return;
+    }
+
     //Check if the player is currently in a demo scene, if so, STOP
     if (invalidStage) {
       log.log(
@@ -290,17 +308,15 @@ async function TwitchHandler() {
       `${message.rewardTitle} < ${message.userDisplayName}`
     );
 
-    if(FullRedeemList.includes(message.rewardTitle)){
-      rejectionID++;
-      if (rejectionID >= 10) rejectionID = 1;
-      rejectionList[rejectionID].rewardID = message.rewardId;
-      rejectionList[rejectionID].ID = message.id;
-      tempVal = rejectionID;
-      setTimeout(backupCheck, 1500, api, streamerID, tempVal);
+    rejectionID++;
+    if (rejectionID >= 10) rejectionID = 1;
+    rejectionList[rejectionID].rewardID = message.rewardId;
+    rejectionList[rejectionID].ID = message.id;
+    tempVal = rejectionID;
+    setTimeout(backupCheck, 1500, api, streamerID, tempVal);
 
-      //Handle redeem in the out packet handler
-      outPackets.outHandler(message.rewardTitle, server, client);
-    }
+    //Handle redeem in the out packet handler
+    outPackets.outHandler(message.rewardTitle, server, client, CurDir);
   });
 }
 

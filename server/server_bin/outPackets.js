@@ -1,3 +1,6 @@
+const fs = require('fs');
+const twitchInit = require('./twitchInit');
+
 const RedeemSet = require("../settings/redeem_set.json");
 const Rand = require("./advancedRand");
 const bufferTool = require("./bufferTool");
@@ -34,10 +37,14 @@ function PosRandomize(server, client) {
 }
 
 module.exports = {
-  outHandler: function (redeemName, server, client) {
+  outHandler: function (redeemName, server, client, CurDir) {
+    //Get the lang init so you can fetch the original name of the redeem
+    langInit = JSON.parse(fs.readFileSync(`${CurDir}/settings/localize/${twitchInit.getLang()}_init.json`));
+
     log.log(1, `Sending redeem packet - ${redeemName}`);
+    
     //Switch case through all valid rewards
-    switch (redeemName) {
+    switch (langInit[redeemName].original) {
       case "Resize": //Packet ID 2 (Resize)
         Resize(server, client);
         break;
