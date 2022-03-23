@@ -45,7 +45,6 @@ static const char* page2Options[] {
     "Kill player\n",
     "End puppetable\n",
     "Complete kingdom (Glitch central)\n",
-    "Restriction Tier (Temp)\n",
     "Plus 100 coins\n"
 };
 static int page2Len = *(&page2Options + 1) - page2Options;
@@ -255,12 +254,14 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
                     amy::log("ClientDisconnect");
                     smo::Server::instance().connect(smo::getServerIp(true));
                     amy::updateServerDemoState();
+                    amy::setRestrictionTier(ri.restrictionTier);
                     ri.rejectionID = 0;
                     break;
                 case 1: // Connect to private server
                     amy::log("ClientDisconnect");
                     smo::Server::instance().connect(smo::getServerIp(false));
                     amy::updateServerDemoState();
+                    amy::setRestrictionTier(ri.restrictionTier);
                     ri.rejectionID = 0;
                     break;
                 case 2:
@@ -276,10 +277,6 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
                     GameDataFunction::addPayShine(holder, 30);
                     break;
                 case 6:
-                    amy::setRestrictionTier(ri.restrictionTier + 1);
-                    amy::log("%u", ri.restrictionTier);
-                    break;
-                case 7:
                     stageScene->mHolder->mGameDataFile->addCoin(100);
                     break;
                 }

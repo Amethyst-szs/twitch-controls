@@ -163,8 +163,8 @@ module.exports = {
   Main: async function (api, streamerID, CurDir, lang, shouldRestore) {
     //Create inital variables
     const redeemInits = require("../settings/redeem_init.json");
-    langList = JSON.parse(fs.readFileSync(`${CurDir}/settings/localize/${lang}_list.json`)).FullRedeemList;
-    langInit = JSON.parse(fs.readFileSync(`${CurDir}/settings/localize/${lang}_init.json`));
+    let langList = JSON.parse(fs.readFileSync(`${CurDir}/settings/localize/${lang}_list.json`)).FullRedeemList;
+    let langInit = JSON.parse(fs.readFileSync(`${CurDir}/settings/localize/${lang}_init.json`));
   
     //Add the lang titles and descriptions into the base init object
     //Yes I'm aware this shit is complicated as hell and probably doesn't need to be

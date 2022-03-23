@@ -1,5 +1,7 @@
 const fs = require("fs");
 const log = require("./console");
+const restrictions = require('./restrictions');
+const twitchInit = require('./twitchInit');
 
 module.exports = {
   disconnectCheck: function (msg, CurDir) {
@@ -68,6 +70,21 @@ module.exports = {
 
     //Return an object
     return returnVal;
+  },
+
+  restrict: function (msg, CurDir) {
+    //Load in the template buffer from the buffer file
+    fileBuf = Buffer.from(fs.readFileSync(`${CurDir}/buffers/restrict.buf`));
+    //Replace the final byte in the file with the final byte of the msg from the switch
+    //This is done so you can compare them regardless of tier
+    fileBuf.fill(msg[msg.byteLength - 1], fileBuf.byteLength - 1);
+    if (Buffer.compare(msg, fileBuf) == 0) {
+      tier = msg[msg.byteLength - 1]-48;
+      restrictions.updateStandardRestriction(tier, CurDir);
+      twitchInit.skipRefreshTimer();
+      log.log(1, `Changing the current restriction tier to ${tier}`);
+    }
+    return;
   },
 
   Vector3fBuf: function (SocketID, FloatArray) {

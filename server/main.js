@@ -48,10 +48,13 @@ server.on("message", (msg, rinfo) => {
     case -3: //Log any information with msg info
       //Inital log
       inPackets.Log(msg, rinfo, CurDir);
+
       //Check if this log is a disconnection request
       if (bufferTool.disconnectCheck(msg, CurDir)) client = {};
+
       //Invalid stage log type check
       invalidStage = bufferTool.demoUpdate(msg, CurDir, invalidStage);
+
       //Rejection status update check
       isReject = bufferTool.reject(msg, CurDir);
       if (isReject.wasRejectLog) {
@@ -69,6 +72,9 @@ server.on("message", (msg, rinfo) => {
           );
         }
       }
+
+      //Restrict status update
+      bufferTool.restrict(msg, CurDir);
       break;
     case -4: //demoToggle
       log.log(0, "DemoToggle");

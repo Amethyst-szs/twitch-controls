@@ -30,7 +30,12 @@ module.exports = {
         return;
     },
 
-    updateStandardRestriction: function(tier){
+    updateStandardRestriction: function(tier, CurDir){
+        //Grab the init information so you can grab the English names regardless of language
+        const twitchInit = require('./twitchInit');
+        let langList = JSON.parse(fs.readFileSync(`${CurDir}/settings/localize/${twitchInit.getLang()}_list.json`)).FullRedeemList;
+        let langInit = JSON.parse(fs.readFileSync(`${CurDir}/settings/localize/${twitchInit.getLang()}_init.json`));
+
         //Reset the list
         restrictionList.fill(false, 0, restrictionList.length);
         let targetList = [];
@@ -41,12 +46,11 @@ module.exports = {
         };
 
         //Process which of the full redeem list redeems are in the restricted target list
-        for(entry in FullRedeemList){
-            if(targetList.includes(FullRedeemList[entry]))
+        for(entry in langList){
+            if(targetList.includes(langInit[langList[entry]].original))
                 restrictionList[entry] = true;
         }
 
-        const twitchInit = require('./twitchInit');
         twitchInit.skipRefreshTimer();
         return;
     },
