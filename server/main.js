@@ -223,9 +223,7 @@ async function backupCheck(api, streamerID, listID) {
 
 //Twitch root function
 async function TwitchHandler() {
-  process.stdout.write(
-    String.fromCharCode(27) + "]0;" + `Title Test` + String.fromCharCode(7)
-  );
+  log.title(`Launch menu`);
   //Create an authProvider and API access client
   let authProvider = await getStreamerAuth();
   api = new BaseAPI.ApiClient({ authProvider });
@@ -244,9 +242,11 @@ async function TwitchHandler() {
   runType = await input.select(["Run Server", "Initalize Twitch Account", "Remove Redeems"]);
   switch(runType){
     case "Initalize Twitch Account": 
+      log.title(`Initalizing redeems`);
       await twitchInit.Main(api, streamerID, CurDir, langType, true);
       break;
     case "Remove Redeems":
+      log.title(`Removing all redeems from account`);
       await twitchInit.Main(api, streamerID, CurDir, langType, false);
       log.log(1, `Thank you!`);
       process.exit();

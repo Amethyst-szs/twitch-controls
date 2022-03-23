@@ -1,7 +1,14 @@
 const chalk = require("chalk");
 
 module.exports = {
-  log(Source, Message) {
+  title: function(title){
+    process.stdout.write(
+      String.fromCharCode(27) + "]0;" + title + String.fromCharCode(7)
+    );
+    return;
+  },
+
+  log: function(Source, Message) {
     switch (Source) {
       case 0:
         console.log(chalk.green.bold("[CLIENT] ") + Message);

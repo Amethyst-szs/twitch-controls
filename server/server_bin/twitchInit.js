@@ -72,6 +72,7 @@ async function updateRedeemCost(twitchRedeem, redeem, api, streamerID){
 }
 
 function RefreshTimer(api, streamerID, streamerMe, CurDir){
+  log.title(`Refresh Timer: ${refreshTimer} - Cost Factor: ${costFactor} - Restriction Tier: ${restrictions.getRestrictedTier()}`);
   if(refreshTimer <= 0){
     refreshTimer = refreshTotalTimer;
     priceUpdate(api, streamerID, streamerMe, CurDir)

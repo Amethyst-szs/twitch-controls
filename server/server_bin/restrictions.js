@@ -3,6 +3,8 @@ let FullRedeemList = [];
 const restrictionTiers = require("../settings/redeem_restrictions.json");
 const fs = require('fs');
 
+let restrictionTier = 0;
+
 let allDisabled = false;
 let restrictionList = [];
 let forcedRestrictionList = [];
@@ -13,6 +15,10 @@ module.exports = {
         restrictionList = new Array(FullRedeemList.length).fill(false, 0, FullRedeemList.length);
         forcedRestrictionList = new Array(FullRedeemList.length).fill(false, 0, FullRedeemList.length);
         return;
+    },
+
+    getRestrictedTier: function(){
+        return restrictionTier;
     },
 
     getRestrictedRedeems: function(){
@@ -31,6 +37,7 @@ module.exports = {
     },
 
     updateStandardRestriction: function(tier, CurDir){
+        restrictionTier = tier;
         //Grab the init information so you can grab the English names regardless of language
         const twitchInit = require('./twitchInit');
         let langList = JSON.parse(fs.readFileSync(`${CurDir}/settings/localize/${twitchInit.getLang()}_list.json`)).FullRedeemList;
