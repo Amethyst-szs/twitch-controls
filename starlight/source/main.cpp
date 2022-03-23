@@ -18,6 +18,7 @@
 #include "game/Player/PlayerActorHakoniwa.h"
 #include "game/Player/PlayerFunction.h"
 #include "game/Player/PlayerInput.h"
+#include "layouts.hpp"
 #include "rs/util.hpp"
 #include "sead/math/seadVector.h"
 #include "sead/prim/seadSafeString.h"
@@ -45,7 +46,8 @@ static const char* page2Options[] {
     "Kill player\n",
     "End puppetable\n",
     "Complete kingdom (Glitch central)\n",
-    "Plus 100 coins\n"
+    "Plus 100 coins\n",
+    "Overlay Test\n"
 };
 static int page2Len = *(&page2Options + 1) - page2Options;
 
@@ -279,6 +281,12 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
                 case 6:
                     stageScene->mHolder->mGameDataFile->addCoin(100);
                     break;
+                case 7: {
+                    smo::Layouts& layouts = smo::getLayouts();
+                    // layouts.mConnectionWait->appear();
+                    // layouts.mConnectionWait->playLoop();
+                    break;
+                }
                 }
             break;
         }
@@ -302,11 +310,31 @@ void stageInitHook(StageScene* initStageScene, al::SceneInitInfo* sceneInitInfo)
     __asm("MOV X1, X24");
 }
 
-ulong threadInit()
-{ // hook for initializing any threads we need
-    __asm("STR X21, [X19,#0x208]");
+al::SequenceInitInfo* initInfo;
+
+HOOK_ATTR
+ulong constructHook()
+{ // hook for constructing anything we need to globally be accesible
+
+    __asm("STR X21, [X19,#0x208]"); // stores WorldResourceLoader into HakoniwSequence
+
+    __asm("MOV %[result], X20"
+          : [result] "=r"(initInfo)); // Save our scenes init info to a gloabl ptr so we can access it later
 
     return 0x20;
+}
+
+HOOK_ATTR
+bool threadInit(HakoniwaSequence* mainSeq)
+{ // hook for initializing any threads we need
+    // al::LayoutInitInfo lytInfo = al::LayoutInitInfo();
+    // smo::Layouts& layouts = smo::getLayouts();
+
+    // al::initLayoutInitInfo(&lytInfo, mainSeq->mLytKit, 0, mainSeq->mAudioDirector, initInfo->mSystemInfo->mLayoutSys, initInfo->mSystemInfo->mMessageSys, initInfo->mSystemInfo->mGamePadSys);
+
+    // layouts.init(lytInfo);
+
+    return GameDataFunction::isPlayDemoOpening(*mainSeq->mGameDataHolder);
 }
 
 HOOK_ATTR

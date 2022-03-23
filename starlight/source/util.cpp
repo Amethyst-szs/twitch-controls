@@ -108,7 +108,7 @@ void amy::calcWorldTier(s32 worldID, const char* stageName)
         "MoonWorldKoopa1Stage", // 8
         "MoonWorldKoopa2Stage", // 9
         "MoonWorldBasementStage", // 10
-        "HomeShipInsideStageMap", // 11
+        "HomeShipInsideStage", // 11
         "SnowWorldShopStage", // 12
         "SkyWorldShopStage", // 13
         "SandWorldShopStage", // 14
@@ -148,14 +148,16 @@ void amy::calcWorldTier(s32 worldID, const char* stageName)
     // Basic variables
     int stageCount = *(&stageNames + 1) - stageNames;
     int matchIndex = -1;
-
+    amy::log("Current Stage: %s", stageName);
     // Sets the matchIndex to the index of the stage, if the current stage isn't a restricted stage, it stays -1
     for (int i = 0; i < stageCount; i++) {
-        if (stageNames[i] == stageName) {
+        amy::log("Stage Check: %s - %s - %i", stageNames[i], stageName, *stageNames[i] == *stageName);
+        if (*stageNames[i] == *stageName) {
             matchIndex = i;
             i = stageCount;
         }
     }
+    amy::log("Match Index: %i", matchIndex);
 
     // Finally, if a match was found, set the restriction tier to the match
     if (matchIndex != -1)

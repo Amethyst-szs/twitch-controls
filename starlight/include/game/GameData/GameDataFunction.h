@@ -12,6 +12,9 @@
 
 class GameDataFunction {
 public:
+    // checks if the opening cutscene needs to play
+    static bool isPlayDemoOpening(GameDataHolderAccessor);
+
     // Checks if a shine ID is a main shine
     static bool isMainShine(GameDataHolderAccessor, int);
 

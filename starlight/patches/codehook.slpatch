@@ -19,8 +19,10 @@ B59E28: // sead::system::print
     MOV X2, X20 // drawContext
     BL drawMainHook
 
-//50E89C:
-//    BL threadInit
+50E89C BL constructHook // HakoniwaSequence::init+1F4
+50EF2C: // HakoniwaSequence::init+884
+    MOV X0, X19 // move HakoniwaSequence ptr to arg register
+    BL threadInit
 
 //4C8958:
 //    BL initDebugListHook
