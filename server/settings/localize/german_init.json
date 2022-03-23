@@ -1,0 +1,77 @@
+{
+    "Größe ändern": {
+        "prompt": "Ändert zufällig die Größe von Mario oder der aktuellen Kaperung!",
+        "title": "Größe ändern",
+        "original": "Resize"
+    },
+    "Teleporte mich": {
+        "prompt": "Teleportiert mich zufällig an einen anderen Ort",
+        "title": "Teleporte mich",
+        "original": "Position Randomizer"
+    },
+    "Rausschmeißen": {
+        "prompt": "Wirft mich aus dem Level, in dem ich mich gerade befinde, und schickt mich dorthin, wo ich davor war",
+        "title": "Rausschmeißen",
+        "original": "See Myself Out"
+    },
+    "Gravitation ändern": {
+        "prompt": "Ändert meine Schwerkraft für 3 Sekunden in eine zufällige Richtung (Fügt weitere Zeit hinzu, wenn es mehrmals eingelöst wird)",
+        "title": "Gravitation ändern",
+        "original": "Change Gravity"
+    },
+    "Ab nach oben!": {
+        "prompt": "Schleudert mich hoch in die Luft!",
+        "title": "Ab nach oben!",
+        "original": "Up we go"
+    },
+    "Cappy? Neee": {
+        "prompt": "Löscht Cappy ... Kann nur wiederhergestellt werden, indem man stirbt, zu einem Checkpoint teleportiert oder eine Sub-Area betritt!",
+        "title": "Cappy? Neee",
+        "original": "Cappy? Nah"
+    },
+    "Zufälliges Königreich": {
+        "prompt": "Schickt mich in ein zufälliges Königreich!",
+        "title": "Zufälliges Königreich",
+        "original": "Random Kingdom"
+    },
+    "Countdown des Todes": {
+        "prompt": "Beginnt meinen Münzzähler herunterzuzählen. Wenn er 0 erreicht, sterbe ich! Wenn er bereits läuft und es erneut eingelöst wird, verschwinden die Münzen schneller!",
+        "title": "Countdown des Todes",
+        "original": "Highway to Death"
+    },
+    "Stürmische Zeiten": {
+        "prompt": "Fängt an, mich 9 Sekunden lang mit Wind in eine zufällige Richtung zu blasen (zählt weiter Zeit hinzu, wenn mehrmals eingelöst)",
+        "title": "Stürmische Zeiten",
+        "original": "Whispy Winds"
+    },
+    "Der Boden ist Lava": {
+        "prompt": "Lässt Mario 10 Sekunden lang ständig springen! (Fügt weiter Zeit hinzu, wenn mehrmals eingelöst)",
+        "title": "Der Boden ist Lava",
+        "original": "Hot Floor"
+    },
+    "Besoffene Steuerung": {
+        "prompt": "Spiegelt meine Steuerung für 10 Sekunden! (Fügt weiter Zeit hinzu, wenn mehrmals eingelöst)",
+        "title": "Besoffene Steuerung",
+        "original": "Stick Flip"
+    },
+    "Hot Tub Stream": {
+        "prompt": "Lässt mich 8 Sekunden lang durch die Luft schwimmen! (Fügt weiter Zeit hinzu, wenn mehrmals eingelöst)",
+        "title": "Hot Tub Stream",
+        "original": "Hot Tub Stream"
+    },
+    "Richtig Party": {
+        "prompt": "RICHTIG PARTY! (1 Einlösung pro Person!)",
+        "title": "Richtig Party",
+        "original": "Dance Party"
+    },
+    "Mond Magnet": {
+        "prompt": "Teleportiert den nächsten Mond zu mir!",
+        "title": "Mond Magnet",
+        "original": "Moon Magnet"
+    },
+    "Bring mich zum Mond!": {
+        "prompt": "Schickt mich direkt ins Mondland!",
+        "title": "Bring mich zum Mond!",
+        "original": "Fly me to the Moon"
+    }
+}
