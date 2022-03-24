@@ -87,6 +87,7 @@ void sendPacketStateNotice(bool rejectState);
 const char* getRandomHomeStage();
 sead::Vector3f getRandomGravity();
 void updateRedeemStatus();
+bool compareChars(const char* value1, const char* value2);
 
 StageScene*& getGlobalStageScene();
 template <typename... Args>
