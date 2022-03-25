@@ -327,12 +327,12 @@ ulong constructHook()
 HOOK_ATTR
 bool threadInit(HakoniwaSequence* mainSeq)
 { // hook for initializing any threads we need
-    // al::LayoutInitInfo lytInfo = al::LayoutInitInfo();
-    // smo::Layouts& layouts = smo::getLayouts();
+    al::LayoutInitInfo lytInfo = al::LayoutInitInfo();
+    smo::Layouts& layouts = smo::getLayouts();
 
-    // al::initLayoutInitInfo(&lytInfo, mainSeq->mLytKit, 0, mainSeq->mAudioDirector, initInfo->mSystemInfo->mLayoutSys, initInfo->mSystemInfo->mMessageSys, initInfo->mSystemInfo->mGamePadSys);
+    al::initLayoutInitInfo(&lytInfo, mainSeq->mLytKit, 0, mainSeq->mAudioDirector, initInfo->mSystemInfo->mLayoutSys, initInfo->mSystemInfo->mMessageSys, initInfo->mSystemInfo->mGamePadSys);
 
-    // layouts.init(lytInfo);
+    smo::layoutInit(lytInfo);
 
     return GameDataFunction::isPlayDemoOpening(*mainSeq->mGameDataHolder);
 }

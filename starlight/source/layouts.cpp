@@ -1,16 +1,18 @@
 #include "layouts.hpp"
 
-smo::Layouts& getLayouts()
+smo::Layouts& smo::getLayouts()
 {
     static smo::Layouts i;
     return i;
 }
 
-void smo::Layouts::init(al::LayoutInitInfo const& initInfo)
+void smo::layoutInit(al::LayoutInitInfo const& initInfo)
 {
-    // mConnectionWait = new al::WindowConfirmWait("ServerWaitConnect", "WindowConfirmWait", initInfo);
+    smo::Layouts& layouts = smo::getLayouts();
 
-    // mConnectionWait->setTxtMessage(u"Connecting to Server.");
+    // layouts.mConnectionWait = new al::WindowConfirmWait("ServerWaitConnect", "WindowConfirmWait", initInfo);
+
+    // layouts.mConnectionWait->setTxtMessage(u"Connecting to Server.");
 
     // mConnectionWait->tryEndForce();
 }

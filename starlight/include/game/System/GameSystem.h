@@ -4,8 +4,8 @@
 #include "al/nerve/NerveExecutor.h"
 
 class GameSystem : public al::NerveExecutor {
-    public:
-        void init();
-        void *gap;
-        GameSystemInfo *mSystemInfo; // 0x18
+public:
+    void init();
+    void* gap;
+    al::GameSystemInfo* mSystemInfo; // 0x18
 };

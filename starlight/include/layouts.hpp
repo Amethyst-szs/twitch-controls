@@ -1,17 +1,17 @@
 #pragma once
 
+#include "al/layout/WindowConfirmWait.h"
 #include "main.hpp"
 #include <stdlib.h>
 
 namespace smo {
-class Layouts {
-public:
-    void init(al::LayoutInitInfo const& initInfo);
-
+struct Layouts {
     // -- Game Layouts --
     bool isConnectionWaitOverlay = false;
-    // al::WindowConfirmWait* mConnectionWait;
+    al::WindowConfirmWait* mConnectionWait;
 };
-
 smo::Layouts& getLayouts();
+
+// Functions
+void layoutInit(al::LayoutInitInfo const& initInfo);
 };
