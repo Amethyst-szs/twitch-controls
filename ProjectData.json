@@ -2,10 +2,10 @@
 	"Version": "10",
 	"PName": "twitch-controls",
 	"DumpStats": {
-		"Time": "3-23-2022 22:31:41",
-		"Amount": 564,
+		"Time": "3-24-2022 17:34:16",
+		"Amount": 567,
 		"isUndumped": false,
-		"Type": "Quick"
+		"Type": "Complete"
 	},
 	"songs": {},
 	"dates": {
@@ -19,7 +19,11 @@
 				"PlayerActorHakoniwa.szs": 1647322668943.5361,
 				"PlayerConst.txt": 1646959632182.1106
 			},
-			"SoundData": {}
+			"SoundData": {},
+			"StageData": {
+				"SnowWorldLobby000StageMap.szs": 1579550961000,
+				"SnowWorldLobby001StageMap.szs": 1579550961000
+			}
 		},
 		"jcirk6ww": {
 			"ObjectData": {

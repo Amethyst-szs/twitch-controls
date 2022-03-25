@@ -1,4 +1,5 @@
 #include "util.h"
+#include "al/util.hpp"
 #include "main.hpp"
 #include "sead/container/seadListImpl.h"
 #include "sead/math/seadVector.h"
@@ -148,17 +149,14 @@ void amy::calcWorldTier(s32 worldID, const char* stageName)
     // Basic variables
     int stageCount = *(&stageNames + 1) - stageNames;
     int matchIndex = -1;
-    amy::log("Current Stage: %s", stageName);
+
     // Sets the matchIndex to the index of the stage, if the current stage isn't a restricted stage, it stays -1
     for (int i = 0; i < stageCount; i++) {
-        amy::log("Stage Check: %s - %s - %i", stageNames[i], stageName, *stageNames[i] == *stageName);
-        amy::compareChars(stageName, stageNames[i]);
-        if (*stageNames[i] == *stageName) {
+        if (al::isEqualString(stageName, stageNames[i])) {
             matchIndex = i;
             i = stageCount;
         }
     }
-    amy::log("Match Index: %i", matchIndex);
 
     // Finally, if a match was found, set the restriction tier to the match
     if (matchIndex != -1)
@@ -171,26 +169,6 @@ void amy::sendPacketStateNotice(bool rejectState)
 {
     amy::RedeemInfo::state& ri = amy::getRedeemInfo();
     amy::log("Reject/%u/%u", ri.rejectionID, rejectState);
-}
-
-bool compareChars(const char* value1, const char* value2)
-{
-    amy::log("Same length check");
-
-    // Start with a check that the two chars are the same length
-    if (*(&value1 + 1) - value1 != *(&value2 + 1) - value2)
-        return false;
-    amy::log("Same length confirmed");
-
-    // Run through each character and confirm they are the same
-    for (int i = 0; i < *(&value1 + 1) - value1; i++) {
-        amy::log("%c - %c", value1[i], value2[i]);
-        if (value1[i] != value2[i])
-            return false; // This means that the chars are not the same
-    }
-
-    // If both checks are passed, the chars are identical!
-    return true;
 }
 
 sead::Vector3f amy::getRandomGravity()
