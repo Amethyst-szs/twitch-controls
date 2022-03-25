@@ -343,7 +343,19 @@ void stageSceneHook(StageScene* stageScene)
     __asm("MOV X19, X0");
 
     al::PlayerHolder* pHolder = al::getScenePlayerHolder(stageScene);
+    if (!pHolder) {
+        __asm("MOV X0, %[input]"
+              : [input] "=r"(stageScene));
+        return;
+    }
+
     PlayerActorHakoniwa* player = al::tryGetPlayerActor(pHolder, 0);
+    if (!player) {
+        __asm("MOV X0, %[input]"
+              : [input] "=r"(stageScene));
+        return;
+    }
+
     al::LiveActor* curHack = player->getPlayerHackKeeper()->currentHackActor;
     amy::getGlobalStageScene() = stageScene;
     GameDataHolderAccessor GameData = *stageScene->mHolder;

@@ -123,8 +123,8 @@ void amy::calcWorldTier(s32 worldID, const char* stageName)
 
     // And then definie what tiers these stages get
     constexpr static const u8 tiers[] = {
-        0, // 0
-        0, // 1
+        5, // 0
+        5, // 1
         1, // 2
         1, // 3
         1, // 4
