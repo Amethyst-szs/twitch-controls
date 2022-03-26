@@ -110,7 +110,7 @@ async function serverPing(){
   if(curTime - lastPingTime >= 5000 && client){
     log.log(1, `\n///\nCONNECTION TO CLIENT WAS LOST!!\n///\n`);
     client = null;
-    rejectionID = 1;
+    rejectionID = 0;
     rejectionList = rejectionList = require("./settings/rejectionListBase.json");
   }
 }

@@ -36,6 +36,7 @@ void threadFunc(void* args)
     smo::Layouts& layouts = smo::getLayouts();
     layouts.mConnectionWait->appear();
     layouts.mConnectionWait->playLoop();
+    layouts.pingFrames = 0;
 
     // Wait for the layout to appear for 1 seconds
     nn::os::SleepThread(nn::TimeSpan::FromSeconds(1));
