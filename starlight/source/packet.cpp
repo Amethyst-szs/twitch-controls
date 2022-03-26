@@ -3,6 +3,7 @@
 #include "al/util.hpp"
 #include "game/GameData/GameDataFunction.h"
 #include "game/StageScene/StageScene.h"
+#include "layouts.hpp"
 #include "rs/util.hpp"
 #include "sead/math/seadVector.h"
 #include "util.h"
@@ -29,6 +30,18 @@ void OutPacketLog::construct(u8* dst)
 // {
 //     *dst = toggleState;
 // }
+
+void InPacketPing::parse(const u8* data, u32 len)
+{
+    // Nothing to parse
+}
+
+void InPacketPing::on(Server& server)
+{
+    smo::Layouts& layouts = smo::getLayouts();
+    layouts.pingFrames = 0;
+    amy::log("Ping");
+}
 
 void InPacketEvent::parse(const u8* data, u32 len)
 {

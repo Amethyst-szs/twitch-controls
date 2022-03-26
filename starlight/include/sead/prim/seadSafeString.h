@@ -5,25 +5,30 @@
 #include <sead/basis/seadRawPrint.h>
 #include <sead/basis/seadTypes.h>
 
-namespace sead
-{
+namespace sead {
 class Heap;
 
 template <typename T>
 class BufferedSafeStringBase;
 
 template <typename T>
-class SafeStringBase
-{
+class SafeStringBase {
 public:
     /// Iterates over every character of a string.
     /// Note that this is extremely inefficient and leads to quadratic time complexity
     /// because of the redundant calls to calcLength() in operator*.
-    class iterator
-    {
+    class iterator {
     public:
-        explicit iterator(const SafeStringBase* string) : mString(string), mIndex(0) {}
-        iterator(const SafeStringBase* string, s32 index) : mString(string), mIndex(index) {}
+        explicit iterator(const SafeStringBase* string)
+            : mString(string)
+            , mIndex(0)
+        {
+        }
+        iterator(const SafeStringBase* string, s32 index)
+            : mString(string)
+            , mIndex(index)
+        {
+        }
         bool operator==(const iterator& rhs) const
         {
             return mString == rhs.mString && mIndex == rhs.mIndex;
@@ -42,16 +47,17 @@ public:
     };
 
     /// Iterates over a string as if it were split by one or several delimiter characters.
-    class token_iterator : public iterator
-    {
+    class token_iterator : public iterator {
     public:
         token_iterator(const SafeStringBase* string, const SafeStringBase& delimiter)
-            : iterator(string), mDelimiter(delimiter)
+            : iterator(string)
+            , mDelimiter(delimiter)
         {
         }
 
         token_iterator(const SafeStringBase* string, s32 index, const SafeStringBase& delimiter)
-            : iterator(string, index), mDelimiter(delimiter)
+            : iterator(string, index)
+            , mDelimiter(delimiter)
         {
         }
 
@@ -73,8 +79,12 @@ public:
         const SafeStringBase mDelimiter;
     };
 
-    SafeStringBase() : mStringTop(&cNullChar) {}
-    SafeStringBase(const T* str) : mStringTop(str)
+    SafeStringBase()
+        : mStringTop(&cNullChar)
+    {
+    }
+    SafeStringBase(const T* str)
+        : mStringTop(str)
     {
         SEAD_ASSERT_MSG(str != nullptr, "str must not be nullptr.");
     }
@@ -126,8 +136,8 @@ public:
     s32 findIndex(const SafeStringBase<T>& str, s32 start_pos) const;
     s32 rfindIndex(const SafeStringBase<T>& str) const;
 
-    iterator findIterator(const SafeStringBase& str) const { return {this, findIndex(str)}; }
-    iterator rfindIterator(const SafeStringBase& str) const { return {this, rfindIndex(str)}; }
+    iterator findIterator(const SafeStringBase& str) const { return { this, findIndex(str) }; }
+    iterator rfindIterator(const SafeStringBase& str) const { return { this, rfindIndex(str) }; }
 
     bool isEmpty() const;
     bool startsWith(const SafeStringBase<T>& prefix) const;
@@ -139,7 +149,7 @@ public:
     static const s32 cMaximumLength = 0x80000;
 
 protected:
-    virtual void assureTerminationImpl_() const {}
+    virtual void assureTerminationImpl_() const { }
     const T& unsafeAt_(s32 idx) const { return mStringTop[idx]; }
 
     const T* mStringTop;
@@ -150,25 +160,21 @@ const SafeStringBase<char> SafeStringBase<char>::cEmptyString;
 
 template <typename T>
 s32 replaceStringImpl_(T* dst, s32* length, s32 dst_size, const T* src, s32 src_size,
-                       const SafeStringBase<T>& old_str, const SafeStringBase<T>& new_str,
-                       bool* is_buffer_overflow);
+    const SafeStringBase<T>& old_str, const SafeStringBase<T>& new_str,
+    bool* is_buffer_overflow);
 
 template <typename T>
-class BufferedSafeStringBase : public SafeStringBase<T>
-{
+class BufferedSafeStringBase : public SafeStringBase<T> {
 public:
     __attribute__((always_inline)) BufferedSafeStringBase(T* buffer, s32 size)
         : SafeStringBase<T>(buffer)
     {
         mBufferSize = size;
-        if (size <= 0)
-        {
+        if (size <= 0) {
             SEAD_ASSERT_MSG(false, "Invalied buffer size(%d).\n", this->getBufferSize());
             this->mStringTop = nullptr;
             this->mBufferSize = 0;
-        }
-        else
-        {
+        } else {
             this->assureTerminationImpl_();
         }
     }
@@ -277,12 +283,12 @@ public:
     inline s32 replaceChar(T old_char, T new_char);
     /// @return the number of characters that were replaced
     inline s32 replaceCharList(const SafeStringBase<T>& old_chars,
-                               const SafeStringBase<T>& new_chars);
+        const SafeStringBase<T>& new_chars);
     /// Set the contents of this string to target_str, after replacing occurrences of old_str in
     /// target_str with new_str.
     /// @return the number of replaced occurrences
     inline s32 setReplaceString(const SafeStringBase<T>& target_str,
-                                const SafeStringBase<T>& old_str, const SafeStringBase<T>& new_str);
+        const SafeStringBase<T>& old_str, const SafeStringBase<T>& new_str);
     /// Replace occurrences of old_str in this string with new_str.
     /// @return the number of replaced occurrences
     inline s32 replaceString(const SafeStringBase<T>& old_str, const SafeStringBase<T>& new_str);
@@ -306,17 +312,22 @@ protected:
 };
 
 template <typename T, s32 L>
-class FixedSafeStringBase : public BufferedSafeStringBase<T>
-{
+class FixedSafeStringBase : public BufferedSafeStringBase<T> {
 public:
-    FixedSafeStringBase() : BufferedSafeStringBase<T>(mBuffer, L) { this->clear(); }
+    FixedSafeStringBase()
+        : BufferedSafeStringBase<T>(mBuffer, L)
+    {
+        this->clear();
+    }
 
-    FixedSafeStringBase(const SafeStringBase<T>& str) : BufferedSafeStringBase<T>(mBuffer, L)
+    FixedSafeStringBase(const SafeStringBase<T>& str)
+        : BufferedSafeStringBase<T>(mBuffer, L)
     {
         this->copy(str);
     }
 
-    FixedSafeStringBase(const FixedSafeStringBase& str) : BufferedSafeStringBase<T>(mBuffer, L)
+    FixedSafeStringBase(const FixedSafeStringBase& str)
+        : BufferedSafeStringBase<T>(mBuffer, L)
     {
         this->copy(str);
     }
@@ -361,11 +372,16 @@ template <>
 s32 BufferedSafeStringBase<char16>::appendWithFormatV(const char16* formatStr, va_list args);
 
 template <s32 L>
-class FixedSafeString : public FixedSafeStringBase<char, L>
-{
+class FixedSafeString : public FixedSafeStringBase<char, L> {
 public:
-    FixedSafeString() : FixedSafeStringBase<char, L>() {}
-    FixedSafeString(const SafeString& str) : FixedSafeStringBase<char, L>(str) {}
+    FixedSafeString()
+        : FixedSafeStringBase<char, L>()
+    {
+    }
+    FixedSafeString(const SafeString& str)
+        : FixedSafeStringBase<char, L>(str)
+    {
+    }
     FixedSafeString(const FixedSafeString& other)
         : FixedSafeString(static_cast<const SafeString&>(other))
     {
@@ -385,19 +401,26 @@ public:
 };
 
 template <s32 L>
-class WFixedSafeString : public FixedSafeStringBase<char16, L>
-{
+class WFixedSafeString : public FixedSafeStringBase<char16, L> {
 public:
-    WFixedSafeString() : FixedSafeStringBase<char16, L>() {}
+    WFixedSafeString()
+        : FixedSafeStringBase<char16, L>()
+    {
+    }
 
-    WFixedSafeString(const WSafeString& str) : FixedSafeStringBase<char16, L>(str) {}
+    WFixedSafeString(const WSafeString& str)
+        : FixedSafeStringBase<char16, L>(str)
+    {
+    }
 };
 
 template <s32 L>
-class FormatFixedSafeString : public FixedSafeString<L>
-{
+class FormatFixedSafeString : public FixedSafeString<L> {
 public:
-    FormatFixedSafeString() : FormatFixedSafeString("") {}
+    FormatFixedSafeString()
+        : FormatFixedSafeString("")
+    {
+    }
 
 #ifdef __GNUC__
     [[gnu::format(printf, 2, 3)]]
@@ -414,8 +437,7 @@ public:
 };
 
 template <s32 L>
-class WFormatFixedSafeString : public WFixedSafeString<L>
-{
+class WFormatFixedSafeString : public WFixedSafeString<L> {
 public:
     explicit WFormatFixedSafeString(const char16* format, ...)
     {
@@ -428,12 +450,11 @@ public:
 };
 
 template <typename T>
-class HeapSafeStringBase : public BufferedSafeStringBase<T>
-{
+class HeapSafeStringBase : public BufferedSafeStringBase<T> {
 public:
     HeapSafeStringBase(Heap* heap, const SafeStringBase<T>& string, s32 alignment = sizeof(void*))
         : BufferedSafeStringBase<T>(new (heap, alignment) T[string.calcLength() + 1](),
-                                    string.calcLength() + 1)
+            string.calcLength() + 1)
     {
         this->copy(string);
     }
@@ -485,4 +506,8 @@ inline bool operator>=(const SafeString& lhs, const SafeString& rhs)
     return lhs.compare(rhs) >= 0;
 }
 
-}  // namespace sead
+} // namespace sead
+
+#define SEAD_PRIM_SAFE_STRING_H_
+#include <sead/prim/seadSafeString.hpp>
+#undef SEAD_PRIM_SAFE_STRING_H_

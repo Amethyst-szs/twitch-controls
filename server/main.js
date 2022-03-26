@@ -1,7 +1,7 @@
 //Initalize server for Starlight
 const dgram = require("dgram");
 const server = dgram.createSocket("udp4");
-let client = {};
+let client;
 //Twitch API requirements
 const BaseAPI = require("@twurple/api");
 let api;
@@ -34,8 +34,12 @@ let rejectionList = require("./settings/rejectionListBase.json");
 let FullRedeemList = [];
 const restrictions = require("./server_bin/restrictions");
 
+let lastPingTime = new Date().getTime();
+let curTime = new Date().getTime();
+
 //Respond to packets from the switch
 server.on("message", (msg, rinfo) => {
+  // console.log(msg);
   switch (msg.readInt8()) {
     case -1: //Dummy Initalization
       inPackets.DummyInit(msg, rinfo);
@@ -44,13 +48,24 @@ server.on("message", (msg, rinfo) => {
       client = inPackets.Init(msg, rinfo);
       rejectionID = 0;
       rejectionList = require("./settings/rejectionListBase.json");
+      lastPingTime = new Date().getTime();
+      serverPing();
       break;
     case -3: //Log any information with msg info
-      //Inital log
-      inPackets.Log(msg, rinfo, CurDir);
+      //Ping check
+      if(!bufferTool.PingBuf(msg, CurDir)){
+        //Log
+        inPackets.Log(msg, rinfo, CurDir);
+      } else {
+        lastPingTime = curTime;
+        break;
+      }
 
       //Check if this log is a disconnection request
-      if (bufferTool.disconnectCheck(msg, CurDir)) client = {};
+      if (bufferTool.disconnectCheck(msg, CurDir)){
+        client = null;
+        break;
+      } 
 
       //Invalid stage log type check
       invalidStage = bufferTool.demoUpdate(msg, CurDir, invalidStage);
@@ -71,6 +86,7 @@ server.on("message", (msg, rinfo) => {
             rejectionList[isReject.rejectionID].ID
           );
         }
+        break;
       }
 
       //Restrict status update
@@ -82,10 +98,28 @@ server.on("message", (msg, rinfo) => {
   }
 });
 
+async function serverPing(){
+  curTime = new Date().getTime();
+
+  if(client){
+    const buf = Buffer.alloc(1);
+    buf.writeInt8(4, 0);
+    server.send(buf, client.port, client.address);
+  }
+
+  if(curTime - lastPingTime >= 5000 && client){
+    log.log(1, `\n///\nCONNECTION TO CLIENT WAS LOST!!\n///\n`);
+    client = null;
+    rejectionID = 1;
+    rejectionList = rejectionList = require("./settings/rejectionListBase.json");
+  }
+}
+
 //Start listening as a server
 server.on("listening", () => {
   const address = server.address();
   log.log(1, `Server listening on ${address.port}`);
+  setInterval(serverPing, 2500);
 });
 
 //Close server on error
@@ -302,7 +336,7 @@ async function TwitchHandler() {
     }
 
     //Check and make sure a switch has connected already
-    if (client.address == undefined) {
+    if (!client) {
       log.log(
         2,
         `${message.rewardTitle} from ${message.userDisplayName} but no client connected yet!`

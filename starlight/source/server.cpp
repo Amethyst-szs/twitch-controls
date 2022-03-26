@@ -1,8 +1,10 @@
 #include "al/util.hpp"
 #include "fl/packet.h"
 #include "game/Layouts/CoinCounter.h"
+#include "layouts.hpp"
 #include "nn/init.h"
 #include "nn/os.hpp"
+#include "nn/time.h"
 #include "types.h"
 #include "util.h"
 #include <fl/server.h>
@@ -10,7 +12,6 @@
 #include <nn/nifm.h>
 #include <nn/socket.h>
 #include <sead/basis/seadNew.hpp>
-
 
 #define IN_PACKET(TYPE)             \
     case smo::InPacketType::TYPE: { \
@@ -22,15 +23,37 @@
 
 void threadFunc(void* args)
 {
+    // Inital setup
     smo::Server* server = (smo::Server*)args;
     nn::TimeSpan w = nn::TimeSpan::FromNanoSeconds(1000000);
     u8* buf = (u8*)nn::init::GetAllocator()->Allocate(30720);
+
+    // Wait for the game to finish starting
+    nn::os::YieldThread();
+    nn::os::SleepThread(nn::TimeSpan::FromSeconds(12));
+
+    // Prepare the connecting layout
+    smo::Layouts& layouts = smo::getLayouts();
+    layouts.mConnectionWait->appear();
+    layouts.mConnectionWait->playLoop();
+
+    // Wait for the layout to appear for 1 seconds
+    nn::os::SleepThread(nn::TimeSpan::FromSeconds(1));
+
+    // Attempt a connection
+    smo::Server::instance().connect(smo::getServerIp(false));
+    layouts.mConnectionWait->exeEnd();
+
     while (true) {
         server->handlePacket(buf, 30720);
+        // amy::log("PingFrames: %i, %i", layouts.pingFrames, layouts.pingFrames >= 300);
         nn::os::YieldThread();
         nn::os::SleepThread(w);
     }
+
     nn::init::GetAllocator()->Free(buf);
+
+    nn::os::YieldThread();
 }
 
 namespace smo {
@@ -86,6 +109,8 @@ void Server::connect(const char* ipS)
         start();
 
     sendInit(ipS);
+    amy::updateServerDemoState();
+    amy::log("Restrict%u", amy::getRedeemInfo().restrictionTier);
 }
 
 void Server::disconnect()
@@ -130,6 +155,7 @@ void Server::handlePacket(u8* buf, size_t bufSize)
         IN_PACKET(Event);
         IN_PACKET(Resize);
         IN_PACKET(PosRandomize);
+        IN_PACKET(Ping);
 
     default:
         break;

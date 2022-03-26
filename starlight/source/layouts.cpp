@@ -10,9 +10,10 @@ void smo::layoutInit(al::LayoutInitInfo const& initInfo)
 {
     smo::Layouts& layouts = smo::getLayouts();
 
-    // layouts.mConnectionWait = new al::WindowConfirmWait("ServerWaitConnect", "WindowConfirmWait", initInfo);
+    typedef void (smo::Layouts::*LayoutsThreadFunc)(void);
 
-    // layouts.mConnectionWait->setTxtMessage(u"Connecting to Server.");
+    layouts.mConnectionWait = new al::WindowConfirmWait("ServerWaitConnect", "WindowConfirmWait", initInfo);
+    layouts.mConnectionWait->setTxtMessage(u"Searching for Twitch Controls server");
 
     // mConnectionWait->tryEndForce();
 }

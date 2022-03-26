@@ -12,7 +12,7 @@ namespace al {
 struct LayoutKeeper;
 
 class IUseLayout : virtual public al::IUseName {
-    public:
-        virtual al::LayoutKeeper* getLayoutKeeper(void) const = 0;
+public:
+    virtual al::LayoutKeeper* getLayoutKeeper(void) const = 0;
 };
-}  // namespace al
+} // namespace al

@@ -116,6 +116,26 @@ al::StageInfo* initDebugListHook(const al::Scene* curScene)
 void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead::DrawContext* drawContext)
 {
     amy::RedeemInfo::state& ri = amy::getRedeemInfo();
+
+    // Increase the frame counter since the last ping
+    smo::Layouts& layouts = smo::getLayouts();
+    layouts.pingFrames++;
+
+    if (layouts.pingFrames >= 300) {
+        // In this case, the game is fairly sure the server is lost and it should go idle
+        if (!layouts.mConnectionWait->mIsAlive) {
+            layouts.mConnectionWait->appear();
+            layouts.mConnectionWait->playLoop();
+            ri.rejectionID = 0;
+        }
+        al::isPadHoldUp(-1) ? smo::Server::instance().connect(smo::getServerIp(true)) : smo::Server::instance().connect(smo::getServerIp(false));
+    } else {
+        // Server is okay! Perform usual code
+        if (layouts.mConnectionWait->mIsAlive) {
+            layouts.mConnectionWait->exeEnd();
+        }
+    }
+
     // Update invalid stage
     ri.isInvalidStage = al::isEqualSubString(curSequence->mGameDataHolder->getCurrentStageName(), "Demo");
 
@@ -216,6 +236,8 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
             gTextWriter->printf("Reject Redeems: %s\n", !ri.isRedeemsValid ? "true" : "false");
             gTextWriter->printf("Invalid Stage: %s\n", ri.isInvalidStage ? "true" : "false");
             gTextWriter->printf("Restriction Tier: %i\n", ri.restrictionTier);
+            gTextWriter->printf("Ping Frames: %i\n", layouts.pingFrames);
+            gTextWriter->printf("Overlay State: %s\n\n", layouts.mConnectionWait->mIsAlive ? "true" : "false");
             gTextWriter->printf("Gravity Timer: %f\n", amy::getGravityState().timer);
             gTextWriter->printf("Wind Timer: %f\n", amy::getWindState().timer);
             gTextWriter->printf("Coin Tick Rate: %f\n", amy::getCoinTickState().speed);
@@ -283,8 +305,8 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
                     break;
                 case 7: {
                     smo::Layouts& layouts = smo::getLayouts();
-                    // layouts.mConnectionWait->appear();
-                    // layouts.mConnectionWait->playLoop();
+                    layouts.mConnectionWait->appear();
+                    layouts.mConnectionWait->playLoop();
                     break;
                 }
                 }

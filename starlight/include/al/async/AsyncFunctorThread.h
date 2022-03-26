@@ -1,7 +1,7 @@
 #pragma once
 
 #include "types.h"
-#include "sead/prim/seadSafeString.h"
+#include "sead/prim/seadSafeString.hpp"
 #include "FunctorBase.h"
 #include "sead/thread/seadDelegateThread.h"
 #include "sead/thread/seadMessageQueue.h"

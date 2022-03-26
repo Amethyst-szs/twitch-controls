@@ -87,6 +87,15 @@ module.exports = {
     return;
   },
 
+  PingBuf: function(msg, CurDir){
+    //Grab the ping template buffer from the buffer file
+    const buf = Buffer.from(
+      fs.readFileSync(`${CurDir}/buffers/ping.buf`)
+    );
+    
+    return Buffer.compare(msg, buf) == 0;
+  },
+
   Vector3fBuf: function (SocketID, FloatArray) {
     const buf = Buffer.alloc(13);
 
@@ -94,7 +103,6 @@ module.exports = {
     buf.writeFloatLE(FloatArray[0], 1);
     buf.writeFloatLE(FloatArray[1], 5);
     buf.writeFloatLE(FloatArray[2], 9);
-
     return buf;
   },
 

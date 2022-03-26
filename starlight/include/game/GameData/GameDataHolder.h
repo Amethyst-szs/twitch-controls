@@ -5,12 +5,6 @@
 
 #pragma once
 
-namespace al {
-    class ISceneObj {
-
-    };
-}
-
 #include "al/scene/Scene.h"
 #include "game/GameData/GameDataFile.h"
 
