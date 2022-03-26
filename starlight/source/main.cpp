@@ -128,7 +128,8 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
             layouts.mConnectionWait->playLoop();
             ri.rejectionID = 0;
         }
-        al::isPadHoldUp(-1) ? smo::Server::instance().connect(smo::getServerIp(true)) : smo::Server::instance().connect(smo::getServerIp(false));
+        if (layouts.pingFrames % 30 == 1)
+            al::isPadHoldUp(-1) ? smo::Server::instance().connect(smo::getServerIp(true)) : smo::Server::instance().connect(smo::getServerIp(false));
     } else {
         // Server is okay! Perform usual code
         if (layouts.mConnectionWait->mIsAlive) {
