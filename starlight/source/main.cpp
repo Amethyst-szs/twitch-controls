@@ -417,14 +417,9 @@ void stageSceneHook(StageScene* stageScene)
     }
 
     // Wind handler
-    if (amy::getWindState().timer > 0 && !isInterupted) {
-        if (player->getPlayerHackKeeper()->getCurrentHackName() != nullptr) {
-            amy::getWindState().timer--;
-            al::addVelocity(player->getPlayerHackKeeper()->currentHackActor, amy::getWindState().vect);
-        } else if (!rs::isPlayerOnGround(player)) {
-            amy::getWindState().timer--;
-            al::addVelocity(player, amy::getWindState().vect);
-        }
+    if (amy::getWindState().timer > 0 && !rs::isPlayerOnGround(player) && !isInterupted && player->getPlayerHackKeeper()->getCurrentHackName() == nullptr) {
+        amy::getWindState().timer--;
+        al::addVelocity(player, amy::getWindState().vect);
     }
 
     // Hot floor updater
