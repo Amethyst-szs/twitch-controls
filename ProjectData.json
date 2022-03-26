@@ -2,18 +2,21 @@
 	"Version": "10",
 	"PName": "twitch-controls",
 	"DumpStats": {
-		"Time": "3-25-2022 21:33:54",
-		"Amount": 617,
+		"Time": "3-25-2022 23:39:17",
+		"Amount": 628,
 		"isUndumped": false,
-		"Type": "Quick"
+		"Type": "Complete"
 	},
 	"songs": {},
 	"dates": {
 		"2i6owudm0": {
 			"LayoutData": {
-				"CounterLife.szs": 1647711428865.75,
+				"CounterLife.szs": 1648275536207.9785,
 				"CounterLifeKids.szs": 1647710921135.1274,
-				"KidsMode.szs": 1619387757107.188
+				"KidsMode.szs": 1619387757107.188,
+				"TitleLogoParts.szs": 1648276715330.8557,
+				"TitleLogoSmallParts.szs": 1648276713517.1626,
+				"WindowConfirmWait.szs": 1648274401928.637
 			},
 			"ObjectData": {
 				"PlayerActorHakoniwa.szs": 1647322668943.5361,

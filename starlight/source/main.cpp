@@ -40,14 +40,11 @@ static int debugPage = 0;
 static int debugSel = 0;
 static int debugMax = 2;
 static const char* page2Options[] {
-    "Connect to local server\n",
-    "Connect to private server\n",
-    "Disconnect from current server\n",
+    "Disconnect from server\n",
     "Kill player\n",
     "End puppetable\n",
     "Complete kingdom (Glitch central)\n",
-    "Plus 100 coins\n",
-    "Overlay Test\n"
+    "Plus 100 coins\n"
 };
 static int page2Len = *(&page2Options + 1) - page2Options;
 
@@ -121,20 +118,25 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
     smo::Layouts& layouts = smo::getLayouts();
     layouts.pingFrames++;
 
-    if (layouts.pingFrames >= 300) {
+    if (layouts.pingFrames >= 300 && layouts.firstBoot) {
         // In this case, the game is fairly sure the server is lost and it should go idle
         if (!layouts.mConnectionWait->mIsAlive) {
             layouts.mConnectionWait->appear();
             layouts.mConnectionWait->playLoop();
             ri.rejectionID = 0;
         }
-        if (layouts.pingFrames % 30 == 1)
+
+        // Every 60 frames, try a reconnection!
+        if ((layouts.pingFrames + 3) % 60 == 1)
             al::isPadHoldUp(-1) ? smo::Server::instance().connect(smo::getServerIp(true)) : smo::Server::instance().connect(smo::getServerIp(false));
-    } else {
+
+        // Every 10 seconds, display a new fun fact!
+        if ((layouts.pingFrames + 303) % 600 == 1)
+            layouts.mConnectionWait->setTxtMessage(smo::getFunFact());
+    } else if (layouts.mConnectionWait->mIsAlive && layouts.firstBoot) {
         // Server is okay! Perform usual code
-        if (layouts.mConnectionWait->mIsAlive) {
-            layouts.mConnectionWait->exeEnd();
-        }
+        layouts.mConnectionWait->exeEnd();
+        layouts.mConnectionWait->setTxtMessage(u"Connection to Twitch lost! One moment!");
     }
 
     // Update invalid stage
@@ -275,41 +277,21 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
             // Process a selection
             if (al::isPadTriggerRight(-1) && !al::isPadHoldZL(-1))
                 switch (debugSel) {
-                case 0: // Connect to local server
-                    amy::log("ClientDisconnect");
-                    smo::Server::instance().connect(smo::getServerIp(true));
-                    amy::updateServerDemoState();
-                    amy::log("Restrict%u", ri.restrictionTier);
-                    ri.rejectionID = 0;
-                    break;
-                case 1: // Connect to private server
-                    amy::log("ClientDisconnect");
-                    smo::Server::instance().connect(smo::getServerIp(false));
-                    amy::updateServerDemoState();
-                    amy::log("Restrict%u", ri.restrictionTier);
-                    ri.rejectionID = 0;
-                    break;
-                case 2:
+                case 0:
                     amy::log("ClientDisconnect");
                     break;
-                case 3:
+                case 1:
                     GameDataFunction::killPlayer(*stageScene->mHolder);
                     break;
-                case 4:
+                case 2:
                     player->endDemoPuppetable();
                     break;
-                case 5:
+                case 3:
                     GameDataFunction::addPayShine(holder, 30);
                     break;
-                case 6:
+                case 4:
                     stageScene->mHolder->mGameDataFile->addCoin(100);
                     break;
-                case 7: {
-                    smo::Layouts& layouts = smo::getLayouts();
-                    layouts.mConnectionWait->appear();
-                    layouts.mConnectionWait->playLoop();
-                    break;
-                }
                 }
             break;
         }

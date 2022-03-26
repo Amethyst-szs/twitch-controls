@@ -10,10 +10,11 @@ namespace smo {
 struct Layouts {
     // -- Game Layouts --
     int pingFrames = 0;
-    int previousAttemptFrame = 0;
+    bool firstBoot = false;
     al::WindowConfirmWait* mConnectionWait;
 };
 smo::Layouts& getLayouts();
+const char16_t* getFunFact();
 
 // Functions
 void layoutInit(al::LayoutInitInfo const& initInfo);
