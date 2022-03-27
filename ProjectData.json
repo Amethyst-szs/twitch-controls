@@ -2,10 +2,10 @@
 	"Version": "10",
 	"PName": "twitch-controls",
 	"DumpStats": {
-		"Time": "3-25-2022 23:55:9",
-		"Amount": 629,
+		"Time": "3-27-2022 10:11:16",
+		"Amount": 630,
 		"isUndumped": false,
-		"Type": "Quick"
+		"Type": "Complete"
 	},
 	"songs": {},
 	"dates": {
@@ -28,11 +28,23 @@
 			}
 		},
 		"jcirk6ww": {
+			"LayoutData": {
+				"BootLoading.szs": 1648400505453.6414,
+				"CounterLife.szs": 1648400505454.1377,
+				"CounterLifeKids.szs": 1647990305872.4963,
+				"KidsMode.szs": 1647990305872.4963,
+				"TitleLogoParts.szs": 1648400505460.183,
+				"TitleLogoSmallParts.szs": 1648400505461.1663,
+				"WindowConfirmWait.szs": 1648400505461.6636
+			},
 			"ObjectData": {
-				"PlayerActorHakoniwa.szs": 1646941289729.0547,
+				"PlayerActorHakoniwa.szs": 1647358466820.3208,
 				"PlayerConst.txt": 1646941303620.938
 			},
-			"SoundData": {}
+			"SoundData": {},
+			"StageData": {
+				"SnowWorldLobby000StageMap.szs": 1648400505448.2346
+			}
 		}
 	},
 	"starlight": true
