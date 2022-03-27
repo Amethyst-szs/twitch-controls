@@ -43,7 +43,23 @@ const char16_t* smo::getFunFact()
         u"Did you know: SMO Lost Kingdoms is not a good mod",
         u"Fun fact: The water in Yoshi Star Galaxy looks terrible",
         u"Did you know: Amethyst wants dumplings right now",
-        u"I feel like SMO needs more spooky captures"
+        u"I feel like SMO needs more spooky captures",
+        u"Fun Fact: Mokachii is a really good artist!",
+        u"Fun Fact: Nut jumps are illegal under USA Flight Regulations",
+        u"Did you know: A baby has more bones than you"
+        u"SMO Twitch controls is sponsored by Technical Difficulties",
+        u"If you take the amount of packets being successfully recieved, \nand multiply it by the number of commands the server is executing, \nyou get how amused Amethyst is right now.",
+        u"Are you sure it's not a you problem?",
+        u"Okay? Which one of you tripped over the power cord?",
+        u"At least your switch didn't crash I guess?",
+        u"This could be a good time for a bathroom break",
+        u"Fun Fact: The logo for this mod is not an NFT",
+        u"Amethyst ran out of sandpaper to fix the imperfections in the code",
+        u"Gosh, did Amethyst make ANOTHER typo?",
+        u"If this crashes again, Amethyst is selling this code to Crafty",
+        u"Programming is like a box of chocolates. Stuff like this happens"
+        u"Epic Coding Fail",
+        u"Alright was this Amethyst, Twitch, or the power cord?"
     };
 
     return funFacts[sead::GlobalRandom::instance()->getU32() % (sizeof(funFacts) / sizeof(const char16_t*))];
