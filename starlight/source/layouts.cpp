@@ -50,7 +50,7 @@ const char16_t* smo::getFunFact()
         u"SMO Twitch controls is sponsored by Technical Difficulties",
         u"If you take the amount of packets being successfully recieved, \nand multiply it by the number of commands the server is executing, \nyou get how amused Amethyst is right now.",
         u"Are you sure it's not a you problem?",
-        u"Okay? Which one of you tripped over the power cord?",
+        u"Okay, which one of you tripped over the power cord?",
         u"At least your switch didn't crash I guess?",
         u"This could be a good time for a bathroom break",
         u"Fun Fact: The logo for this mod is not an NFT",
