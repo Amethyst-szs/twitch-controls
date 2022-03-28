@@ -2,8 +2,8 @@
 	"Version": "10",
 	"PName": "twitch-controls",
 	"DumpStats": {
-		"Time": "3-28-2022 1:13:45",
-		"Amount": 634,
+		"Time": "3-28-2022 13:11:9",
+		"Amount": 675,
 		"isUndumped": false,
 		"Type": "Quick"
 	},
@@ -17,7 +17,7 @@
 				"KidsMode.szs": 1619387757107.188,
 				"TitleLogoParts.szs": 1648276715330.8557,
 				"TitleLogoSmallParts.szs": 1648276713517.1626,
-				"WindowConfirmWait.szs": 1648274401928.637
+				"WindowConfirmWait.szs": 1648489305038.0693
 			},
 			"ObjectData": {
 				"PlayerActorHakoniwa.szs": 1647322668943.5361,

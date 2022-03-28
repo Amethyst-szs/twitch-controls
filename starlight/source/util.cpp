@@ -212,3 +212,33 @@ void amy::updateRedeemStatus()
     // amy::log("Info: %i %i %s", amy::getRedeemInfo().isRedeemsValid, amy::getRedeemInfo().isInvalidStage, GameDataFunction::getCurrentStageName(*amy::getGlobalStageScene()->mHolder));
     return;
 }
+
+void amy::drawBackground(agl::DrawContext* context, sead::Vector2f position, sead::Vector2f size, sead::Vector2f offset, sead::Color4f color)
+{
+    sead::Vector3f p1 = { position.x + offset.x, position.y + offset.y, 0.f }; // top left
+    sead::Vector3f p2 = { position.x + size.x + offset.x, position.y + offset.y, 0.f }; // top right
+    sead::Vector3f p3 = { position.x + offset.x, position.y + size.y + offset.y, 0.f }; // bottom left
+    sead::Vector3f p4 = { position.x + size.x + offset.x, position.y + size.y + offset.y, 0.f }; // bottom right
+
+    agl::utl::DevTools::beginDrawImm(context, sead::Matrix34<float>::ident, sead::Matrix44<float>::ident);
+    agl::utl::DevTools::drawTriangleImm(context, p1, p2, p3, color);
+    agl::utl::DevTools::drawTriangleImm(context, p3, p4, p2, color);
+}
+
+int amy::limitInt(int min, int value, int max)
+{
+    if (value > max)
+        value = min;
+    else if (value < min)
+        value = max;
+    return value;
+}
+
+float amy::limitFloat(float min, float value, float max)
+{
+    if (value > max)
+        value = max;
+    else if (value < min)
+        value = min;
+    return value;
+}

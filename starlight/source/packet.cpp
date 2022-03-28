@@ -6,6 +6,7 @@
 #include "layouts.hpp"
 #include "rs/util.hpp"
 #include "sead/math/seadVector.h"
+#include "sead/prim/seadSafeString.h"
 #include "util.h"
 #include <string.h>
 
@@ -41,6 +42,20 @@ void InPacketPing::on(Server& server)
     smo::Layouts& layouts = smo::getLayouts();
     layouts.pingFrames = 0;
     amy::log("Ping");
+}
+
+void InPacketSay::parse(const u8* data, u32 len)
+{
+    memcpy(message.getBuffer(), data, len + 1);
+    textFrames = (4 * 60) + (len * 6);
+}
+
+void InPacketSay::on(Server& server)
+{
+    amy::log("Say message: %s", message.cstr());
+    amy::RedeemInfo::state& ri = amy::getRedeemInfo();
+    ri.sayText = message;
+    ri.sayTimer = textFrames;
 }
 
 void InPacketEvent::parse(const u8* data, u32 len)

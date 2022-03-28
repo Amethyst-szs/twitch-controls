@@ -6,14 +6,17 @@ const Rand = require("./advancedRand");
 const bufferTool = require("./bufferTool");
 const log = require("./console");
 
+let serverRef;
+let client;
+
 //Channel point redeem: PrevScene (Server -> Client)
-function Events(server, EventID, client) {
+function Events(EventID) {
   //Socket ID 1 - Event ID 1
-  server.send(bufferTool.GenericBuf(1, EventID), client.port, client.address);
+  serverRef.send(bufferTool.GenericBuf(1, EventID), client.port, client.address);
 }
 
 //Channel point redeem: Resize (Server -> Client)
-function Resize(server, client) {
+function Resize() {
   //Socket ID 2
   const Amplitude = RedeemSet.Resize.Amplitude;
   const Scale = [
@@ -21,11 +24,11 @@ function Resize(server, client) {
     Rand.Ampli(Amplitude, false),
     Rand.Ampli(Amplitude, false),
   ];
-  server.send(bufferTool.Vector3fBuf(2, Scale), client.port, client.address);
+  serverRef.send(bufferTool.Vector3fBuf(2, Scale), client.port, client.address);
 }
 
 //Channel point redeem: PosRandomize (Server -> Client)
-function PosRandomize(server, client) {
+function PosRandomize() {
   //Socket ID 3
   const Amplitude = RedeemSet.PosRandomize.Amplitude;
   const NewPos = [
@@ -33,11 +36,40 @@ function PosRandomize(server, client) {
     Rand.Ampli(Amplitude, false),
     Rand.Ampli(Amplitude, true),
   ];
-  server.send(bufferTool.Vector3fBuf(3, NewPos), client.port, client.address);
+  serverRef.send(bufferTool.Vector3fBuf(3, NewPos), client.port, client.address);
 }
 
 module.exports = {
-  outHandler: function (redeemName, server, client, CurDir) {
+  getClient: function(){
+    return client;
+  },
+  
+  setClient: function(newClient){
+    client = newClient;
+    return;
+  },
+
+  clearClient: function(){
+    client = null;
+    return;
+  },
+
+  setServerRef: function(server){
+    serverRef = server;
+    return;
+  },
+
+  sayMessage: function(msg){
+    //Check that the client is valid
+    if(!client){
+      log.log(3, `Message can not be sent to client because there is no client`);
+      return;
+    }
+
+    serverRef.send(bufferTool.sayBuf(msg), client.port, client.address);
+  },
+  
+  outHandler: function (redeemName, server, CurDir) {
     //Get the lang init so you can fetch the original name of the redeem
     langInit = JSON.parse(fs.readFileSync(`${CurDir}/settings/localize/${twitchInit.getLang()}_init.json`));
 
@@ -46,49 +78,49 @@ module.exports = {
     //Switch case through all valid rewards
     switch (langInit[redeemName].original) {
       case "Resize": //Packet ID 2 (Resize)
-        Resize(server, client);
+        Resize();
         break;
       case "Position Randomizer": //Packet ID 3 (PosRandomize)
-        PosRandomize(server, client);
+        PosRandomize();
         break;
       case "See Myself Out": //Event ID 1 (PrevScene)
-        Events(server, 1, client);
+        Events(1);
         break;
       case "Change Gravity": //Event ID 2 (GravFlip)
-        Events(server, 2, client);
+        Events(2);
         break;
       case "Up we go": //Event ID 3 (Fling)
-        Events(server, 3, client);
+        Events(3);
         break;
       case "Cappy? Nah": //Event ID 4 (Cappy)
-        Events(server, 4, client);
+        Events(4);
         break;
       case "Random Kingdom": //Event ID 5 (Random Kingdom)
-        Events(server, 5, client);
+        Events(5);
         break;
       case "Highway to Death": //Event ID 6 (CoinTick)
-        Events(server, 6, client);
+        Events(6);
         break;
       case "Whispy Winds": //Event ID 7 (Wind)
-        Events(server, 7, client);
+        Events(7);
         break;
       case "Hot Floor": //Event ID 8
-        Events(server, 8, client);
+        Events(8);
         break;
       case "Stick Flip": //Event ID 9
-        Events(server, 9, client);
+        Events(9);
         break;
       case "Hot Tub Stream": //Event ID 10
-        Events(server, 10, client);
+        Events(10);
         break;
       case "Dance Party": //Event ID 11
-        Events(server, 11, client);
+        Events(11);
         break;
       case "Moon Magnet": //Event ID 12
-        Events(server, 12, client);
+        Events(12);
         break;
       case "Fly me to the Moon": //Event ID 13
-        Events(server, 13, client);
+        Events(13);
         break;
       default:
         //Generic reward

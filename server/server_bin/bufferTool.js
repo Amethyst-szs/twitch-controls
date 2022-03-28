@@ -106,6 +106,21 @@ module.exports = {
     return buf;
   },
 
+  sayBuf: function(msg){
+    //Construct buffer
+    const buf = Buffer.alloc(91);
+    buf.fill(0, 1, buf.length);
+
+    //Write msg into buffer with filler byte at start
+    msg = '.'+msg;
+    buf.write(msg, 'utf-8');
+
+    //Write Socket ID into byte 0
+    buf.writeInt8(5, 0);
+
+    return buf;
+  },
+
   GenericBuf: function (SocketID, EventID) {
     const buf = Buffer.alloc(2);
     buf.writeInt8(SocketID, 0);

@@ -10,6 +10,7 @@ const { disclientid, disguildid, distoken } = require('../settings/secret.json')
 const log = require('../server_bin/console');
 const twitchInit = require('../server_bin/twitchInit');
 const restrictions = require('../server_bin/restrictions');
+const outPackets = require('../server_bin/outPackets');
 
 // Create a new client instance
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
@@ -49,7 +50,6 @@ module.exports = {
 					break;
 				case "cooldown":
 					value = interaction.options.getNumber('value', true);
-
 					twitchInit.disCooldownUpdate(value);
 					log.log(3, `Pushing a cooldown update from ${interaction.user.username}`);
 					interaction.reply(`Setting the cooldown multiplier to **${value}**!`);
@@ -68,6 +68,20 @@ module.exports = {
 					twitchInit.skipRefreshTimer();
 					log.log(3, `Toggling all redeems from ${interaction.user.username}`);
 					interaction.reply(`Toggling every single Twitch Controls redeem for you!`);
+					break;
+				case "say":
+					message = interaction.options.getString('message', true);
+
+					//Error check
+					if(message.length > 90 || message.length <= 1){
+						log.log(3, `Message is ${message.length} characters long, valid range is 2-90!`);
+						interaction.reply(`Your message is ${message.length} characters long, get it within 2-90 characters!`);
+						return;
+					};
+
+					log.log(3, `Sending ${message} from ${interaction.user.username} to client`);
+					interaction.reply(`Sending your message off to the client!\n${message}`);
+					outPackets.sayMessage(message);
 					break;
 				default:
 					interaction.reply("**ERROR**\nDunno what you did, but it didn't work");
@@ -133,7 +147,15 @@ module.exports = {
 				),
 			new SlashCommandBuilder()
 				.setName('toggle-all')
-				.setDescription('Turns on or off every single Twitch Controls redeem on your channel')
+				.setDescription('Turns on or off every single Twitch Controls redeem on your channel'),
+			new SlashCommandBuilder()
+				.setName('say')
+				.setDescription('Send a message to the screen of the person playing')
+				.addStringOption(option =>
+					option.setName('message')
+					.setDescription('What are you saying')
+					.setRequired(true)
+				),
 		]
 			.map(command => command.toJSON());
 		

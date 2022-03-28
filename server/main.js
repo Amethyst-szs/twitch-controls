@@ -1,7 +1,6 @@
 //Initalize server for Starlight
 const dgram = require("dgram");
 const server = dgram.createSocket("udp4");
-let client;
 //Twitch API requirements
 const BaseAPI = require("@twurple/api");
 let api;
@@ -45,7 +44,7 @@ server.on("message", (msg, rinfo) => {
       inPackets.DummyInit(msg, rinfo);
       break;
     case -2: //Initalization
-      client = inPackets.Init(msg, rinfo);
+      outPackets.setClient(inPackets.Init(msg, rinfo));
       rejectionID = 0;
       rejectionList = require("./settings/rejectionListBase.json");
       lastPingTime = new Date().getTime();
@@ -63,7 +62,7 @@ server.on("message", (msg, rinfo) => {
 
       //Check if this log is a disconnection request
       if (bufferTool.disconnectCheck(msg, CurDir)){
-        client = null;
+        outPackets.clearClient();
         break;
       } 
 
@@ -100,16 +99,17 @@ server.on("message", (msg, rinfo) => {
 
 async function serverPing(){
   curTime = new Date().getTime();
+  curClient = outPackets.getClient();
 
-  if(client){
+  if(curClient){
     const buf = Buffer.alloc(1);
     buf.writeInt8(4, 0);
-    server.send(buf, client.port, client.address);
+    server.send(buf, curClient.port, curClient.address);
   }
 
-  if(curTime - lastPingTime >= 5000 && client){
+  if(curTime - lastPingTime >= 5000 && curClient){
     log.log(1, `\n///\nCONNECTION TO CLIENT WAS LOST!!\n///\n`);
-    client = null;
+    outPackets.clearClient();
     rejectionID = 0;
     rejectionList = rejectionList = require("./settings/rejectionListBase.json");
   }
@@ -299,6 +299,7 @@ async function TwitchHandler() {
 
   //Once Twitch is authenticated and ready, finish UDP server
   server.bind(7902);
+  outPackets.setServerRef(server);
 
   //Once both the UDP server and Twitch is ready, launch discord bot
   discordHandler.slashCommandInit(CurDir);
@@ -336,7 +337,7 @@ async function TwitchHandler() {
     }
 
     //Check and make sure a switch has connected already
-    if (!client) {
+    if (!outPackets.getClient()) {
       log.log(
         2,
         `${message.rewardTitle} from ${message.userDisplayName} but no client connected yet!`
@@ -359,7 +360,7 @@ async function TwitchHandler() {
     setTimeout(backupCheck, 1500, api, streamerID, tempVal);
 
     //Handle redeem in the out packet handler
-    outPackets.outHandler(message.rewardTitle, server, client, CurDir);
+    outPackets.outHandler(message.rewardTitle, server, CurDir);
   });
 }
 

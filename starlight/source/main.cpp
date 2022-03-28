@@ -48,37 +48,6 @@ static const char* page2Options[] {
 };
 static int page2Len = *(&page2Options + 1) - page2Options;
 
-void drawBackground(agl::DrawContext* context)
-{
-
-    sead::Vector3<float> p1; // top left
-    p1.x = -1.0;
-    p1.y = 0.3;
-    p1.z = 0.0;
-    sead::Vector3<float> p2; // top right
-    p2.x = -0.2;
-    p2.y = 0.3;
-    p2.z = 0.0;
-    sead::Vector3<float> p3; // bottom left
-    p3.x = -1.0;
-    p3.y = -1.0;
-    p3.z = 0.0;
-    sead::Vector3<float> p4; // bottom right
-    p4.x = -0.2;
-    p4.y = -1.0;
-    p4.z = 0.0;
-
-    sead::Color4f c;
-    c.r = 0.1;
-    c.g = 0.1;
-    c.b = 0.1;
-    c.a = 0.9;
-
-    agl::utl::DevTools::beginDrawImm(context, sead::Matrix34<float>::ident, sead::Matrix44<float>::ident);
-    agl::utl::DevTools::drawTriangleImm(context, p1, p2, p3, c);
-    agl::utl::DevTools::drawTriangleImm(context, p3, p4, p2, c);
-}
-
 // ------------- Hooks -------------
 
 al::StageInfo* initDebugListHook(const al::Scene* curScene)
@@ -133,6 +102,7 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
         // Every 10 seconds, display a new fun fact!
         if ((layouts.pingFrames + 303) % 600 == 1)
             layouts.mConnectionWait->setTxtMessage(smo::getFunFact());
+
     } else if (layouts.mConnectionWait->mIsAlive && layouts.firstBoot) {
         // Server is okay! Perform usual code
         layouts.mConnectionWait->exeEnd();
@@ -148,7 +118,7 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
         prevFrameInvalidScene = ri.isInvalidStage;
     }
 
-    if (!showMenu && amy::getDancePartyState().timer <= 0) {
+    if (!showMenu && amy::getDancePartyState().timer <= 0 && ri.sayTimer <= 0) {
         al::executeDraw(curSequence->mLytKit, "２Ｄバック（メイン画面）");
         return;
     }
@@ -197,9 +167,35 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
         return;
     }
 
+    // Say message overlay
+    if (curScene && ri.sayTimer >= 0) {
+        ri.sayTimer--;
+
+        amy::drawBackground((agl::DrawContext*)drawContext,
+            sead::Vector2f { -0.75f, -1.f },
+            sead::Vector2f { 1.5f, 0.09f },
+            sead::Vector2f { 0.f, 0.f },
+            sead::Color4f { 0.1f, 0.1f, 0.1f, 1.f });
+
+        // Draws to the screen
+        gTextWriter->beginDraw();
+        gTextWriter->setCursorFromTopLeft(sead::Vector2f(dispWidth / 7.5f, dispHeight - 25.f));
+        gTextWriter->setScaleFromFontHeight(20.f);
+        gTextWriter->printf(ri.sayText.cstr());
+
+        // End
+        gTextWriter->endDraw();
+        al::executeDraw(curSequence->mLytKit, "２Ｄバック（メイン画面）");
+        return;
+    }
+
     // Standard debug menu
     if (curScene && isInGame) {
-        drawBackground((agl::DrawContext*)drawContext);
+        amy::drawBackground((agl::DrawContext*)drawContext,
+            sead::Vector2f { -1.f, -1.f },
+            sead::Vector2f { 0.6f, 1.3f },
+            sead::Vector2f { 0.f, 0.f },
+            sead::Color4f { 0.1f, 0.1f, 0.1f, 0.9f });
 
         gTextWriter->beginDraw();
         gTextWriter->setCursorFromTopLeft(sead::Vector2f(10.f, (dispHeight / 3) + 30.f));

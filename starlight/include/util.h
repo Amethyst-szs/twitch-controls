@@ -3,15 +3,24 @@
 #include "fl/packet.h"
 #include "fl/server.h"
 #include "game/StageScene/StageScene.h"
+#include "sead/gfx/seadColor.h"
 #include "sead/math/seadVector.h"
+#include "sead/prim/seadSafeString.h"
 #include <cstdio>
 
 namespace amy {
 struct RedeemInfo {
     struct state {
+        // State
         bool isInvalidStage = true;
         bool isRedeemsValid = false;
         bool isTransition = true;
+
+        // Say message
+        int sayTimer = -1;
+        sead::FixedSafeString<0x5A> sayText;
+
+        // Restriction and rejection values
         u8 rejectionID = 0;
         u8 restrictionTier = 0;
         u8 lastPublishRestrictionTier = 0;
@@ -87,6 +96,10 @@ void sendPacketStateNotice(bool rejectState);
 const char* getRandomHomeStage();
 sead::Vector3f getRandomGravity();
 void updateRedeemStatus();
+
+void drawBackground(agl::DrawContext* context, sead::Vector2f position, sead::Vector2f size, sead::Vector2f offset, sead::Color4f color);
+int limitInt(int min, int value, int max);
+float limitFloat(float min, float value, float max);
 
 StageScene*& getGlobalStageScene();
 template <typename... Args>

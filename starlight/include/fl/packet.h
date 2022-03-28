@@ -26,7 +26,8 @@ enum InPacketType : u8 {
     Event = (u8)1,
     Resize = (u8)2,
     PosRandomize = (u8)3,
-    Ping = (u8)4
+    Ping = (u8)4,
+    Say = (u8)5
 };
 
 class InPacket {
@@ -80,6 +81,15 @@ public:
 
 class InPacketPosRandomize : public InPacket {
     sead::Vector3f posVector;
+
+public:
+    void parse(const u8* data, u32 len);
+    void on(Server& server);
+};
+
+class InPacketSay : public InPacket {
+    sead::FixedSafeString<0x5A> message;
+    int textFrames = 0;
 
 public:
     void parse(const u8* data, u32 len);
