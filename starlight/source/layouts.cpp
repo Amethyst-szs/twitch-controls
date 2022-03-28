@@ -59,7 +59,23 @@ const char16_t* smo::getFunFact()
         u"If this crashes again, Amethyst is selling this code to Crafty",
         u"Programming is like a box of chocolates. Stuff like this happens",
         u"Epic Coding Fail",
-        u"Alright was this Amethyst, Twitch, or the power cord?"
+        u"Alright was this Amethyst, Twitch, or the power cord?",
+        u"Your packet got stuck in public transport, expect 30 year delay...",
+        u"Quick! Think of something to entertain chat!",
+        u"I'm gonna try to get a new PB in fix server any%",
+        u"It costs 465,999,480 USD to make a building out of 207,593 layers of paint",
+        u"Code is the best spaghetti",
+        u"Fun Fact: Goombas are a reference to the fictional plant known as chestnut",
+        u"The characters in New donk city are of a fictional species known as humans",
+        u"That last enemy had a family. How do you sleep at night, knowing what you did?",
+        u"When I said hot tub stream, I didn't mean pour water on the server omg",
+        u"We have been trying to reach you about your Cappy's extended warranty",
+        u"Hmm, try blowing on the cartridge to unfreeze the game",
+        u"Fun Fact: Mario's blood type is 'edible!'",
+        u"Fun Fact: Talkatoo is just a figment of your imagination",
+        u"[person] redeemed Resize!",
+        u"Yoshi's tax evasion or something I'm running out of jokes"
+
     };
 
     return funFacts[sead::GlobalRandom::instance()->getU32() % (sizeof(funFacts) / sizeof(const char16_t*))];
