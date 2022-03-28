@@ -2,8 +2,8 @@
 	"Version": "10",
 	"PName": "twitch-controls",
 	"DumpStats": {
-		"Time": "3-27-2022 10:11:16",
-		"Amount": 630,
+		"Time": "3-27-2022 20:41:41",
+		"Amount": 632,
 		"isUndumped": false,
 		"Type": "Complete"
 	},
@@ -11,6 +11,7 @@
 	"dates": {
 		"2i6owudm0": {
 			"LayoutData": {
+				"BootLoading.szs": 1579550369000,
 				"CounterLife.szs": 1648275536207.9785,
 				"CounterLifeKids.szs": 1647710921135.1274,
 				"KidsMode.szs": 1619387757107.188,

@@ -46,7 +46,7 @@ const char16_t* smo::getFunFact()
         u"I feel like SMO needs more spooky captures",
         u"Fun Fact: Mokachii is a really good artist!",
         u"Fun Fact: Nut jumps are illegal under USA Flight Regulations",
-        u"Did you know: A baby has more bones than you"
+        u"Did you know: A baby has more bones than you",
         u"SMO Twitch controls is sponsored by Technical Difficulties",
         u"If you take the amount of packets being successfully recieved, \nand multiply it by the number of commands the server is executing, \nyou get how amused Amethyst is right now.",
         u"Are you sure it's not a you problem?",
@@ -57,7 +57,7 @@ const char16_t* smo::getFunFact()
         u"Amethyst ran out of sandpaper to fix the imperfections in the code",
         u"Gosh, did Amethyst make ANOTHER typo?",
         u"If this crashes again, Amethyst is selling this code to Crafty",
-        u"Programming is like a box of chocolates. Stuff like this happens"
+        u"Programming is like a box of chocolates. Stuff like this happens",
         u"Epic Coding Fail",
         u"Alright was this Amethyst, Twitch, or the power cord?"
     };
