@@ -73,7 +73,7 @@ module.exports = {
 					message = interaction.options.getString('message', true);
 
 					//Error check
-					if(message.length > 450 || message.length <= 1){
+					if(message.length > 450){
 						log.log(3, `Message is ${message.length} characters long, valid range is 2-450!`);
 						interaction.reply(`Your message is ${message.length} characters long, get it within 2-450 characters!`);
 						return;

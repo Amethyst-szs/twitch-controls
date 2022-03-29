@@ -68,9 +68,14 @@ module.exports = {
 
     let breakRate = 92;
 
+    //Calculate line breaks
     for(i=1;i<Math.ceil(msg.length/breakRate);i++){
       msg = msg.substring(0, (i*breakRate)+i+i) + `\n` + msg.substring((i*breakRate)+i+i, msg.length);
     }
+
+    //Handle the weird af multiple of 16 + 1 error
+    if((msg.length%16)-1 == 0)
+      msg += ` `;
 
     // bufferTool.sayBuf(msg)
     serverRef.send(bufferTool.sayBuf(msg), client.port, client.address);
