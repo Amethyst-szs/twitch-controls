@@ -72,7 +72,7 @@ const char16_t* smo::getFunFact()
         u"Hmm, try blowing on the cartridge to unfreeze the game",
         u"Fun Fact: Mario's blood type is 'edible!'",
         u"Fun Fact: Talkatoo is just a figment of your imagination",
-        u"[person] redeemed Resize!",
+        u"Person redeemed Resize!",
         u"Yoshi's tax evasion or something I'm running out of jokes"
 
     };

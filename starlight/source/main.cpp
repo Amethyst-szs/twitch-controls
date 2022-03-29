@@ -168,20 +168,20 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
     }
 
     // Say message overlay
-    if (curScene && ri.sayTimer >= 0) {
+    if (curScene && ri.sayTimer >= 0 && ri.sayText) {
         ri.sayTimer--;
 
         amy::drawBackground((agl::DrawContext*)drawContext,
             sead::Vector2f { -0.75f, -1.f },
-            sead::Vector2f { 1.5f, 0.09f },
+            sead::Vector2f { 1.5f, 0.09f + ((ceil(strlen(ri.sayText) / 92.f) - 1.f) * 0.06f) },
             sead::Vector2f { 0.f, 0.f },
-            sead::Color4f { 0.1f, 0.1f, 0.1f, 1.f });
+            sead::Color4f { 0.1f, 0.1f, 0.1f, 0.95f });
 
         // Draws to the screen
         gTextWriter->beginDraw();
-        gTextWriter->setCursorFromTopLeft(sead::Vector2f(dispWidth / 7.5f, dispHeight - 25.f));
+        gTextWriter->setCursorFromTopLeft(sead::Vector2f(dispWidth / 7.5f, dispHeight - 25.f - (ceil(strlen(ri.sayText) / 92.f) - 1.f) * 20.f));
         gTextWriter->setScaleFromFontHeight(20.f);
-        gTextWriter->printf(ri.sayText.cstr());
+        gTextWriter->printf("%s", ri.sayText);
 
         // End
         gTextWriter->endDraw();

@@ -8,6 +8,7 @@
 #include "sead/math/seadVector.h"
 #include "sead/prim/seadSafeString.h"
 #include "util.h"
+#include <cmath>
 #include <string.h>
 
 namespace smo {
@@ -46,14 +47,17 @@ void InPacketPing::on(Server& server)
 
 void InPacketSay::parse(const u8* data, u32 len)
 {
-    memcpy(message.getBuffer(), data, len + 1);
-    textFrames = (4 * 60) + (len * 6);
+    message = strdup((const char*)data);
+    textFrames = (5.5 * 60) + (len * 3);
 }
 
 void InPacketSay::on(Server& server)
 {
-    amy::log("Say message: %s", message.cstr());
+    amy::log("Say message: %s", message);
     amy::RedeemInfo::state& ri = amy::getRedeemInfo();
+    if (ri.sayText)
+        ri.sayText = nullptr;
+
     ri.sayText = message;
     ri.sayTimer = textFrames;
 }

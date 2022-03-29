@@ -60,12 +60,19 @@ module.exports = {
   },
 
   sayMessage: function(msg){
-    //Check that the client is valid
+    // Check that the client is valid
     if(!client){
       log.log(3, `Message can not be sent to client because there is no client`);
       return;
     }
 
+    let breakRate = 92;
+
+    for(i=1;i<Math.ceil(msg.length/breakRate);i++){
+      msg = msg.substring(0, (i*breakRate)+i+i) + `\n` + msg.substring((i*breakRate)+i+i, msg.length);
+    }
+
+    // bufferTool.sayBuf(msg)
     serverRef.send(bufferTool.sayBuf(msg), client.port, client.address);
   },
   

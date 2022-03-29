@@ -108,7 +108,7 @@ module.exports = {
 
   sayBuf: function(msg){
     //Construct buffer
-    const buf = Buffer.alloc(91);
+    const buf = Buffer.alloc(msg.length+2); //One extra byte for socket ID, one extra for null terminator
     buf.fill(0, 1, buf.length);
 
     //Write msg into buffer with filler byte at start
@@ -117,7 +117,9 @@ module.exports = {
 
     //Write Socket ID into byte 0
     buf.writeInt8(5, 0);
+    buf.writeInt8(0x0, buf.length-1);
 
+    // console.log(buf);
     return buf;
   },
 

@@ -88,7 +88,7 @@ public:
 };
 
 class InPacketSay : public InPacket {
-    sead::FixedSafeString<0x5A> message;
+    const char* message;
     int textFrames = 0;
 
 public:

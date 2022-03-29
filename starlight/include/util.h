@@ -18,7 +18,8 @@ struct RedeemInfo {
 
         // Say message
         int sayTimer = -1;
-        sead::FixedSafeString<0x5A> sayText;
+        int sayLines = 1;
+        const char* sayText;
 
         // Restriction and rejection values
         u8 rejectionID = 0;
