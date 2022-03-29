@@ -73,8 +73,22 @@ const char16_t* smo::getFunFact()
         u"Fun Fact: Mario's blood type is 'edible!'",
         u"Fun Fact: Talkatoo is just a figment of your imagination",
         u"Person redeemed Resize!",
-        u"Yoshi's tax evasion or something I'm running out of jokes"
-
+        u"Yoshi's tax evasion or something I'm running out of jokes",
+        u"Sand kingdom's sand is a single grain of sand in every SMO cartridge",
+        u"The deep woods are universally believed to be lame",
+        u"Lake kingdom is more of a lagoon than a lake",
+        u"Metro Kingdom has no metro",
+        u"Tropical wigglers are very cute and Nintendo should make a plush of them",
+        u"20 shiverians die during races every year...",
+        u"Try the volleyball challenge with this mod, I dare you",
+        u"Luncheon Kingdom's food is raw and missing lamb sauce",
+        u"Ruined Kingdom gets its name its ruined potential",
+        u"Bowser's Kingdom is a testing ground for teleportation technology",
+        u"Moon Kingdom is actually half cheese",
+        u"Beat darker 2401 times and unlock a Aperture Science Dual Portal Device",
+        u"Fun Fact: Wii Fit U is a game that exists",
+        u"Fun Fact: The Wii U is actually good console",
+        u"Fun Fact: Quagsire is at your door, look outside"
     };
 
     return funFacts[sead::GlobalRandom::instance()->getU32() % (sizeof(funFacts) / sizeof(const char16_t*))];
