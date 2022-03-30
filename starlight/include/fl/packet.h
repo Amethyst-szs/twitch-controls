@@ -59,6 +59,7 @@ public:
 
 class InPacketEvent : public InPacket {
     u8 eventID;
+    bool isTwitch;
 
 public:
     void parse(const u8* data, u32 len);

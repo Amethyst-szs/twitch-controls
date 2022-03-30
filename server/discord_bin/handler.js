@@ -11,6 +11,7 @@ const log = require('../server_bin/console');
 const twitchInit = require('../server_bin/twitchInit');
 const restrictions = require('../server_bin/restrictions');
 const outPackets = require('../server_bin/outPackets');
+const { outHandler } = require('../server_bin/outPackets');
 
 // Create a new client instance
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
@@ -82,6 +83,16 @@ module.exports = {
 					log.log(3, `Sending ${message} from ${interaction.user.username} to client`);
 					interaction.reply(`Sending your message off to the client!\n${message}`);
 					outPackets.sayMessage(message);
+					break;
+				case "unfreeze":
+					outPackets.outHandler('unfreeze', false);
+					log.log(3, `Turning off demo lock from Discord by ${interaction.user.username}`);
+					interaction.reply(`Turning off demo lock from Discord by ${interaction.user.username}`);
+					break;
+				case "kill":
+					outPackets.outHandler('kill', false);
+					log.log(3, `Killing the player from Discord by ${interaction.user.username}`);
+					interaction.reply(`Killing the player from Discord by ${interaction.user.username}`);
 					break;
 				default:
 					interaction.reply("**ERROR**\nDunno what you did, but it didn't work");
@@ -156,6 +167,13 @@ module.exports = {
 					.setDescription('What are you saying')
 					.setRequired(true)
 				),
+			new SlashCommandBuilder()
+				.setName('unfreeze')
+				.setDescription('Turns off the players demo state, saving from potential softlocks'),
+			new SlashCommandBuilder()
+				.setName('kill')
+				.setDescription('Kills Mario, mainly use this to save a player from softlocks'),
+			
 		]
 			.map(command => command.toJSON());
 		

@@ -123,10 +123,11 @@ module.exports = {
     return buf;
   },
 
-  GenericBuf: function (SocketID, EventID) {
-    const buf = Buffer.alloc(2);
+  GenericBuf: function (SocketID, EventID, isTwitch) {
+    const buf = Buffer.alloc(3);
     buf.writeInt8(SocketID, 0);
     buf.writeInt8(EventID, 1);
+    buf.writeUInt8(isTwitch, 2);
     return buf;
   },
 };

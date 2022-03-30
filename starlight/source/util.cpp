@@ -165,10 +165,12 @@ void amy::calcWorldTier(s32 worldID, const char* stageName)
     return;
 }
 
-void amy::sendPacketStateNotice(bool rejectState)
+void amy::sendPacketStateNotice(bool rejectState, bool isTwitch)
 {
-    amy::RedeemInfo::state& ri = amy::getRedeemInfo();
-    amy::log("Reject/%u/%u", ri.rejectionID, rejectState);
+    if (isTwitch) {
+        amy::RedeemInfo::state& ri = amy::getRedeemInfo();
+        amy::log("Reject/%u/%u", ri.rejectionID, rejectState);
+    }
 }
 
 sead::Vector3f amy::getRandomGravity()
@@ -203,12 +205,16 @@ const char* amy::getRandomHomeStage()
     return stageNames[sead::GlobalRandom::instance()->getU32() % (sizeof(stageNames) / sizeof(const char*))];
 }
 
-void amy::updateRedeemStatus()
+void amy::updateRedeemStatus(bool isTwitch)
 {
     StageScene* stageScene = amy::getGlobalStageScene();
     al::PlayerHolder* pHolder = al::getScenePlayerHolder(stageScene);
     PlayerActorHakoniwa* player = al::tryGetPlayerActor(pHolder, 0);
-    amy::getRedeemInfo().isRedeemsValid = !(stageScene->isPause() || PlayerFunction::isPlayerDeadStatus(player) || rs::isActiveDemo(player) || amy::getDancePartyState().timer > 0);
+
+    if (isTwitch)
+        amy::getRedeemInfo().isRedeemsValid = !(stageScene->isPause() || PlayerFunction::isPlayerDeadStatus(player) || rs::isActiveDemo(player) || amy::getDancePartyState().timer > 0);
+    else
+        amy::getRedeemInfo().isRedeemsValid = !(stageScene->isPause() || PlayerFunction::isPlayerDeadStatus(player));
     // amy::log("Info: %i %i %s", amy::getRedeemInfo().isRedeemsValid, amy::getRedeemInfo().isInvalidStage, GameDataFunction::getCurrentStageName(*amy::getGlobalStageScene()->mHolder));
     return;
 }

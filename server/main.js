@@ -300,6 +300,7 @@ async function TwitchHandler() {
   //Once Twitch is authenticated and ready, finish UDP server
   server.bind(7902);
   outPackets.setServerRef(server);
+  outPackets.prepareLang();
 
   //Once both the UDP server and Twitch is ready, launch discord bot
   discordHandler.slashCommandInit(CurDir);
@@ -358,9 +359,9 @@ async function TwitchHandler() {
     rejectionList[rejectionID].ID = message.id;
     tempVal = rejectionID;
     setTimeout(backupCheck, 1500, api, streamerID, tempVal);
-
+    
     //Handle redeem in the out packet handler
-    outPackets.outHandler(message.rewardTitle, server, CurDir);
+    outPackets.outHandler(message.rewardTitle, true);
   });
 }
 

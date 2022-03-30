@@ -1,5 +1,6 @@
 const fs = require('fs');
 const twitchInit = require('./twitchInit');
+let langInit;
 
 const RedeemSet = require("../settings/redeem_set.json");
 const Rand = require("./advancedRand");
@@ -10,9 +11,9 @@ let serverRef;
 let client;
 
 //Channel point redeem: PrevScene (Server -> Client)
-function Events(EventID) {
+function Events(EventID, isTwitch) {
   //Socket ID 1 - Event ID 1
-  serverRef.send(bufferTool.GenericBuf(1, EventID), client.port, client.address);
+  serverRef.send(bufferTool.GenericBuf(1, EventID, isTwitch), client.port, client.address);
 }
 
 //Channel point redeem: Resize (Server -> Client)
@@ -80,15 +81,26 @@ module.exports = {
     // bufferTool.sayBuf(msg)
     serverRef.send(bufferTool.sayBuf(msg), client.port, client.address);
   },
-  
-  outHandler: function (redeemName, server, CurDir) {
-    //Get the lang init so you can fetch the original name of the redeem
-    langInit = JSON.parse(fs.readFileSync(`${CurDir}/settings/localize/${twitchInit.getLang()}_init.json`));
 
-    log.log(1, `Sending redeem packet - ${redeemName}`);
-    
+  prepareLang: function(){
+    langInit = JSON.parse(fs.readFileSync(`${process.cwd()}/settings/localize/${twitchInit.getLang()}_init.json`));
+    return;
+  },
+  
+  outHandler: function (redeemName, isTwitch) {
+    //Get the lang init so you can fetch the original name of the redeem
+    redeemTitle = redeemName;
+
+    //If this is a Twitch log this extra info
+    if(isTwitch)
+      log.log(1, `Sending redeem packet - ${redeemName}`);
+
+    //If this is a translation, convert back to English
+    if(langInit.hasOwnProperty(redeemName))
+      redeemTitle = langInit[redeemName].original;
+
     //Switch case through all valid rewards
-    switch (langInit[redeemName].original) {
+    switch (redeemTitle) {
       case "Resize": //Packet ID 2 (Resize)
         Resize();
         break;
@@ -96,43 +108,49 @@ module.exports = {
         PosRandomize();
         break;
       case "See Myself Out": //Event ID 1 (PrevScene)
-        Events(1);
+        Events(1, isTwitch);
         break;
       case "Change Gravity": //Event ID 2 (GravFlip)
-        Events(2);
+        Events(2, isTwitch);
         break;
       case "Up we go": //Event ID 3 (Fling)
-        Events(3);
+        Events(3, isTwitch);
         break;
       case "Cappy? Nah": //Event ID 4 (Cappy)
-        Events(4);
+        Events(4, isTwitch);
         break;
       case "Random Kingdom": //Event ID 5 (Random Kingdom)
-        Events(5);
+        Events(5, isTwitch);
         break;
       case "Highway to Death": //Event ID 6 (CoinTick)
-        Events(6);
+        Events(6, isTwitch);
         break;
       case "Whispy Winds": //Event ID 7 (Wind)
-        Events(7);
+        Events(7, isTwitch);
         break;
       case "Hot Floor": //Event ID 8
-        Events(8);
+        Events(8, isTwitch);
         break;
       case "Stick Flip": //Event ID 9
-        Events(9);
+        Events(9, isTwitch);
         break;
       case "Hot Tub Stream": //Event ID 10
-        Events(10);
+        Events(10, isTwitch);
         break;
       case "Dance Party": //Event ID 11
-        Events(11);
+        Events(11, isTwitch);
         break;
       case "Moon Magnet": //Event ID 12
-        Events(12);
+        Events(12, isTwitch);
         break;
       case "Fly me to the Moon": //Event ID 13
-        Events(13);
+        Events(13, isTwitch);
+        break;
+      case "unfreeze": //Event ID 14
+        Events(14, isTwitch);
+        break;
+      case "kill": //Event ID 15
+        Events(15, isTwitch);
         break;
       default:
         //Generic reward

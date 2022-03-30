@@ -65,20 +65,22 @@ void InPacketSay::on(Server& server)
 void InPacketEvent::parse(const u8* data, u32 len)
 {
     eventID = data[0];
+    isTwitch = data[1];
 }
 
 void InPacketEvent::on(Server& server)
 {
     amy::RedeemInfo::state& ri = amy::getRedeemInfo();
-
-    ri.rejectionID++;
-    if (ri.rejectionID >= 10)
-        ri.rejectionID = 1;
+    if (isTwitch) {
+        ri.rejectionID++;
+        if (ri.rejectionID >= 10)
+            ri.rejectionID = 1;
+    }
 
     if (!amy::getRedeemInfo().isTransition) {
-        amy::updateRedeemStatus();
+        amy::updateRedeemStatus(isTwitch);
     } else {
-        amy::sendPacketStateNotice(true);
+        amy::sendPacketStateNotice(true, isTwitch);
         return;
     }
 
@@ -90,10 +92,10 @@ void InPacketEvent::on(Server& server)
     al::LiveActor* curHack = player->getPlayerHackKeeper()->currentHackActor;
 
     if (!ri.isRedeemsValid)
-        amy::sendPacketStateNotice(true);
+        amy::sendPacketStateNotice(true, isTwitch);
     else {
         // Send an update about successful packet
-        amy::sendPacketStateNotice(false);
+        amy::sendPacketStateNotice(false, isTwitch);
 
         switch (eventID) {
         case 1: { // PrevScene - See Myself Out
@@ -197,6 +199,19 @@ void InPacketEvent::on(Server& server)
             stageScene->mHolder->changeNextStage(&stageInfo, 0);
             break;
         }
+        case 14: {
+            player->endDemoPuppetable();
+            break;
+        }
+        case 15: {
+            GameDataFunction::killPlayer(*stageScene->mHolder);
+            player->startDemoPuppetable();
+            al::setVelocityZero(player);
+            rs::faceToCamera(player);
+            player->mPlayerAnimator->endSubAnim();
+            player->mPlayerAnimator->startAnimDead();
+            break;
+        }
         default: {
             amy::log("Invalid EventID sent? EventID: %i", eventID);
             break;
@@ -219,18 +234,18 @@ void InPacketResize::on(Server& server)
         ri.rejectionID = 1;
 
     if (!amy::getRedeemInfo().isTransition) {
-        amy::updateRedeemStatus();
+        amy::updateRedeemStatus(true);
     } else {
-        amy::sendPacketStateNotice(true);
+        amy::sendPacketStateNotice(true, true);
         return;
     }
 
     amy::log("Resize Redeem Claimed! Rejected: %s", !amy::getRedeemInfo().isRedeemsValid ? "true" : "false");
 
     if (!amy::getRedeemInfo().isRedeemsValid)
-        amy::sendPacketStateNotice(true);
+        amy::sendPacketStateNotice(true, true);
     else {
-        amy::sendPacketStateNotice(false);
+        amy::sendPacketStateNotice(false, true);
         al::PlayerHolder* pHolder = al::getScenePlayerHolder(amy::getGlobalStageScene());
         PlayerActorHakoniwa* player = al::tryGetPlayerActor(pHolder, 0);
         al::LiveActor* curHack = player->getPlayerHackKeeper()->currentHackActor;
@@ -259,18 +274,18 @@ void InPacketPosRandomize::on(Server& server)
         ri.rejectionID = 1;
 
     if (!amy::getRedeemInfo().isTransition) {
-        amy::updateRedeemStatus();
+        amy::updateRedeemStatus(true);
     } else {
-        amy::sendPacketStateNotice(true);
+        amy::sendPacketStateNotice(true, true);
         return;
     }
 
     amy::log("PosRandomize Redeem Claimed! Rejected: %s", !amy::getRedeemInfo().isRedeemsValid ? "true" : "false");
 
     if (!amy::getRedeemInfo().isRedeemsValid)
-        amy::sendPacketStateNotice(true);
+        amy::sendPacketStateNotice(true, true);
     else {
-        amy::sendPacketStateNotice(false);
+        amy::sendPacketStateNotice(false, true);
         al::PlayerHolder* pHolder = al::getScenePlayerHolder(amy::getGlobalStageScene());
         PlayerActorHakoniwa* player = al::tryGetPlayerActor(pHolder, 0);
         al::LiveActor* curHack = player->getPlayerHackKeeper()->currentHackActor;

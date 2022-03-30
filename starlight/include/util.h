@@ -92,11 +92,11 @@ void setRestrictionTier(u8 tier);
 void calcWorldTier(s32 worldID, const char* stageName);
 
 void updateServerDemoState();
-void sendPacketStateNotice(bool rejectState);
+void sendPacketStateNotice(bool rejectState, bool isTwitch);
 
 const char* getRandomHomeStage();
 sead::Vector3f getRandomGravity();
-void updateRedeemStatus();
+void updateRedeemStatus(bool isTwitch);
 
 void drawBackground(agl::DrawContext* context, sead::Vector2f position, sead::Vector2f size, sead::Vector2f offset, sead::Color4f color);
 int limitInt(int min, int value, int max);
