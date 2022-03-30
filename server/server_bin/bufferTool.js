@@ -45,6 +45,7 @@ module.exports = {
 
     //Load in the template buffer from the buffer file
     fileBuf = Buffer.from(fs.readFileSync(`${CurDir}/buffers/reject.buf`));
+
     //Replace 3rd to last byte with Rejection ID
     //Replace last byte with rejection state
 
@@ -52,21 +53,21 @@ module.exports = {
     //Rejection sate byte is a bool on 30-31, 30 being success 31 being rejection
 
     //Rejection ID from message into template
-    fileBuf.fill(
-      msg[msg.byteLength - 3],
-      fileBuf.byteLength - 3,
-      fileBuf.byteLength - 2
-    );
+    fileBuf.fill(msg[msg.byteLength - 4], fileBuf.byteLength - 4, fileBuf.byteLength - 3);
+    fileBuf.fill(msg[msg.byteLength - 3], fileBuf.byteLength - 3, fileBuf.byteLength - 2);
     //Toggle state from message into template
     fileBuf.fill(msg[msg.byteLength - 1], fileBuf.byteLength - 1);
 
     if (Buffer.compare(msg, fileBuf) == 0) {
       returnVal.wasRejectLog = true;
-      returnVal.rejectionID = parseInt(msg[msg.byteLength - 3], 10) - 48;
+
+      returnVal.rejectionID = parseInt((msg[msg.byteLength - 4] - 48) * 10, 10) + (parseInt(msg[msg.byteLength - 3], 10) - 48);
       returnVal.rejectionState = parseInt(msg[msg.byteLength - 1], 10) - 48;
       if (returnVal.rejectionState == 0) returnVal.rejectionState = true;
       else returnVal.rejectionState = false;
-    } else returnVal.wasRejectLog = false;
+    }
+    else
+      returnVal.wasRejectLog = false;
 
     //Return an object
     return returnVal;

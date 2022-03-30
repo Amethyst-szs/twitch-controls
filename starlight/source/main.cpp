@@ -87,7 +87,7 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
     smo::Layouts& layouts = smo::getLayouts();
     layouts.pingFrames++;
 
-    if (layouts.pingFrames >= 300 && layouts.firstBoot) {
+    if (layouts.pingFrames >= 400 && layouts.firstBoot) {
         // In this case, the game is fairly sure the server is lost and it should go idle
         if (!layouts.mConnectionWait->mIsAlive) {
             layouts.mConnectionWait->appear();
@@ -100,7 +100,7 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
             al::isPadHoldUp(-1) ? smo::Server::instance().connect(smo::getServerIp(true)) : smo::Server::instance().connect(smo::getServerIp(false));
 
         // Every 10 seconds, display a new fun fact!
-        if ((layouts.pingFrames + 303) % 600 == 1)
+        if ((layouts.pingFrames + 403) % 600 == 1)
             layouts.mConnectionWait->setTxtMessage(smo::getFunFact());
 
     } else if (layouts.mConnectionWait->mIsAlive && layouts.firstBoot) {
@@ -234,6 +234,7 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
             gTextWriter->printf("Twitch Integration Values:\n");
             gTextWriter->printf("Reject Redeems: %s\n", !ri.isRedeemsValid ? "true" : "false");
             gTextWriter->printf("Invalid Stage: %s\n", ri.isInvalidStage ? "true" : "false");
+            gTextWriter->printf("Rejection ID: %i\n", ri.rejectionID);
             gTextWriter->printf("Restriction Tier: %i\n", ri.restrictionTier);
             gTextWriter->printf("Ping Frames: %i\n", layouts.pingFrames);
             gTextWriter->printf("Overlay State: %s\n\n", layouts.mConnectionWait->mIsAlive ? "true" : "false");

@@ -169,7 +169,10 @@ void amy::sendPacketStateNotice(bool rejectState, bool isTwitch)
 {
     if (isTwitch) {
         amy::RedeemInfo::state& ri = amy::getRedeemInfo();
-        amy::log("Reject/%u/%u", ri.rejectionID, rejectState);
+        if (ri.rejectionID > 9)
+            amy::log("Reject/%u/%u", ri.rejectionID, rejectState);
+        else
+            amy::log("Reject/0%u/%u", ri.rejectionID, rejectState);
     }
 }
 

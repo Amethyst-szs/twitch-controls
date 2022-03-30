@@ -73,7 +73,7 @@ void InPacketEvent::on(Server& server)
     amy::RedeemInfo::state& ri = amy::getRedeemInfo();
     if (isTwitch) {
         ri.rejectionID++;
-        if (ri.rejectionID >= 10)
+        if (ri.rejectionID >= ri.rejectionIDMax)
             ri.rejectionID = 1;
     }
 
@@ -230,7 +230,7 @@ void InPacketResize::on(Server& server)
     amy::RedeemInfo::state& ri = amy::getRedeemInfo();
 
     ri.rejectionID++;
-    if (ri.rejectionID >= 10)
+    if (ri.rejectionID >= ri.rejectionIDMax)
         ri.rejectionID = 1;
 
     if (!amy::getRedeemInfo().isTransition) {
@@ -270,7 +270,7 @@ void InPacketPosRandomize::on(Server& server)
     amy::RedeemInfo::state& ri = amy::getRedeemInfo();
 
     ri.rejectionID++;
-    if (ri.rejectionID >= 10)
+    if (ri.rejectionID >= ri.rejectionIDMax)
         ri.rejectionID = 1;
 
     if (!amy::getRedeemInfo().isTransition) {

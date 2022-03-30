@@ -28,7 +28,8 @@ let invalidStage = false;
 let streamerID = null;
 
 let rejectionID = 0;
-let rejectionList = require("./settings/rejectionListBase.json");
+let rejectionListSize = 50;
+let rejectionList = [];
 
 let FullRedeemList = [];
 const restrictions = require("./server_bin/restrictions");
@@ -45,8 +46,7 @@ server.on("message", (msg, rinfo) => {
       break;
     case -2: //Initalization
       outPackets.setClient(inPackets.Init(msg, rinfo));
-      rejectionID = 0;
-      rejectionList = require("./settings/rejectionListBase.json");
+      initRejectionList();
       lastPingTime = new Date().getTime();
       serverPing();
       break;
@@ -107,11 +107,10 @@ async function serverPing(){
     server.send(buf, curClient.port, curClient.address);
   }
 
-  if(curTime - lastPingTime >= 5000 && curClient){
+  if(curTime - lastPingTime >= 6500 && curClient){
     log.log(1, `\n///\nCONNECTION TO CLIENT WAS LOST!!\n///\n`);
     outPackets.clearClient();
-    rejectionID = 0;
-    rejectionList = rejectionList = require("./settings/rejectionListBase.json");
+    initRejectionList();
   }
 }
 
@@ -195,16 +194,38 @@ async function langSelect(){
   }
 }
 
+function initRejectionList(){
+  rejectionID = 0;
+  rejectionList = [];
+
+  for(i=0;i<rejectionListSize;i++){
+    rejectionList.push({
+      "rewardID": null,
+      "ID": null
+    });
+  }
+
+  return;
+}
+
 async function refundRedeem(api, streamerID, rewardId, id) {
   redemption = await api.channelPoints.getRedemptionById(
     streamerID,
     rewardId,
     id
-  );
-  if ((await redemption).isFulfilled || (await redemption).isCanceled) {
-    log.log(1, `Redeem ${id} came back from the past`);
+  )
+  .catch(console.error);
+
+  if(!redemption){
+    log.log(1, `Redeem would not be found! It will likely be caught in the manual queue?`);
     return;
   }
+
+  if ((await redemption).isFulfilled || (await redemption).isCanceled) {
+    log.log(1, `Redeem ${id} was already handled elsewhere?`);
+    return;
+  }
+
   await api.channelPoints.updateRedemptionStatusByIds(
     streamerID,
     rewardId,
@@ -220,11 +241,19 @@ async function approveRedeem(api, streamerID, rewardId, id) {
     streamerID,
     rewardId,
     id
-  );
-  if ((await redemption).isFulfilled || (await redemption).isCanceled) {
-    log.log(1, `Redeem ${id} came back from the past`);
+  )
+  .catch(console.error);
+
+  if(!redemption){
+    log.log(1, `Redeem would not be found! It will likely be caught in the manual queue?`);
     return;
   }
+
+  if ((await redemption).isFulfilled || (await redemption).isCanceled) {
+    log.log(1, `Redeem ${id} was already handled elsewhere?`);
+    return;
+  }
+
   await api.channelPoints.updateRedemptionStatusByIds(
     streamerID,
     rewardId,
@@ -247,6 +276,12 @@ async function backupCheck(api, streamerID, listID) {
     rejectionList[listID].ID
   )
   .catch(console.error);
+
+  if(!redeemInfo){
+    log.log(1, `Redeem would not be found! It will likely be caught in the manual queue?`);
+    return;
+  }
+
   let isAlreadyDone =
     (await redeemInfo).isFulfilled || (await redeemInfo).isCanceled;
   if (!isAlreadyDone) {
@@ -354,7 +389,8 @@ async function TwitchHandler() {
     );
 
     rejectionID++;
-    if (rejectionID >= 10) rejectionID = 1;
+    if (rejectionID >= rejectionListSize)
+      rejectionID = 1;
     rejectionList[rejectionID].rewardID = message.rewardId;
     rejectionList[rejectionID].ID = message.id;
     tempVal = rejectionID;

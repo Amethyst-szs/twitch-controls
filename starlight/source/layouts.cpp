@@ -65,7 +65,7 @@ const char16_t* smo::getFunFact()
         u"It costs 465,999,480 USD to make a building out of 207,593 layers of paint",
         u"Code is the best spaghetti",
         u"Fun Fact: Goombas are a reference to the fictional plant known as chestnut",
-        u"The characters in New donk city are of a fictional species known as humans",
+        u"The characters in New Donk City are of a fictional species known as humans",
         u"That last enemy had a family. How do you sleep at night, knowing what you did?",
         u"When I said hot tub stream, I didn't mean pour water on the server omg",
         u"We have been trying to reach you about your Cappy's extended warranty",

@@ -23,6 +23,7 @@ struct RedeemInfo {
 
         // Restriction and rejection values
         u8 rejectionID = 0;
+        u8 rejectionIDMax = 50;
         u8 restrictionTier = 0;
         u8 lastPublishRestrictionTier = 0;
     };
