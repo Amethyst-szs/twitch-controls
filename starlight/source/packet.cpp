@@ -60,6 +60,7 @@ void InPacketSay::on(Server& server)
 
     ri.sayText = message;
     ri.sayTimer = textFrames;
+    ri.sayAnimator = 20;
 }
 
 void InPacketEvent::parse(const u8* data, u32 len)

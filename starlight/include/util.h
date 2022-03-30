@@ -19,6 +19,7 @@ struct RedeemInfo {
         // Say message
         int sayTimer = -1;
         int sayLines = 1;
+        int sayAnimator = 0;
         const char* sayText;
 
         // Restriction and rejection values
