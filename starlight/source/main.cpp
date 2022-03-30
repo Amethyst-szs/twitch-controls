@@ -252,8 +252,6 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
             gTextWriter->printf("Quick Functions:\n");
 
             // Draw the page
-            if (al::isPadTriggerDown(-1) && !al::isPadTriggerZL(-1))
-                debugSel++;
             if (al::isPadTriggerUp(-1) && !al::isPadTriggerZL(-1))
                 debugSel--;
 
