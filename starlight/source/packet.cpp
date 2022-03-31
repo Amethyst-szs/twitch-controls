@@ -85,6 +85,9 @@ void InPacketEvent::on(Server& server)
         return;
     }
 
+    if (!ri.isRedeemsValid)
+        amy::sendPacketStateNotice(true, isTwitch);
+
     amy::log("Event Redeem Claimed! EventID: %i - Rejected: %s", eventID, !amy::getRedeemInfo().isRedeemsValid ? "true" : "false");
 
     StageScene* stageScene = amy::getGlobalStageScene();
@@ -92,9 +95,7 @@ void InPacketEvent::on(Server& server)
     PlayerActorHakoniwa* player = al::tryGetPlayerActor(pHolder, 0);
     al::LiveActor* curHack = player->getPlayerHackKeeper()->currentHackActor;
 
-    if (!ri.isRedeemsValid)
-        amy::sendPacketStateNotice(true, isTwitch);
-    else {
+    if (ri.isRedeemsValid) {
         // Send an update about successful packet
         amy::sendPacketStateNotice(false, isTwitch);
 

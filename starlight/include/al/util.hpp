@@ -110,6 +110,8 @@ PlayerActorHakoniwa* getPlayerActor(al::LiveActor const*, int);
 
 PlayerActorHakoniwa* tryGetPlayerActor(al::PlayerHolder const*, int);
 
+bool isStopScene(al::LiveActor const*);
+
 sead::Heap* getCurrentHeap(void);
 
 al::Projection* getProjection(al::IUseCamera const*, int);
@@ -359,8 +361,6 @@ bool isEqualString(char const*, char const*);
 bool isEqualSubString(char const*, char const*);
 
 bool isOnGround(al::LiveActor const*, uint);
-
-bool isActiveDemo(al::Scene const*);
 
 bool isInWaterPos(al::LiveActor const*, sead::Vector3f const&);
 bool isInWater(al::LiveActor const*);

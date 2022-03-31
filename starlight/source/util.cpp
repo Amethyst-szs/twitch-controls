@@ -13,7 +13,8 @@
 
 void amy::updateServerDemoState()
 {
-    amy::log("Demo%i", amy::getRedeemInfo().isInvalidStage);
+    amy::RedeemInfo::state& ri = amy::getRedeemInfo();
+    amy::log("Demo%i", ri.isInvalidStage);
 }
 
 StageScene*& amy::getGlobalStageScene()
@@ -213,11 +214,18 @@ void amy::updateRedeemStatus(bool isTwitch)
     StageScene* stageScene = amy::getGlobalStageScene();
     al::PlayerHolder* pHolder = al::getScenePlayerHolder(stageScene);
     PlayerActorHakoniwa* player = al::tryGetPlayerActor(pHolder, 0);
+    amy::RedeemInfo::state& ri = amy::getRedeemInfo();
+
+    amy::log("Save: %i Lang: %i", ri.isSaveLoad, ri.isLangChange);
 
     if (isTwitch)
-        amy::getRedeemInfo().isRedeemsValid = !(stageScene->isPause() || PlayerFunction::isPlayerDeadStatus(player) || rs::isActiveDemo(player) || amy::getDancePartyState().timer > 0);
+        amy::getRedeemInfo().isRedeemsValid = !(stageScene->isPause()
+            || PlayerFunction::isPlayerDeadStatus(player)
+            || rs::isActiveDemo(player)
+            || amy::getDancePartyState().timer > 0);
     else
-        amy::getRedeemInfo().isRedeemsValid = !(stageScene->isPause() || PlayerFunction::isPlayerDeadStatus(player));
+        amy::getRedeemInfo().isRedeemsValid = !(stageScene->isPause()
+            || PlayerFunction::isPlayerDeadStatus(player));
     // amy::log("Info: %i %i %s", amy::getRedeemInfo().isRedeemsValid, amy::getRedeemInfo().isInvalidStage, GameDataFunction::getCurrentStageName(*amy::getGlobalStageScene()->mHolder));
     return;
 }

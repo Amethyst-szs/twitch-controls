@@ -28,25 +28,14 @@ async function createAlreadyExistsList(twitchRedeems, langList) {
   return preExistIndexList;
 }
 
-async function deleteOldRedeems(
-  streamerID,
-  twitchRedeems,
-  preExistIndexList,
-  api
-) {
+async function deleteOldRedeems(streamerID, twitchRedeems, preExistIndexList, api) {
   //Now that you have a list of indexes for all point redeems to remove, go remove them
   for (i = 0; i < preExistIndexList.length; i++) {
     if (preExistIndexList == 0) continue;
-    await api.channelPoints.deleteCustomReward(
-      streamerID,
-      twitchRedeems[preExistIndexList[i]].id
-    );
-    log.log(
-      2,
-      `Cleared ${twitchRedeems[preExistIndexList[i]].title}! (${
-        twitchRedeems[preExistIndexList[i]].id
-      })`
-    );
+    await api.channelPoints.deleteCustomReward(streamerID, twitchRedeems[preExistIndexList[i]].id)
+      .catch(console.error);
+
+    log.log(2, `Cleared ${twitchRedeems[preExistIndexList[i]].title}! (${twitchRedeems[preExistIndexList[i]].id})`);
   }
   log.log(1, `Completed clearing!`);
 }
@@ -54,20 +43,20 @@ async function deleteOldRedeems(
 async function publishNewRedeems(streamerID, redeemInits, api) {
   //Publish redeems back to API!
   for (redeem in redeemInits) {
-    await api.channelPoints.createCustomReward(streamerID, redeemInits[redeem]);
-    log.log(
-      2,
-      `Created new redeem ${redeemInits[redeem].title}! (ID is not saved!)`
-    );
+    await api.channelPoints.createCustomReward(streamerID, redeemInits[redeem])
+      .catch(console.error);
+
+    log.log(2,`Created new redeem ${redeemInits[redeem].title}! (ID is not saved!)`);
   }
   log.log(1, `Completed publishing!`);
 }
 
 async function updateRedeemCost(twitchRedeem, redeem, api, streamerID){
-  if(redeem!=null){
+  if(redeem != null){
     log.log(2, `Updating status of ${redeem.title}`);
+
     await api.channelPoints.updateCustomReward(streamerID, twitchRedeem, redeem)
-    .catch(console.error);
+      .catch(console.error);
   }
 }
 
@@ -76,7 +65,8 @@ function RefreshTimer(api, streamerID, streamerMe, CurDir){
   if(refreshTimer <= 0){
     refreshTimer = refreshTotalTimer;
     priceUpdate(api, streamerID, streamerMe, CurDir)
-    .catch(console.error);
+      .catch(console.error);
+    
     setTimeout(RefreshTimer, 1000, api, streamerID, streamerMe, CurDir);
   } else {
     refreshTimer--;
@@ -98,29 +88,23 @@ async function priceUpdate(api, streamerID, streamerMe, CurDir) {
     redeemInits[langInit[langList[cur]].original].prompt = langInit[langList[cur]].prompt;
   }
 
-  let twitchRedeems = await api.channelPoints.getCustomRewards(
-    streamerID,
-    false
-  );
+  //Grab all the current redeems on the streamer's account
+  let twitchRedeems = await api.channelPoints.getCustomRewards(streamerID, false)
+    .catch(console.error);
+  
+  let preExistIndexList = await createAlreadyExistsList(twitchRedeems, langList);
 
-  let preExistIndexList = await createAlreadyExistsList(
-    twitchRedeems,
-    langList
-  );
-
+  //Get the streamer's current viewer count
   let stream = await streamerMe.getStream();
-
   if(stream == null)
     stream = {"viewers": 0}
 
   let viewers = stream.viewers;
-
   if(viewers == null)
     viewers = 0;
   
-  let updatedAmount = 0;
-
   //Update price listing
+  let updatedAmount = 0; //This is how many Twitch redeems got updated in this run
   for (twitchListing = 0; twitchListing < preExistIndexList.length; twitchListing++) {
     let twitchRedeem = twitchRedeems[preExistIndexList[twitchListing]]
     let title = twitchRedeem.title;
@@ -129,7 +113,7 @@ async function priceUpdate(api, streamerID, streamerMe, CurDir) {
 
     //If the redeem is invalid for some magic reason, log it and run away
     if(redeem == undefined){
-      log.log(1, `TRIED TO UDPATE A REDEEM THAT DOESN'T EXISTS PRICE?!?!`);
+      log.log(1, `Can't update the price of a redeem that doesn't exist??`);
       continue;
     }
 
@@ -185,15 +169,10 @@ module.exports = {
       }
     }
 
-    let twitchRedeems = await api.channelPoints.getCustomRewards(
-      streamerID,
-      false
-    );
+    let twitchRedeems = await api.channelPoints.getCustomRewards(streamerID, false)
+      .catch(console.error);
 
-    let preExistIndexList = await createAlreadyExistsList(
-      twitchRedeems,
-      langList
-    );
+    let preExistIndexList = await createAlreadyExistsList(twitchRedeems, langList);
 
     //Attempt to remove any prexisting redeems with overlapping names
     if (preExistIndexList.length > 0)

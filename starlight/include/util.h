@@ -16,6 +16,10 @@ struct RedeemInfo {
         bool isRedeemsValid = false;
         bool isTransition = true;
 
+        // Frame timer based states
+        int isSaveLoad = 0;
+        int isLangChange = 0;
+
         // Say message
         int sayTimer = -1;
         int sayLines = 1;

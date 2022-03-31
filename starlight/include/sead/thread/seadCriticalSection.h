@@ -1,17 +1,15 @@
 #ifndef SEAD_CRITICAL_SECTION_H_
 #define SEAD_CRITICAL_SECTION_H_
 
-#include <nn/os.hpp>
+#include <nn/os.h>
 
 #include <sead/basis/seadTypes.h>
 #include <sead/heap/seadDisposer.h>
 
-namespace sead
-{
+namespace sead {
 class Heap;
 
-class CriticalSection : public IDisposer
-{
+class CriticalSection : public IDisposer {
 public:
     CriticalSection();
     explicit CriticalSection(Heap* disposer_heap);
@@ -31,6 +29,6 @@ public:
     nn::os::MutexType mCriticalSectionInner;
 };
 
-}  // namespace sead
+} // namespace sead
 
-#endif  // SEAD_CRITICAL_SECTION_H_
+#endif // SEAD_CRITICAL_SECTION_H_

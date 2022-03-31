@@ -39,7 +39,7 @@ let curTime = new Date().getTime();
 
 //Respond to packets from the switch
 server.on("message", (msg, rinfo) => {
-  // console.log(msg);
+  console.log(msg);
   switch (msg.readInt8()) {
     case -1: //Dummy Initalization
       inPackets.DummyInit(msg, rinfo);
@@ -71,22 +71,11 @@ server.on("message", (msg, rinfo) => {
 
       //Rejection status update check
       isReject = bufferTool.reject(msg, CurDir);
-      if (isReject.wasRejectLog) {
-        if (!isReject.rejectionState) {
-          refundRedeem(
-            api, streamerID,
-            rejectionList[isReject.rejectionID].rewardID,
-            rejectionList[isReject.rejectionID].ID
-          );
-        } else {
-          approveRedeem(
-            api, streamerID,
-            rejectionList[isReject.rejectionID].rewardID,
-            rejectionList[isReject.rejectionID].ID
-          );
-        }
-        break;
-      }
+      if (isReject.wasRejectLog)
+        updateRedeem(api, streamerID,
+          rejectionList[isReject.rejectionID].rewardID,
+          rejectionList[isReject.rejectionID].ID,
+          !isReject.rejectionState);
 
       //Restrict status update
       bufferTool.restrict(msg, CurDir);
@@ -208,58 +197,26 @@ function initRejectionList(){
   return;
 }
 
-async function refundRedeem(api, streamerID, rewardId, id) {
-  redemption = await api.channelPoints.getRedemptionById(
-    streamerID,
-    rewardId,
-    id
-  )
+async function updateRedeem(api, streamerID, rewardId, id, isRefund) {
+  //Grab the redemption, ready to catch an error
+  redemption = await api.channelPoints.getRedemptionById(streamerID, rewardId, id)
   .catch(console.error);
-
-  if(!redemption){
-    log.log(1, `Redeem would not be found! It will likely be caught in the manual queue?`);
+  if(!redemption){ //If the redemption wasn't found, return early
+    log.log(1, `Redeem was not be found! It will likely be caught in the manual queue?`);
     return;
   }
 
-  if ((await redemption).isFulfilled || (await redemption).isCanceled) {
+  if ((await redemption).isFulfilled || (await redemption).isCanceled) { //If the redeem was handled elsewhere, skip
     log.log(1, `Redeem ${id} was already handled elsewhere?`);
     return;
   }
+  
+  //Set the respond based on the isRefund parameter
+  response = `FULFILLED`;
+  if(isRefund)
+    response = `CANCELED`;
 
-  await api.channelPoints.updateRedemptionStatusByIds(
-    streamerID,
-    rewardId,
-    id,
-    "CANCELED"
-  )
-  .catch(console.error);
-  return;
-}
-
-async function approveRedeem(api, streamerID, rewardId, id) {
-  redemption = await api.channelPoints.getRedemptionById(
-    streamerID,
-    rewardId,
-    id
-  )
-  .catch(console.error);
-
-  if(!redemption){
-    log.log(1, `Redeem would not be found! It will likely be caught in the manual queue?`);
-    return;
-  }
-
-  if ((await redemption).isFulfilled || (await redemption).isCanceled) {
-    log.log(1, `Redeem ${id} was already handled elsewhere?`);
-    return;
-  }
-
-  await api.channelPoints.updateRedemptionStatusByIds(
-    streamerID,
-    rewardId,
-    id,
-    "FULFILLED"
-  )
+  await api.channelPoints.updateRedemptionStatusByIds(streamerID, rewardId, id, response)
   .catch(console.error);
   return;
 }
@@ -270,11 +227,7 @@ async function viewerUpdate(streamerMe) {
 }
 
 async function backupCheck(api, streamerID, listID) {
-  let redeemInfo = await api.channelPoints.getRedemptionById(
-    streamerID,
-    rejectionList[listID].rewardID,
-    rejectionList[listID].ID
-  )
+  let redeemInfo = await api.channelPoints.getRedemptionById(streamerID, rejectionList[listID].rewardID, rejectionList[listID].ID)
   .catch(console.error);
 
   if(!redeemInfo){
@@ -290,15 +243,24 @@ async function backupCheck(api, streamerID, listID) {
   }
 }
 
+async function testFunc(){
+  if(outPackets.getClient()){
+    outPackets.outHandler("Hot Tub Stream", false);
+  }
+  return;
+}
+
 //Twitch root function
 async function TwitchHandler() {
   log.title(`Launch menu`);
   //Create an authProvider and API access client
   let authProvider = await getStreamerAuth();
   api = new BaseAPI.ApiClient({ authProvider });
-
+  
   // //Collect some data about the streamer
-  let streamerMe = await api.users.getMe(false); //The argument here is to NOT grab the streamer's email!
+  let streamerMe = await api.users.getMe(false) //The argument here is to NOT grab the streamer's email!
+  .catch(console.error);
+  
   streamerID = streamerMe.id;
 
   //Let the client language be selected
@@ -324,10 +286,7 @@ async function TwitchHandler() {
   //Create a subscription client to the channel point redeems
   const PubSubClient = new PubSub.PubSubClient();
   const userId = await PubSubClient.registerUserListener(authProvider);
-  log.log(
-    2,
-    `Subscribed to redeem alerts with channel:read:redemptions scope!\nWelcome ${streamerMe.displayName}`
-  );
+  log.log(2, `Subscribed to redeem alerts with channel:read:redemptions scope!\nWelcome ${streamerMe.displayName}` );
 
   //Starts a timer tracking automatic refreshing of costs, cooldowns, and enabled status
   twitchInit.startRefreshTimer(api, streamerID, streamerMe, CurDir);
@@ -340,6 +299,8 @@ async function TwitchHandler() {
   //Once both the UDP server and Twitch is ready, launch discord bot
   discordHandler.slashCommandInit(CurDir);
   discordHandler.botManage();
+
+  // setInterval(testFunc, 50);
 
   //Create listener that is triggered every channel point redeem
   const listener = await PubSubClient.onRedemption(userId, (message) => {
@@ -354,31 +315,22 @@ async function TwitchHandler() {
 
     //Check if the player is currently in a demo scene, if so, STOP
     if (invalidStage) {
-      log.log(
-        2,
-        `${message.rewardTitle} from ${message.userDisplayName} but the player is in a demo scene`
-      );
-      refundRedeem(api, streamerID, message.rewardId, message.id);
+      log.log(2, `${message.rewardTitle} from ${message.userDisplayName} but the player is in a demo scene`);
+      updateRedeem(api, streamerID, message.rewardId, message.id, true);
       return;
     }
 
     //If a redeem that is the the restriction list is redeemed, refund it!
     if (restrictions.getRestrictedRedeems().includes(message.rewardTitle)) {
-      log.log(
-        2,
-        `${message.rewardTitle} from ${message.userDisplayName} was redeemed even though it was restricted! Refunded, no big deal!`
-      );
-      refundRedeem(api, streamerID, message.rewardId, message.id);
+      log.log(2, `${message.rewardTitle} from ${message.userDisplayName} was redeemed even though it was restricted! Refunded, no big deal!`);
+      updateRedeem(api, streamerID, message.rewardId, message.id, true);
       return;
     }
 
     //Check and make sure a switch has connected already
     if (!outPackets.getClient()) {
-      log.log(
-        2,
-        `${message.rewardTitle} from ${message.userDisplayName} but no client connected yet!`
-      );
-      refundRedeem(api, streamerID, message.rewardId, message.id);
+      log.log(2, `${message.rewardTitle} from ${message.userDisplayName} but no client connected yet!`);
+      updateRedeem(api, streamerID, message.rewardId, message.id, true);
       return;
     }
 
@@ -396,6 +348,8 @@ async function TwitchHandler() {
     tempVal = rejectionID;
     setTimeout(backupCheck, 1500, api, streamerID, tempVal);
     
+    // console.log(rejectionList);
+
     //Handle redeem in the out packet handler
     outPackets.outHandler(message.rewardTitle, true);
   });

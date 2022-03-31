@@ -44,7 +44,8 @@ static const char* page2Options[] {
     "Kill player\n",
     "End puppetable\n",
     "Complete kingdom (Glitch central)\n",
-    "Plus 100 coins\n"
+    "Plus 100 coins\n",
+    "Random Test Button\n"
 };
 static int page2Len = *(&page2Options + 1) - page2Options;
 
@@ -109,8 +110,23 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
         layouts.mConnectionWait->setTxtMessage(u"Connection to Twitch lost! One moment!");
     }
 
+    al::Scene* curScene = curSequence->curScene;
+
     // Update invalid stage
+    StageScene* stageScene = amy::getGlobalStageScene();
     ri.isInvalidStage = al::isEqualSubString(curSequence->mGameDataHolder->getCurrentStageName(), "Demo");
+
+    // If the stage exists and the game is loading a new save file this frame, update the trackers of loads and langs
+    if (curScene && isInGame && ri.isSaveLoad == 0)
+        ri.isSaveLoad = stageScene->isLoadData() * 1000;
+    if (curScene && isInGame && ri.isLangChange == 0)
+        ri.isLangChange = stageScene->isChangeLanguage() * 1000;
+
+    if (ri.isSaveLoad > 0 || ri.isLangChange > 0) {
+        ri.isInvalidStage = true;
+        ri.isTransition = true;
+        isInGame = false;
+    }
 
     // If the stage switched from an invalid stage to valid or vise versa
     if (ri.isInvalidStage != prevFrameInvalidScene) {
@@ -127,14 +143,7 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
     int dispHeight = al::getLayoutDisplayHeight();
 
     gTextWriter->mViewport = viewport;
-
-    gTextWriter->mColor = sead::Color4f(
-        1.f,
-        1.f,
-        1.f,
-        0.8f);
-
-    al::Scene* curScene = curSequence->curScene;
+    gTextWriter->mColor = sead::Color4f(1.f, 1.f, 1.f, 0.8f);
 
     // Dance party overlay
     if (curScene && amy::getDancePartyState().timer > 0) {
@@ -203,7 +212,6 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
         gTextWriter->setCursorFromTopLeft(sead::Vector2f(10.f, (dispHeight / 3) + 30.f));
         gTextWriter->setScaleFromFontHeight(20.f);
 
-        StageScene* stageScene = amy::getGlobalStageScene();
         al::PlayerHolder* pHolder = al::getScenePlayerHolder(stageScene);
         PlayerActorHakoniwa* player = al::tryGetPlayerActor(pHolder, 0);
         GameDataHolderAccessor GameData = *stageScene->mHolder;
@@ -289,6 +297,9 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
                 case 4:
                     stageScene->mHolder->mGameDataFile->addCoin(100);
                     break;
+                case 5:
+                    stageScene->exeDemoTitleLogo();
+                    break;
                 }
             break;
         }
@@ -370,6 +381,12 @@ void stageSceneHook(StageScene* stageScene)
     bool isDemo = rs::isActiveDemo(player);
     bool isDead = PlayerFunction::isPlayerDeadStatus(player);
     bool isInterupted = isDead || isDemo || isPause || amy::getDancePartyState().timer > 0;
+
+    // Frame timer based states
+    if (ri.isSaveLoad > 0)
+        ri.isSaveLoad--;
+    if (ri.isLangChange > 0)
+        ri.isLangChange--;
 
     // Calculate the restriction tiers if it's the first frame in the full scene
     if (ri.isTransition) {
