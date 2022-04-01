@@ -434,6 +434,8 @@ void stageSceneHook(StageScene* stageScene)
             player->startDemoPuppetable();
             al::setVelocityZero(player);
             rs::faceToCamera(player);
+            player->mPlayerAnimator->endSubAnim();
+            player->mPlayerAnimator->startAnim("RaceResultLose");
         }
     }
 

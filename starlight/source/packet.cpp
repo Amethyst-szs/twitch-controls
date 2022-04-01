@@ -211,7 +211,7 @@ void InPacketEvent::on(Server& server)
             al::setVelocityZero(player);
             rs::faceToCamera(player);
             player->mPlayerAnimator->endSubAnim();
-            player->mPlayerAnimator->startAnimDead();
+            player->mPlayerAnimator->startAnim("RaceResultLose");
             break;
         }
         default: {
