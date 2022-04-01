@@ -39,16 +39,21 @@ let curTime = new Date().getTime();
 
 //Respond to packets from the switch
 server.on("message", (msg, rinfo) => {
-  console.log(msg);
+  // console.log(msg);
   switch (msg.readInt8()) {
-    case -1: //Dummy Initalization
-      inPackets.DummyInit(msg, rinfo);
-      break;
+    // case -1: //Dummy Initalization
+      //No code is actually ran here
+      // break;
     case -2: //Initalization
-      outPackets.setClient(inPackets.Init(msg, rinfo));
+      outPackets.setClient(rinfo);
+      log.setNickname(msg.slice(1, msg.indexOf(0x00)).toString().toUpperCase());
+    
       initRejectionList();
       lastPingTime = new Date().getTime();
       serverPing();
+
+      log.log(0, "New client connected! Initalization was completed successfully!");
+
       break;
     case -3: //Log any information with msg info
       //Ping check

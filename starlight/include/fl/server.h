@@ -1,6 +1,7 @@
 #pragma once
 
-#include "nn/os.hpp"
+#include "nn/account.h"
+#include "nn/os.h"
 #include <fl/packet.h>
 #include <nn/socket.h>
 #include <types.h>
@@ -11,6 +12,13 @@
 namespace smo {
 class OutPacket;
 enum OutPacketType : u8;
+class InitPacket {
+    u8 packetID = -2;
+    nn::account::Nickname username;
+
+public:
+    void setUsername(nn::account::Nickname name);
+};
 class Server {
 private:
     bool connected = false;
@@ -34,5 +42,6 @@ public:
     }
     s32 socket = -1;
     sockaddr server = { 0 };
+    nn::account::Uid mUserID;
 };
 }

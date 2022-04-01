@@ -1,4 +1,5 @@
 const chalk = require("chalk");
+let nickname = `//////////////`;
 
 module.exports = {
   title: function(title){
@@ -8,10 +9,14 @@ module.exports = {
     return;
   },
 
+  setNickname: function(newName){
+    nickname = newName;
+  },
+
   log: function(Source, Message) {
     switch (Source) {
       case 0:
-        console.log(chalk.green.bold("[CLIENT] ") + Message);
+        console.log(chalk.greenBright.italic(`[${nickname}] `) + Message);
         break;
       case 1:
         console.log(chalk.yellow.bold("[SERVER] ") + Message);

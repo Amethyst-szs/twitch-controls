@@ -45,8 +45,9 @@ module.exports = {
     return client;
   },
   
-  setClient: function(newClient){
+  setClient: function(newClient, nickname){
     client = newClient;
+    client.nickname = nickname;
     return;
   },
 

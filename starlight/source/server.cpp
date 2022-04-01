@@ -3,8 +3,9 @@
 #include "game/Layouts/CoinCounter.h"
 #include "layouts.hpp"
 #include "nn/init.h"
-#include "nn/os.hpp"
+#include "nn/os.h"
 #include "nn/time.h"
+#include "rs/util.hpp"
 #include "types.h"
 #include "util.h"
 #include <fl/server.h>
@@ -33,6 +34,7 @@ void threadFunc(void* args)
     nn::os::SleepThread(nn::TimeSpan::FromSeconds(12));
 
     // Prepare the connecting layout
+    amy::RedeemInfo::state& ri = amy::getRedeemInfo();
     smo::Layouts& layouts = smo::getLayouts();
     layouts.mConnectionWait->appear();
     layouts.mConnectionWait->playLoop();
@@ -48,7 +50,6 @@ void threadFunc(void* args)
 
     while (true) {
         server->handlePacket(buf, 30720);
-        // amy::log("PingFrames: %i, %i", layouts.pingFrames, layouts.pingFrames >= 300);
         nn::os::YieldThread();
         nn::os::SleepThread(w);
     }
@@ -59,6 +60,12 @@ void threadFunc(void* args)
 }
 
 namespace smo {
+
+void InitPacket::setUsername(nn::account::Nickname name)
+{
+    username = name;
+}
+
 void Server::sendInit(const char* ipS)
 {
     in_addr ip = { 0 };
@@ -68,10 +75,23 @@ void Server::sendInit(const char* ipS)
     server.family = 2;
     server.address = ip;
 
+    // Dummy init
     OutPacketType dummy = OutPacketType::DummyInit;
     nn::socket::SendTo(socket, &dummy, 1, 0, (struct sockaddr*)&server, sizeof(server));
-    dummy = OutPacketType::Init;
-    nn::socket::SendTo(socket, &dummy, 1, 0, (struct sockaddr*)&server, sizeof(server));
+
+    // Main init
+
+    // Fetch the user's name and ID
+    nn::account::GetLastOpenedUser(&mUserID);
+    nn::account::Nickname playerName;
+    nn::account::GetNickname(&playerName, mUserID);
+
+    // Create an init packet
+    InitPacket initPack;
+    initPack.setUsername(playerName);
+
+    // Send
+    nn::socket::SendTo(socket, &initPack, sizeof(initPack), 0, (struct sockaddr*)&server, sizeof(server));
 
     connected = true;
 }

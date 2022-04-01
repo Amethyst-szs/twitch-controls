@@ -18,6 +18,8 @@ ChangeStageInfo* createChangeStageInfo(const al::LiveActor*, const al::Placement
 
 bool isPlayerDamageStopDemo(const al::LiveActor*);
 
+bool isDemoEnvironmentChange(al::Scene const*);
+
 al::LiveActor* getPlayerActor(const al::Scene*);
 
 void get2DAreaPos(sead::Vector3<f32>*, al::AreaObj const*);
@@ -38,7 +40,7 @@ bool isMsgShineGet(al::SensorMsg const*);
 
 void saveCoinStack(al::LiveActor const* actor, al::PlacementId const* placement, int stackCount);
 
-bool isActiveDemo(al::LiveActor const*);
+bool isActiveDemo(al::Scene const*);
 
 bool isActiveDemoWithPlayer(al::Scene const*);
 
