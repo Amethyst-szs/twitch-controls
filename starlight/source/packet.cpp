@@ -107,6 +107,11 @@ void InPacketEvent::on(Server& server)
         case 2: { // GravFlip - Change Gravity
             amy::RedeemInfo::gravityState& grav = amy::getGravityState();
             al::setGravity(player, amy::getRandomGravity());
+
+            // If timer ended up at an unresonably low value, bump to zero
+            if (grav.timer < -1)
+                grav.timer = 0;
+
             if (grav.timer <= 0)
                 grav.comboLength = 0;
             if (grav.comboLength >= 10)
@@ -141,6 +146,11 @@ void InPacketEvent::on(Server& server)
         case 7: {
             amy::RedeemInfo::windState& wind = amy::getWindState();
             wind.vect = amy::getRandomGravity();
+
+            // If timer ended up at an unresonably low value, bump to zero
+            if (wind.timer < -1)
+                wind.timer = 0;
+
             if (wind.timer <= 0)
                 wind.comboLength = 0;
             if (wind.comboLength >= 10)
@@ -151,6 +161,11 @@ void InPacketEvent::on(Server& server)
         }
         case 8: {
             amy::RedeemInfo::hotFloorState& hot = amy::getHotFloorState();
+
+            // If timer ended up at an unresonably low value, bump to zero
+            if (hot.timer < -1)
+                hot.timer = 0;
+
             if (hot.timer <= 0)
                 hot.comboLength = 0;
             if (hot.comboLength >= 10)
@@ -161,6 +176,11 @@ void InPacketEvent::on(Server& server)
         }
         case 9: {
             amy::RedeemInfo::stickInverState& stick = amy::getStickInverState();
+
+            // If timer ended up at an unresonably low value, bump to zero
+            if (stick.timer < -1)
+                stick.timer = 0;
+
             if (stick.timer <= 0)
                 stick.comboLength = 0;
             if (stick.comboLength >= 10)
@@ -171,6 +191,11 @@ void InPacketEvent::on(Server& server)
         }
         case 10: {
             amy::RedeemInfo::waterAreaState& water = amy::getWaterAreaState();
+
+            // If timer ended up at an unresonably low value, bump to zero
+            if (water.timer < -1)
+                water.timer = 0;
+
             if (water.timer <= 0)
                 water.comboLength = 0;
             if (water.comboLength >= 10)
@@ -184,7 +209,13 @@ void InPacketEvent::on(Server& server)
                 al::setTransY(player, al::getTrans(player)->y + 2000.f);
                 break;
             }
+
             amy::RedeemInfo::dancePartyState& party = amy::getDancePartyState();
+
+            // If timer ended up at an unresonably low value, bump to zero
+            if (party.timer < -1)
+                party.timer = 0;
+
             party.timer += party.addLength * 60;
 
             if (party.enableFrame == false)
