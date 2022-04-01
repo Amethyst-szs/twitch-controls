@@ -29,6 +29,7 @@
 static bool showMenu = false;
 static bool isInGame = false;
 static bool prevFrameInvalidScene = true;
+static bool isPause = false;
 static HakoniwaSequence* curGlobalSequence;
 
 DebugWarpPoint warpPoints[40];
@@ -118,10 +119,10 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
     ri.isInvalidStage = al::isEqualSubString(curSequence->mGameDataHolder->getCurrentStageName(), "Demo");
 
     // If the stage exists and the game is loading a new save file this frame, update the trackers of loads and langs
-    if (curScene && isInGame && ri.isSaveLoad == 0 && !prevFrameInvalidScene)
-        ri.isSaveLoad = stageScene->isLoadData() * 1000;
-    if (curScene && isInGame && ri.isLangChange == 0 && !prevFrameInvalidScene)
-        ri.isLangChange = stageScene->isChangeLanguage() * 1000;
+    if (curScene && isInGame && ri.isSaveLoad == 0 && !prevFrameInvalidScene && isPause)
+        ri.isSaveLoad = stageScene->isLoadData() * 200;
+    if (curScene && isInGame && ri.isLangChange == 0 && !prevFrameInvalidScene && isPause)
+        ri.isLangChange = stageScene->isChangeLanguage() * 200;
 
     if (ri.isSaveLoad > 0 || ri.isLangChange > 0) {
         ri.isInvalidStage = true;
@@ -383,7 +384,7 @@ void stageSceneHook(StageScene* stageScene)
     GameDataHolderWriter holder = *stageScene->mHolder;
     amy::RedeemInfo::state& ri = amy::getRedeemInfo();
 
-    bool isPause = stageScene->isPause();
+    isPause = stageScene->isPause();
     bool isDemo = rs::isActiveDemo(player);
     bool isDead = PlayerFunction::isPlayerDeadStatus(player);
     bool isInterupted = isDead || isDemo || isPause || amy::getDancePartyState().timer > 0;
@@ -481,8 +482,10 @@ void stageSceneHook(StageScene* stageScene)
     // GameDataFunction::repairHome(holder);
     GameDataFunction::enableCap(holder);
 
-    if (!isInGame) {
+    if (!isInGame || !isDead || !isDemo) {
         isInGame = true;
+    } else {
+        isInGame = false;
     }
 
     // DEBUG MENU HOTKEYS
