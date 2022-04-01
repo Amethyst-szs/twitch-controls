@@ -117,9 +117,9 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
     ri.isInvalidStage = al::isEqualSubString(curSequence->mGameDataHolder->getCurrentStageName(), "Demo");
 
     // If the stage exists and the game is loading a new save file this frame, update the trackers of loads and langs
-    if (curScene && isInGame && ri.isSaveLoad == 0)
+    if (curScene && isInGame && ri.isSaveLoad == 0 && !prevFrameInvalidScene)
         ri.isSaveLoad = stageScene->isLoadData() * 1000;
-    if (curScene && isInGame && ri.isLangChange == 0)
+    if (curScene && isInGame && ri.isLangChange == 0 && !prevFrameInvalidScene)
         ri.isLangChange = stageScene->isChangeLanguage() * 1000;
 
     if (ri.isSaveLoad > 0 || ri.isLangChange > 0) {
@@ -131,6 +131,7 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
     // If the stage switched from an invalid stage to valid or vise versa
     if (ri.isInvalidStage != prevFrameInvalidScene) {
         amy::updateServerDemoState();
+        isInGame = false;
         prevFrameInvalidScene = ri.isInvalidStage;
     }
 
