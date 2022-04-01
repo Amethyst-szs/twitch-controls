@@ -16,7 +16,7 @@ module.exports = {
   log: function(Source, Message) {
     switch (Source) {
       case 0:
-        console.log(chalk.greenBright.italic(`[${nickname}] `) + Message);
+        console.log(chalk.greenBright.italic(`[${nickname}]`) + " " + Message);
         break;
       case 1:
         console.log(chalk.yellow.bold("[SERVER] ") + Message);
