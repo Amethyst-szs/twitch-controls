@@ -40,6 +40,7 @@ static int debugPage = 0;
 static int debugSel = 0;
 static int debugMax = 2;
 static const char* page2Options[] {
+    "Force Reconnection Screen\n",
     "Disconnect from server\n",
     "Kill player\n",
     "End puppetable\n",
@@ -284,21 +285,24 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
             if (al::isPadTriggerRight(-1) && !al::isPadHoldZL(-1))
                 switch (debugSel) {
                 case 0:
-                    amy::log("ClientDisconnect");
+                    layouts.pingFrames = 400;
                     break;
                 case 1:
-                    GameDataFunction::killPlayer(*stageScene->mHolder);
+                    amy::log("ClientDisconnect");
                     break;
                 case 2:
-                    player->endDemoPuppetable();
+                    GameDataFunction::killPlayer(*stageScene->mHolder);
                     break;
                 case 3:
-                    GameDataFunction::addPayShine(holder, 30);
+                    player->endDemoPuppetable();
                     break;
                 case 4:
-                    stageScene->mHolder->mGameDataFile->addCoin(100);
+                    GameDataFunction::addPayShine(holder, 30);
                     break;
                 case 5:
+                    stageScene->mHolder->mGameDataFile->addCoin(100);
+                    break;
+                case 6:
                     stageScene->exeDemoTitleLogo();
                     break;
                 }
@@ -320,6 +324,7 @@ void stageInitHook(StageScene* initStageScene, al::SceneInitInfo* sceneInitInfo)
     __asm("LDR X24, [X1, #0x18]");
 
     amy::getRedeemInfo().isTransition = true;
+    isInGame = false;
 
     __asm("MOV X1, X24");
 }

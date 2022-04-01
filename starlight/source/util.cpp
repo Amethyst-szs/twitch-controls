@@ -86,7 +86,7 @@ void amy::calcWorldTier(s32 worldID, const char* stageName)
         0, // Seaside Kingdom
         0, // Snow Kingdom
         0, // Luncheon Kingdom
-        0, // Ruined Kingdom
+        3, // Ruined Kingdom
         1, // Bowsers Kingdom
         2, // Moon Kingdom
         0, // Mushroom Kingdom
@@ -119,7 +119,9 @@ void amy::calcWorldTier(s32 worldID, const char* stageName)
         "LavaWorldShopStage", // 17
         "LakeWorldShopStage", // 18
         "CityWorldShop01Stage", // 19
-        "ClashWorldShopStage" // 20
+        "ClashWorldShopStage", // 20
+        "SandWorldSlotStage", // 21
+        "CityWorldSandSlotStage" // 22
     };
 
     // And then definie what tiers these stages get
@@ -144,7 +146,9 @@ void amy::calcWorldTier(s32 worldID, const char* stageName)
         4, // 17
         4, // 18
         4, // 19
-        4 // 20
+        4, // 20
+        4, // 21
+        4 // 22
     };
 
     // Basic variables
@@ -215,8 +219,6 @@ void amy::updateRedeemStatus(bool isTwitch)
     al::PlayerHolder* pHolder = al::getScenePlayerHolder(stageScene);
     PlayerActorHakoniwa* player = al::tryGetPlayerActor(pHolder, 0);
     amy::RedeemInfo::state& ri = amy::getRedeemInfo();
-
-    amy::log("Save: %i Lang: %i", ri.isSaveLoad, ri.isLangChange);
 
     if (isTwitch)
         amy::getRedeemInfo().isRedeemsValid = !(stageScene->isPause()
