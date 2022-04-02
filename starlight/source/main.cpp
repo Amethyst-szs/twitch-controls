@@ -124,7 +124,7 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
     if (curScene && isInGame && ri.isLangChange == 0 && !prevFrameInvalidScene && isPause)
         ri.isLangChange = stageScene->isChangeLanguage() * 200;
 
-    if (ri.isSaveLoad > 0 || ri.isLangChange > 0) {
+    if (ri.isSaveLoad > 0 || ri.isLangChange > 0 || ri.isSceneKill > 0) {
         ri.isInvalidStage = true;
         ri.isTransition = true;
         isInGame = false;
@@ -330,6 +330,16 @@ void stageInitHook(StageScene* initStageScene, al::SceneInitInfo* sceneInitInfo)
     __asm("MOV X1, X24");
 }
 
+HOOK_ATTR
+bool sceneKillHook(GameDataHolderAccessor value)
+{
+    amy::RedeemInfo::state& ri = amy::getRedeemInfo();
+    amy::log("StageScene killed, transition triggered");
+    ri.isSceneKill = 60;
+
+    return GameDataFunction::isMissEndPrevStageForSceneDead(value);
+}
+
 al::SequenceInitInfo* initInfo;
 
 HOOK_ATTR
@@ -394,6 +404,8 @@ void stageSceneHook(StageScene* stageScene)
         ri.isSaveLoad--;
     if (ri.isLangChange > 0)
         ri.isLangChange--;
+    if (ri.isSceneKill > 0)
+        ri.isSceneKill--;
 
     // Calculate the restriction tiers if it's the first frame in the full scene
     if (ri.isTransition) {

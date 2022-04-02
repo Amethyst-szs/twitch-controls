@@ -233,3 +233,7 @@ B59E28: // sead::system::print
 // Shine control update
 001CF534:
     BL shineControl
+
+//Stage Scene Kill Hook
+004cc780:
+    BL sceneKillHook

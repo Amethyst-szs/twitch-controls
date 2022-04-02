@@ -19,6 +19,7 @@ struct RedeemInfo {
         // Frame timer based states
         int isSaveLoad = 0;
         int isLangChange = 0;
+        int isSceneKill = 0;
 
         // Say message
         int sayTimer = -1;
