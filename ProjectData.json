@@ -2,10 +2,10 @@
 	"Version": "10",
 	"PName": "twitch-controls",
 	"DumpStats": {
-		"Time": "4-1-2022 17:54:27",
-		"Amount": 782,
+		"Time": "4-2-2022 0:7:44",
+		"Amount": 783,
 		"isUndumped": false,
-		"Type": "Quick"
+		"Type": "Complete"
 	},
 	"songs": {},
 	"dates": {
@@ -16,7 +16,7 @@
 				"CounterLifeKids.szs": 1647710921135.1274,
 				"KidsMode.szs": 1619387757107.188,
 				"TitleLogoParts.szs": 1648276715330.8557,
-				"TitleLogoSmallParts.szs": 1648276713517.1626,
+				"TitleLogoSmallParts.szs": 1648883245455.9746,
 				"WindowConfirmWait.szs": 1648489305038.0693
 			},
 			"ObjectData": {
