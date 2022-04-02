@@ -77,7 +77,7 @@ function RefreshTimer(api, streamerID, streamerMe, CurDir){
 
 async function priceUpdate(api, streamerID, streamerMe, CurDir) {
   //Get a list of Twitch Controls redeems
-  const redeemInits = require("../settings/redeem_init.json");
+  const redeemInits = JSON.parse(fs.readFileSync(`${CurDir}/settings/redeem_init.json`));
   langList = JSON.parse(fs.readFileSync(`${CurDir}/settings/localize/${lang}_list.json`)).FullRedeemList;
   langInit = JSON.parse(fs.readFileSync(`${CurDir}/settings/localize/${lang}_init.json`));
 
