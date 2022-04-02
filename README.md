@@ -35,7 +35,20 @@ Once you have all this in place the server should be able to be run with both np
 
 ### Switch side
 
-You should be able to compile the project with the make file on Linux or WSL, only part you'll have to change is the local ip address of the server. Just open up `starlight/include/ipAddress.hpp` and supply the server's local IP. This does require both the server and the switch to be on the same network connection.  
+You should be able to compile the project with the make file on Linux or WSL, only part you'll have to change is the local ip address of the server. Just open up `starlight/include/ips.hpp` and supply a local and global IP. The local IP is intended to connect to a server running on your machine on the same wifi connection. The global IP is used to connect to the main offical server, which you do not have and I will not give. Hold up on the D-Pad during the connection screen to use your local IP instead of the global IP. Here is a template of the `ips.hpp` file
+`starlight/source/ips.hpp`
+```
+#pragma once
+
+namespace smo {
+class ServerIP {
+public:
+    const char* localIp = ""; // LOCAL IP OF SERVER HERE!
+    const char* privateIp = ""; // GLOBAL IP OF SERVER HOST HERE!
+};
+const char* getServerIp(bool useLocal);
+}; // namespace smo
+```
   
 If you wish to add your own redeems, look into the packet and server code! I can help out if needed
 
