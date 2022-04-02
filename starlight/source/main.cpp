@@ -304,7 +304,7 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
                     stageScene->mHolder->mGameDataFile->addCoin(100);
                     break;
                 case 6:
-                    stageScene->exeDemoTitleLogo();
+                    amy::getGravityState().timer -= 150;
                     break;
                 }
             break;
