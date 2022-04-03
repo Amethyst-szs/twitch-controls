@@ -138,7 +138,7 @@ async function priceUpdate(api, streamerID, streamerMe, CurDir) {
     || (redeem.globalCooldown != twitchRedeem.globalCooldown)
     || (redeem.isEnabled != twitchRedeem.isEnabled)){
       updatedAmount++;
-      setTimeout(updateRedeemCost, (updatedAmount+1)*2000, twitchRedeem.id, redeem, api, streamerID);
+      setTimeout(updateRedeemCost, (updatedAmount+1)*500, twitchRedeem.id, redeem, api, streamerID);
     }
   }
   log.log(1, `Finished queuing price updates!`);
