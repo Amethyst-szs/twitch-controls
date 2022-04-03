@@ -82,7 +82,7 @@ const char16_t* smo::getFunFact()
         u"20 shiverians die during races every year...",
         u"Try the volleyball challenge with this mod, I dare you",
         u"Luncheon Kingdom's food is raw and missing lamb sauce",
-        u"Ruined Kingdom gets its name its ruined potential",
+        u"Ruined Kingdom gets its name from its ruined potential",
         u"Bowser's Kingdom is a testing ground for teleportation technology",
         u"Moon Kingdom is actually half cheese",
         u"Beat darker 2401 times and unlock a Aperture Science Dual Portal Device",

@@ -245,6 +245,10 @@ void InPacketEvent::on(Server& server)
             player->mPlayerAnimator->startAnim("RaceResultLose");
             break;
         }
+        case 16: {
+            player->mDamageKeeper->activatePreventDamage();
+            break;
+        }
         default: {
             amy::log("Invalid EventID sent? EventID: %i", eventID);
             break;

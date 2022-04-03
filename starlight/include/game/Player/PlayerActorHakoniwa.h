@@ -11,6 +11,7 @@
 #include "PlayerAnimator.h"
 #include "PlayerColliderHakoniwa.h"
 #include "PlayerConst.h"
+#include "PlayerDamageKeeper.h"
 #include "PlayerFormSensorCollisionArranger.h"
 #include "PlayerHackKeeper.h"
 #include "PlayerInfo.h"
@@ -53,9 +54,10 @@ public:
     PlayerAnimator* mPlayerAnimator; // 0x168
     PlayerColliderHakoniwa* mPlayerCollider; // 0x170
     PlayerPuppet* mPlayerPuppet; // 0x178
-    // 0x180 PlayerAreaChecker
-    // 0x188 WaterSurfaceFinder
-    // 0x190 unk
+    void* mPlayerAreaChecker;
+    void* mWaterSurfaceFinder;
+    void* mDunnoSomething;
+    PlayerDamageKeeper* mDamageKeeper; // 0x198
     // 0x198 unk
     // 0x1A0 unk
     // 0x1A8 unk
@@ -69,7 +71,7 @@ public:
     // 0x1E8 unk
     // 0x1F0 unk
     // 0x1F8 PlayerBindKeeper
-    unsigned char padding_208[0x208 - 0x180];
+    unsigned char padding_208[0x60];
     PlayerHackKeeper* mHackKeeper; // 0x208
     PlayerFormSensorCollisionArranger* mCollArranger; // 0x210
     void* unkPtr2; // 0x218

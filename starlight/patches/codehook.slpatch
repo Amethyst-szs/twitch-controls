@@ -237,3 +237,7 @@ B59E28: // sead::system::print
 //Stage Scene Kill Hook
 004cc780:
     BL sceneKillHook
+
+//Kill preventDamage Set
+// 0043f438:
+    // NOP

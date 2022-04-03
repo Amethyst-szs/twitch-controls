@@ -226,11 +226,6 @@ async function updateRedeem(api, streamerID, rewardId, id, isRefund) {
   return;
 }
 
-async function viewerUpdate(streamerMe) {
-  let stream = await streamerMe.getStream();
-  console.log(stream.viewers);
-}
-
 async function backupCheck(api, streamerID, listID) {
   let redeemInfo = await api.channelPoints.getRedemptionById(streamerID, rejectionList[listID].rewardID, rejectionList[listID].ID)
   .catch(console.error);

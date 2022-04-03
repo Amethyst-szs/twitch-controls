@@ -9,6 +9,16 @@
         "title": "Position Randomizer",
         "original": "Position Randomizer"
     },
+    "Resize DX": {
+        "prompt": "Randomly changes the size of Mario or the current capture BUT MORE!",
+        "title": "Resize DX",
+        "original": "Resize DX"
+    },
+    "Position Randomizer DX": {
+        "prompt": "Teleports me randomly very far away somewhere else",
+        "title": "Position Randomizer DX",
+        "original": "Position Randomizer DX"
+    },
     "See Myself Out": {
         "prompt": "Kicks me out the stage I'm in right now and sends me wherever I was before",
         "title": "See Myself Out",
@@ -73,5 +83,10 @@
         "prompt": "Sends me straight to Moon Kingdom!",
         "title": "Fly me to the Moon",
         "original": "Fly me to the Moon"
+    },
+    "Pay to Win": {
+        "prompt": "Activates an invincibility power up!",
+        "title": "Pay to Win",
+        "original": "Pay to Win"
     }
 }

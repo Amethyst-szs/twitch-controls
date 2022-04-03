@@ -21,6 +21,28 @@
         "maxRedemptionsPerUserPerStream": null,
         "userInputRequired": false
     },
+    "Resize DX": {
+        "autoFulfill:": true,
+        "backgroundColor": "#1ACE87",
+        "cost": 300,
+        "globalCooldown": 10,
+        "isEnabled": true,
+        "isPaused": false,
+        "maxRedemptionsPerStream": null,
+        "maxRedemptionsPerUserPerStream": null,
+        "userInputRequired": false
+    },
+    "Position Randomizer DX": {
+        "autoFulfill:": true,
+        "backgroundColor": "#9842AD",
+        "cost": 750,
+        "globalCooldown": 20,
+        "isEnabled": true,
+        "isPaused": false,
+        "maxRedemptionsPerStream": null,
+        "maxRedemptionsPerUserPerStream": null,
+        "userInputRequired": false
+    },
     "See Myself Out": {
         "autoFulfill:": true,
         "backgroundColor": "#aa6d6d",
@@ -161,6 +183,17 @@
         "isEnabled": true,
         "isPaused": false,
         "maxRedemptionsPerStream": 1,
+        "maxRedemptionsPerUserPerStream": null,
+        "userInputRequired": false
+    },
+    "Pay to Win": {
+        "autoFulfill:": true,
+        "backgroundColor": "#DECB86",
+        "cost": 2000,
+        "globalCooldown": 60,
+        "isEnabled": true,
+        "isPaused": false,
+        "maxRedemptionsPerStream": null,
         "maxRedemptionsPerUserPerStream": null,
         "userInputRequired": false
     }

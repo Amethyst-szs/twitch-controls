@@ -17,25 +17,25 @@ function Events(EventID, isTwitch) {
 }
 
 //Channel point redeem: Resize (Server -> Client)
-function Resize() {
+function Resize(multi) {
   //Socket ID 2
   const Amplitude = RedeemSet.Resize.Amplitude;
   const Scale = [
-    Rand.Ampli(Amplitude, false),
-    Rand.Ampli(Amplitude, false),
-    Rand.Ampli(Amplitude, false),
+    Rand.Ampli(Amplitude*multi, false),
+    Rand.Ampli(Amplitude*multi, false),
+    Rand.Ampli(Amplitude*multi, false),
   ];
   serverRef.send(bufferTool.Vector3fBuf(2, Scale), client.port, client.address);
 }
 
 //Channel point redeem: PosRandomize (Server -> Client)
-function PosRandomize() {
+function PosRandomize(multi) {
   //Socket ID 3
   const Amplitude = RedeemSet.PosRandomize.Amplitude;
   const NewPos = [
-    Rand.Ampli(Amplitude, true),
-    Rand.Ampli(Amplitude, false),
-    Rand.Ampli(Amplitude, true),
+    Rand.Ampli(Amplitude*multi, true),
+    Rand.Ampli(Amplitude*multi, false),
+    Rand.Ampli(Amplitude*multi, true),
   ];
   serverRef.send(bufferTool.Vector3fBuf(3, NewPos), client.port, client.address);
 }
@@ -103,10 +103,16 @@ module.exports = {
     //Switch case through all valid rewards
     switch (redeemTitle) {
       case "Resize": //Packet ID 2 (Resize)
-        Resize();
+        Resize(1);
         break;
       case "Position Randomizer": //Packet ID 3 (PosRandomize)
-        PosRandomize();
+        PosRandomize(1);
+        break;
+      case "Resize DX": //Packet ID 2 (Resize)
+        Resize(5);
+        break;
+      case "Position Randomizer DX": //Packet ID 3 (PosRandomize)
+        PosRandomize(5);
         break;
       case "See Myself Out": //Event ID 1 (PrevScene)
         Events(1, isTwitch);
@@ -152,6 +158,9 @@ module.exports = {
         break;
       case "kill": //Event ID 15
         Events(15, isTwitch);
+        break;
+      case "Pay to Win": //Event ID 16
+        Events(16, isTwitch);
         break;
       default:
         //Generic reward
