@@ -521,9 +521,9 @@ void stageSceneHook(StageScene* stageScene)
     }
 
     // TESTING FUNCTIONS
-    if (al::isPadHoldZR(-1) && al::isPadTriggerLeft(-1)) {
-        // rs::appearCapMsgTutorial(stageScene, "YukimaruTutorial");
-    }
+    // if (al::isPadHoldZR(-1) && al::isPadTriggerLeft(-1)) {
+    //     // rs::appearCapMsgTutorial(stageScene, "YukimaruTutorial");
+    // }
 
     __asm("MOV X0, %[input]"
           : [input] "=r"(stageScene));

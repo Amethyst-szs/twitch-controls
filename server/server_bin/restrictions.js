@@ -14,6 +14,13 @@ module.exports = {
         FullRedeemList = JSON.parse(fs.readFileSync(`${CurDir}/settings/localize/${langType}_list.json`)).FullRedeemList;
         restrictionList = new Array(FullRedeemList.length).fill(false, 0, FullRedeemList.length);
         forcedRestrictionList = new Array(FullRedeemList.length).fill(false, 0, FullRedeemList.length);
+
+        //Disable vaulted redeems
+        let vault = JSON.parse(fs.readFileSync(`${CurDir}/settings/redeem_vault.json`)).vault;
+        for(entry in vault){
+            this.updateForcedRestriction(vault[entry]);
+        }
+
         return;
     },
 

@@ -112,7 +112,7 @@
     "Stick Flip": {
         "autoFulfill:": true,
         "backgroundColor": "#64368d",
-        "cost": 100,
+        "cost": 250,
         "globalCooldown": 3,
         "isEnabled": true,
         "isPaused": false,
@@ -123,7 +123,7 @@
     "Hot Tub Stream": {
         "autoFulfill:": true,
         "backgroundColor": "#2daba7",
-        "cost": 250,
+        "cost": 100,
         "globalCooldown": 2,
         "isEnabled": true,
         "isPaused": false,
