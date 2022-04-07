@@ -109,6 +109,10 @@ module.exports = {
 					
 					twitchInit.skipRefreshTimer();
 					break;
+				case "fake-event":
+					outPackets.outHandler(interaction.options.getString("redeem", true), false);
+					interaction.reply(`Sending fake redeem to client: ${interaction.options.getString("redeem", true)}`);
+					break;
 				default:
 					interaction.reply("**ERROR**\nDunno what you did, but it didn't work");
 					log.log(3, "Strange interaction, ignoring");
@@ -124,6 +128,7 @@ module.exports = {
 		//Get a list of the current redeems
 		const FullRedeemList = JSON.parse(fs.readFileSync(`${CurDir}/settings/localize/${twitchInit.getLang()}_list.json`)).FullRedeemList;
 		let formattedRedeems = [];
+		let fakeRedeems = [];
 
 		//Format this list into a weird formatted redeems array for the twitch API
 		for(i=0;i<FullRedeemList.length;i++){
@@ -200,6 +205,15 @@ module.exports = {
 					option.setName('viewers')
 					.setDescription('How many viewers are we testing?')
 					.setRequired(true)
+				),
+			new SlashCommandBuilder()
+				.setName('fake-event')
+				.setDescription('Sends a fake redeem to the client')
+				.addStringOption(option =>
+					option.setName('redeem')
+					.setDescription('Which redeem are you sending')
+					.setRequired(true)
+					.addChoices(formattedRedeems.slice(4, formattedRedeems.length))
 				)
 		]
 			.map(command => command.toJSON());
