@@ -144,6 +144,10 @@ void setTrans(al::LiveActor*, sead::Vector3f const&);
 
 void setScale(al::LiveActor*, const sead::Vector3f&);
 
+void setScaleX(al::LiveActor*, float);
+void setScaleY(al::LiveActor*, float);
+void setScaleZ(al::LiveActor*, float);
+
 void setScaleAll(al::LiveActor*, float);
 
 void setGravity(al::LiveActor const*, sead::Vector3f const&);

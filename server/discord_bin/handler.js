@@ -11,7 +11,6 @@ const log = require('../server_bin/console');
 const twitchInit = require('../server_bin/twitchInit');
 const restrictions = require('../server_bin/restrictions');
 const outPackets = require('../server_bin/outPackets');
-const { outHandler } = require('../server_bin/outPackets');
 
 // Create a new client instance
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
@@ -94,6 +93,22 @@ module.exports = {
 					log.log(3, `Killing the player from Discord by ${interaction.user.username}`);
 					interaction.reply(`Killing the player from Discord by ${interaction.user.username}`);
 					break;
+				case "preview":
+					isPreview = interaction.options.getBoolean("enabled", true);
+					previewViewers = interaction.options.getInteger("viewers");
+
+					if(isPreview){
+						twitchInit.setPreviewMode(previewViewers);
+						log.log(3, `Previewing ${previewViewers} viewers on Twitch`);
+						interaction.reply(`Check the Twitch account to preview ${previewViewers} viewers!`);
+					} else {
+						twitchInit.setPreviewMode(-1);
+						log.log(3, `Disabling preview mode on Twitch`);
+						interaction.reply(`Preview mode has been disabled!`);
+					}
+					
+					twitchInit.skipRefreshTimer();
+					break;
 				default:
 					interaction.reply("**ERROR**\nDunno what you did, but it didn't work");
 					log.log(3, "Strange interaction, ignoring");
@@ -173,7 +188,19 @@ module.exports = {
 			new SlashCommandBuilder()
 				.setName('kill')
 				.setDescription('Kills Mario, mainly use this to save a player from softlocks'),
-			
+			new SlashCommandBuilder()
+				.setName('preview')
+				.setDescription('Preview your current prices with different viewer counts')
+				.addBooleanOption(option => 
+					option.setName("enabled")
+					.setDescription("Is preview mode on?")
+					.setRequired(true)
+				)
+				.addIntegerOption(option =>
+					option.setName('viewers')
+					.setDescription('How many viewers are we testing?')
+					.setRequired(true)
+				)
 		]
 			.map(command => command.toJSON());
 		

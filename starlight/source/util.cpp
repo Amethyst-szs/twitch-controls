@@ -75,7 +75,7 @@ amy::RedeemInfo::shineWarpState& amy::getShineWarpState()
 void amy::calcWorldTier(s32 worldID, const char* stageName)
 {
     constexpr static const u8 worldTier[] = {
-        1, // Cap kingdom
+        2, // Cap kingdom
         1, // Cascase Kingdom
         0, // Sand Kingdom
         0, // Wooded Kingdom

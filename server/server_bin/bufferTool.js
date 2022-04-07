@@ -16,7 +16,7 @@ module.exports = {
     return Buffer.compare(msg, buf) == 0;
   },
 
-  demoUpdate: function (msg, CurDir, invalidStage) {
+  demoUpdate: function (msg, CurDir) {
     //Load in the template buffer from the buffer file
     fileBuf = Buffer.from(fs.readFileSync(`${CurDir}/buffers/demoUpdate.buf`));
     //Replace the final byte in the file with the final byte of the msg from the switch
@@ -26,17 +26,20 @@ module.exports = {
       switch (msg[msg.byteLength - 1]) {
         case 48: //Boolean value of false
           log.log(1, "Not in demo scene, starting/resuming packet transfer");
-          return false;
+          break;
         case 49: //Boolean value of true
           log.log(1, "Entered Demo scene! Not sending any packets!!");
-          return true;
+          break;
         default:
           //Some weird bug happened, look into it if this is ever seen
           log.log(1, "Invalid bool value for Demo Toggle??");
+          break;
       }
+      return true;
+
     }
     //If it ended up not being a log about the scene, just return what we started with
-    return invalidStage;
+    return false;
   },
 
   reject: function (msg, CurDir) {
@@ -84,8 +87,9 @@ module.exports = {
       restrictions.updateStandardRestriction(tier, CurDir);
       twitchInit.skipRefreshTimer();
       log.log(1, `Changing the current restriction tier to ${tier}`);
+      return true;
     }
-    return;
+    return false;
   },
 
   PingBuf: function(msg, CurDir){

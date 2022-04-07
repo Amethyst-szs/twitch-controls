@@ -93,8 +93,8 @@ module.exports = {
     redeemTitle = redeemName;
 
     //If this is a Twitch log this extra info
-    if(isTwitch)
-      log.log(1, `Sending redeem packet - ${redeemName}`);
+    if(!isTwitch)
+      log.log(1, `Sending fake redeem packet - ${redeemName}`);
 
     //If this is a translation, convert back to English
     if(langInit.hasOwnProperty(redeemName))

@@ -57,10 +57,7 @@ server.on("message", (msg, rinfo) => {
       break;
     case -3: //Log any information with msg info
       //Ping check
-      if(!bufferTool.PingBuf(msg, CurDir)){
-        //Log
-        inPackets.Log(msg, rinfo, CurDir);
-      } else {
+      if(bufferTool.PingBuf(msg, CurDir)){
         lastPingTime = curTime;
         break;
       }
@@ -69,21 +66,29 @@ server.on("message", (msg, rinfo) => {
       if (bufferTool.disconnectCheck(msg, CurDir)){
         outPackets.clearClient();
         break;
-      } 
+      }
 
       //Invalid stage log type check
-      invalidStage = bufferTool.demoUpdate(msg, CurDir, invalidStage);
+      if(bufferTool.demoUpdate(msg, CurDir)){
+        break;
+      };
 
       //Rejection status update check
       isReject = bufferTool.reject(msg, CurDir);
-      if (isReject.wasRejectLog)
+      if (isReject.wasRejectLog){
         updateRedeem(api, streamerID,
           rejectionList[isReject.rejectionID].rewardID,
           rejectionList[isReject.rejectionID].ID,
           !isReject.rejectionState);
+        break;
+      }
 
       //Restrict status update
-      bufferTool.restrict(msg, CurDir);
+      if(bufferTool.restrict(msg, CurDir)){
+        break;
+      };
+
+      inPackets.Log(msg, rinfo, CurDir);
       break;
     case -4: //demoToggle
       log.log(0, "DemoToggle");
@@ -207,7 +212,6 @@ async function updateRedeem(api, streamerID, rewardId, id, isRefund) {
   redemption = await api.channelPoints.getRedemptionById(streamerID, rewardId, id)
   .catch(console.error);
   if(!redemption){ //If the redemption wasn't found, return early
-    log.log(1, `Redeem was not be found! It will likely be caught in the manual queue?`);
     return;
   }
 
@@ -231,7 +235,6 @@ async function backupCheck(api, streamerID, listID) {
   .catch(console.error);
 
   if(!redeemInfo){
-    log.log(1, `Redeem would not be found! It will likely be caught in the manual queue?`);
     return;
   }
 
@@ -315,27 +318,23 @@ async function TwitchHandler() {
 
     //Check if the player is currently in a demo scene, if so, STOP
     if (invalidStage) {
-      log.log(2, `${message.rewardTitle} from ${message.userDisplayName} but the player is in a demo scene`);
       updateRedeem(api, streamerID, message.rewardId, message.id, true);
       return;
     }
 
     //If a redeem that is the the restriction list is redeemed, refund it!
     if (restrictions.getRestrictedRedeems().includes(message.rewardTitle)) {
-      log.log(2, `${message.rewardTitle} from ${message.userDisplayName} was redeemed even though it was restricted! Refunded, no big deal!`);
       updateRedeem(api, streamerID, message.rewardId, message.id, true);
       return;
     }
 
     //Check and make sure a switch has connected already
     if (!outPackets.getClient()) {
-      log.log(2, `${message.rewardTitle} from ${message.userDisplayName} but no client connected yet!`);
       updateRedeem(api, streamerID, message.rewardId, message.id, true);
       return;
     }
 
     //Log information about redeem now that we've gotten past the start & update history
-    log.log(2, `${message.rewardTitle} - ${message.userDisplayName} redeemed!`);
     redeemHistory.updateList(
       `${message.rewardTitle} < ${message.userDisplayName}`
     );

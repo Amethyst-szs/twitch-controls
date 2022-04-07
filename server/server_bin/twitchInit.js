@@ -11,6 +11,7 @@ let lang = `english`;
 let costFactor = 1;
 let costDisabled = false;
 let cooldownMulti = 1;
+let previewViewers = -1;
 
 let refreshTotalTimer = 180;
 let refreshTimer = 0;
@@ -24,7 +25,6 @@ async function createAlreadyExistsList(twitchRedeems, langList) {
         preExistIndexList.push(redeem);
     }
   }
-  log.log(1, `Collected list of SMO point redeems on channel!`);
   return preExistIndexList;
 }
 
@@ -75,6 +75,22 @@ function RefreshTimer(api, streamerID, streamerMe, CurDir){
   return;
 }
 
+async function priceCalc(baseCost, viewers){
+  let cost = baseCost;
+
+  //Handle the dynamic cost
+  cost *= costFactor*Math.max(1,Math.log10(viewers)/1.5);
+  cost = Math.floor(cost/10)*10;
+
+  //In these edge cases, fix it
+  if(cost==0)
+    cost = 10;
+  if(costDisabled)
+    cost = 1;
+
+  return cost;
+}
+
 async function priceUpdate(api, streamerID, streamerMe, CurDir) {
   //Get a list of Twitch Controls redeems
   const redeemInits = JSON.parse(fs.readFileSync(`${CurDir}/settings/redeem_init.json`));
@@ -103,6 +119,9 @@ async function priceUpdate(api, streamerID, streamerMe, CurDir) {
   if(viewers == null)
     viewers = 0;
   
+  if(previewViewers >= 0)
+    viewers = previewViewers;
+  
   //Update price listing
   let updatedAmount = 0; //This is how many Twitch redeems got updated in this run
   for (twitchListing = 0; twitchListing < preExistIndexList.length; twitchListing++) {
@@ -116,16 +135,8 @@ async function priceUpdate(api, streamerID, streamerMe, CurDir) {
       log.log(1, `Can't update the price of a redeem that doesn't exist??`);
       continue;
     }
-
-    //Handle the dynamic cost
-    redeem.cost *= costFactor*Math.max(1,Math.log10(viewers)/2);
-    redeem.cost = Math.floor(redeem.cost/10)*10;
-
-    //In these edge cases, fix it
-    if(redeem.cost==0)
-      redeem.cost = 10;
-    if(costDisabled)
-      redeem.cost = 1;
+    
+    redeem.cost = await priceCalc(redeem.cost, viewers);
     
     //Sets the global cooldown based on the base and cooldown multiplier
     redeem.globalCooldown = Math.floor(redeem.globalCooldown*cooldownMulti);
@@ -138,7 +149,7 @@ async function priceUpdate(api, streamerID, streamerMe, CurDir) {
     || (redeem.globalCooldown != twitchRedeem.globalCooldown)
     || (redeem.isEnabled != twitchRedeem.isEnabled)){
       updatedAmount++;
-      setTimeout(updateRedeemCost, (updatedAmount+1)*500, twitchRedeem.id, redeem, api, streamerID);
+      setTimeout(updateRedeemCost, (updatedAmount+1)*200, twitchRedeem.id, redeem, api, streamerID);
     }
   }
   log.log(1, `Finished queuing price updates!`);
@@ -225,6 +236,11 @@ module.exports = {
 
   skipRefreshTimer: function(){
     refreshTimer = 0;
+    return;
+  },
+
+  setPreviewMode: function(newPreview){
+    previewViewers = newPreview;
     return;
   }
 };

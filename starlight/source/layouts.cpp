@@ -88,7 +88,8 @@ const char16_t* smo::getFunFact()
         u"Beat darker 2401 times and unlock a Aperture Science Dual Portal Device",
         u"Fun Fact: Wii Fit U is a game that exists",
         u"Fun Fact: The Wii U is actually good console",
-        u"Fun Fact: Quagsire is at your door, look outside"
+        u"Fun Fact: Quagsire is at your door, look outside",
+        u"Diagnosis : Skill issue"
     };
 
     return funFacts[sead::GlobalRandom::instance()->getU32() % (sizeof(funFacts) / sizeof(const char16_t*))];

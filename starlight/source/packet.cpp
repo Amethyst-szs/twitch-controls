@@ -88,8 +88,6 @@ void InPacketEvent::on(Server& server)
     if (!ri.isRedeemsValid)
         amy::sendPacketStateNotice(true, isTwitch);
 
-    amy::log("Event Redeem Claimed! EventID: %i - Rejected: %s", eventID, !amy::getRedeemInfo().isRedeemsValid ? "true" : "false");
-
     StageScene* stageScene = amy::getGlobalStageScene();
     al::PlayerHolder* pHolder = al::getScenePlayerHolder(stageScene);
     PlayerActorHakoniwa* player = al::tryGetPlayerActor(pHolder, 0);
@@ -277,8 +275,6 @@ void InPacketResize::on(Server& server)
         return;
     }
 
-    amy::log("Resize Redeem Claimed! Rejected: %s", !amy::getRedeemInfo().isRedeemsValid ? "true" : "false");
-
     if (!amy::getRedeemInfo().isRedeemsValid)
         amy::sendPacketStateNotice(true, true);
     else {
@@ -316,8 +312,6 @@ void InPacketPosRandomize::on(Server& server)
         amy::sendPacketStateNotice(true, true);
         return;
     }
-
-    amy::log("PosRandomize Redeem Claimed! Rejected: %s", !amy::getRedeemInfo().isRedeemsValid ? "true" : "false");
 
     if (!amy::getRedeemInfo().isRedeemsValid)
         amy::sendPacketStateNotice(true, true);
