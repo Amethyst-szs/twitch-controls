@@ -9,6 +9,16 @@
         "title": "Teleporte mich",
         "original": "Position Randomizer"
     },
+    "Größe ändern Deluxe": {
+        "prompt": "Ändert zufällig die Größe von Mario oder der aktuellen Kaperung, ABER MEHR!",
+        "title": "Größe ändern Deluxe",
+        "original": "Resize DX"
+    },
+    "Position Randomizer DX": {
+        "prompt": "Teleportiert mich zufällig sehr weit weg!",
+        "title": "Position Randomizer DX",
+        "original": "Position Randomizer DX"
+    },
     "Rausschmeißen": {
         "prompt": "Wirft mich aus dem Level, in dem ich mich gerade befinde, und schickt mich dorthin, wo ich davor war",
         "title": "Rausschmeißen",
@@ -73,5 +83,10 @@
         "prompt": "Schickt mich direkt ins Mondland!",
         "title": "Bring mich zum Mond!",
         "original": "Fly me to the Moon"
+    },
+    "Pay 2 Win": {
+        "prompt": "Aktiviert ein Unbesiegbarkeits-Power Up!",
+        "title": "Pay 2 Win",
+        "original": "Pay to Win"
     }
 }
