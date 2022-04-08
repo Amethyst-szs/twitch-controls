@@ -106,7 +106,7 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
         if (((layouts.pingFrames + 403) % 600 == 1) && !smo::Server::instance().isKicked)
             layouts.mConnectionWait->setTxtMessage(smo::getFunFact());
         else if (smo::Server::instance().isKicked)
-            layouts.mConnectionWait->setTxtMessage(u"You have been kicked from the server!\nYou're welcome to close your game now");
+            layouts.mConnectionWait->setTxtMessage(u"You have been kicked from the server!");
 
     } else if (layouts.mConnectionWait->mIsAlive && layouts.firstBoot) {
         // Server is okay! Perform usual code

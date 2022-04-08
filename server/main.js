@@ -58,6 +58,7 @@ server.on("message", (msg, rinfo) => {
         log.log(0, "New client connected! Initalization was completed successfully!");
       } else {
         outPackets.blockPacket(rinfo);
+        console.log("Blocking connection");
       }
 
       break;

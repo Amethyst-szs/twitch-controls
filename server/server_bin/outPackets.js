@@ -68,9 +68,7 @@ module.exports = {
   },
 
   blockPacket: function(rinfo){
-    if(client){
-      serverRef.send(new Buffer.alloc(1, 0x06), rinfo.port, rinfo.address);
-    }
+    serverRef.send(new Buffer.alloc(1, 0x06), rinfo.port, rinfo.address);
     return;
   },
 
