@@ -99,12 +99,14 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
         }
 
         // Every 60 frames, try a reconnection!
-        if ((layouts.pingFrames + 3) % 60 == 1)
+        if (((layouts.pingFrames + 3) % 60 == 1) && !smo::Server::instance().isKicked)
             al::isPadHoldUp(-1) ? smo::Server::instance().connect(smo::getServerIp(true)) : smo::Server::instance().connect(smo::getServerIp(false));
 
         // Every 10 seconds, display a new fun fact!
-        if ((layouts.pingFrames + 403) % 600 == 1)
+        if (((layouts.pingFrames + 403) % 600 == 1) && !smo::Server::instance().isKicked)
             layouts.mConnectionWait->setTxtMessage(smo::getFunFact());
+        else if (smo::Server::instance().isKicked)
+            layouts.mConnectionWait->setTxtMessage(u"You have been kicked from the server!\nYou're welcome to close your game now");
 
     } else if (layouts.mConnectionWait->mIsAlive && layouts.firstBoot) {
         // Server is okay! Perform usual code
@@ -453,7 +455,7 @@ void stageSceneHook(StageScene* stageScene)
 
     // Wind handler
     if (amy::getWindState().timer > 0 && !isInterupted && player->getPlayerHackKeeper()->getCurrentHackName() == nullptr) {
-        if(!rs::isPlayerOnGround(player))
+        if (!rs::isPlayerOnGround(player))
             al::addVelocity(player, amy::getWindState().vect);
         amy::getWindState().timer--;
     }

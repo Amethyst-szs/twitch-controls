@@ -27,7 +27,8 @@ enum InPacketType : u8 {
     Resize = (u8)2,
     PosRandomize = (u8)3,
     Ping = (u8)4,
-    Say = (u8)5
+    Say = (u8)5,
+    Kick = (u8)6
 };
 
 class InPacket {
@@ -67,6 +68,12 @@ public:
 };
 
 class InPacketPing : public InPacket {
+public:
+    void parse(const u8* data, u32 len);
+    void on(Server& server);
+};
+
+class InPacketKick : public InPacket {
 public:
     void parse(const u8* data, u32 len);
     void on(Server& server);

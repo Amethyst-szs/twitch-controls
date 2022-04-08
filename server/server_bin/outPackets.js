@@ -1,6 +1,7 @@
 const fs = require('fs');
 const twitchInit = require('./twitchInit');
 let langInit;
+let blockList = [];
 
 const RedeemSet = require("../settings/redeem_set.json");
 const Rand = require("./advancedRand");
@@ -59,6 +60,18 @@ module.exports = {
   setServerRef: function(server){
     serverRef = server;
     return;
+  },
+
+  pushNewBlock: function(block){
+    if(client){
+      blockList.push(block);
+      serverRef.send(new Buffer.alloc(1, 0x06), client.port, client.address);
+    }
+    return;
+  },
+
+  getBlockList: function(){
+    return blockList;
   },
 
   sayMessage: function(msg){

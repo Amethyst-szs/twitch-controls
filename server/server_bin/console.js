@@ -13,6 +13,10 @@ module.exports = {
     nickname = newName;
   },
 
+  getNickname: function(){
+    return nickname;
+  },
+
   log: function(Source, Message) {
     switch (Source) {
       case 0:

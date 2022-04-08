@@ -113,6 +113,11 @@ module.exports = {
 					outPackets.outHandler(interaction.options.getString("redeem", true), false);
 					interaction.reply(`Sending fake redeem to client: ${interaction.options.getString("redeem", true)}`);
 					break;
+				case "boot-off":
+					outPackets.pushNewBlock(log.getNickname());
+					log.log(3, `Kicking ${log.getNickname()} off of the server!`);
+					interaction.reply(`Kicked the current client off!`);
+					break;
 				default:
 					interaction.reply("**ERROR**\nDunno what you did, but it didn't work");
 					log.log(3, "Strange interaction, ignoring");
@@ -214,7 +219,10 @@ module.exports = {
 					.setDescription('Which redeem are you sending')
 					.setRequired(true)
 					.addChoices(formattedRedeems.slice(4, formattedRedeems.length))
-				)
+				),
+			new SlashCommandBuilder()
+				.setName('boot-off')
+				.setDescription('Kicks the current client off, blocking them for this session')
 		]
 			.map(command => command.toJSON());
 		

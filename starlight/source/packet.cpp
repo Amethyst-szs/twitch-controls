@@ -45,6 +45,18 @@ void InPacketPing::on(Server& server)
     amy::log("Ping");
 }
 
+void InPacketKick::parse(const u8* data, u32 len)
+{
+    // Nothing to parse
+}
+
+void InPacketKick::on(Server& server)
+{
+    smo::Layouts& layouts = smo::getLayouts();
+    server.isKicked = true;
+    layouts.pingFrames = 300;
+}
+
 void InPacketSay::parse(const u8* data, u32 len)
 {
     message = strdup((const char*)data);

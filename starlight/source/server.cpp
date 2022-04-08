@@ -179,6 +179,7 @@ void Server::handlePacket(u8* buf, size_t bufSize)
         IN_PACKET(PosRandomize);
         IN_PACKET(Ping);
         IN_PACKET(Say);
+        IN_PACKET(Kick);
 
     default:
         break;

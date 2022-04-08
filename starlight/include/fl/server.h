@@ -43,5 +43,6 @@ public:
     s32 socket = -1;
     sockaddr server = { 0 };
     nn::account::Uid mUserID;
+    bool isKicked = false;
 };
 }

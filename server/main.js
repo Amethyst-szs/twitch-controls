@@ -45,14 +45,18 @@ server.on("message", (msg, rinfo) => {
       //No code is actually ran here
       // break;
     case -2: //Initalization
-      outPackets.setClient(rinfo);
-      log.setNickname(msg.slice(1, msg.indexOf(0x00)).toString().toUpperCase());
-    
-      initRejectionList();
-      lastPingTime = new Date().getTime();
-      serverPing();
+      nickname = msg.slice(1, msg.indexOf(0x00)).toString().toUpperCase();
 
-      log.log(0, "New client connected! Initalization was completed successfully!");
+      if(!outPackets.getBlockList().includes(nickname)){
+        outPackets.setClient(rinfo);
+        log.setNickname(nickname);
+      
+        initRejectionList();
+        lastPingTime = new Date().getTime();
+        serverPing();
+
+        log.log(0, "New client connected! Initalization was completed successfully!");
+      }
 
       break;
     case -3: //Log any information with msg info
@@ -106,9 +110,10 @@ async function serverPing(){
     server.send(buf, curClient.port, curClient.address);
   }
 
-  if(curTime - lastPingTime >= 6500 && curClient){
+  if((curTime - lastPingTime >= 6500 && curClient) || (outPackets.getBlockList().includes(log.getNickname()))){
     log.log(1, `\n///\nCONNECTION TO CLIENT WAS LOST!!\n///\n`);
     outPackets.clearClient();
+    log.setNickname("//////////////");
     initRejectionList();
   }
 }
