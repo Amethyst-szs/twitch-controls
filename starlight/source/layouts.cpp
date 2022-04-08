@@ -1,4 +1,5 @@
 #include "layouts.hpp"
+#include "al/layout/GaugeAir.h"
 #include "sead/random/seadGlobalRandom.h"
 
 smo::Layouts& smo::getLayouts()
@@ -11,10 +12,11 @@ void smo::layoutInit(al::LayoutInitInfo const& initInfo)
 {
     smo::Layouts& layouts = smo::getLayouts();
 
-    typedef void (smo::Layouts::*LayoutsThreadFunc)(void);
-
     layouts.mConnectionWait = new al::WindowConfirmWait("ServerWaitConnect", "WindowConfirmWait", initInfo);
     layouts.mConnectionWait->setTxtMessage(u"Connecting to Twitch Controls server!");
+
+    // layouts.mGague = new al::GaugeAir("TestGauge", "GaugeAir", initInfo);
+    // layouts.mGague->exeAppear();
 
     // mConnectionWait->tryEndForce();
 }

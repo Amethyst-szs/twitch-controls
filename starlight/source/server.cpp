@@ -42,7 +42,7 @@ void threadFunc(void* args)
     layouts.firstBoot = true;
 
     // Wait for the layout to appear for 1 seconds
-    nn::os::SleepThread(nn::TimeSpan::FromSeconds(1));
+    nn::os::SleepThread(nn::TimeSpan::FromSeconds(2));
 
     // Attempt a connection
     smo::Server::instance().connect(smo::getServerIp(false));
