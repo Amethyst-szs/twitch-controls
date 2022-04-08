@@ -63,9 +63,13 @@ module.exports = {
   },
 
   pushNewBlock: function(block){
+    blockList.push(block);
+    return;
+  },
+
+  blockPacket: function(rinfo){
     if(client){
-      blockList.push(block);
-      serverRef.send(new Buffer.alloc(1, 0x06), client.port, client.address);
+      serverRef.send(new Buffer.alloc(1, 0x06), rinfo.port, rinfo.address);
     }
     return;
   },

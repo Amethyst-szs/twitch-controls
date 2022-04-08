@@ -56,6 +56,8 @@ server.on("message", (msg, rinfo) => {
         serverPing();
 
         log.log(0, "New client connected! Initalization was completed successfully!");
+      } else {
+        outPackets.blockPacket(rinfo);
       }
 
       break;

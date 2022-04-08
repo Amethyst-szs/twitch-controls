@@ -115,6 +115,7 @@ module.exports = {
 					break;
 				case "boot-off":
 					outPackets.pushNewBlock(log.getNickname());
+					outPackets.blockPacket(outPackets.getClient());
 					log.log(3, `Kicking ${log.getNickname()} off of the server!`);
 					interaction.reply(`Kicked the current client off!`);
 					break;
