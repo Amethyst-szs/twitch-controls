@@ -241,3 +241,7 @@ B59E28: // sead::system::print
 //Kill preventDamage Set
 // 0043f438:
     // NOP
+
+//On recovery bubble
+0046137c:
+    BL recoverBubbleHook

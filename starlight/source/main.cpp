@@ -47,7 +47,7 @@ static const char* page2Options[] {
     "End puppetable\n",
     "Complete kingdom (Glitch central)\n",
     "Plus 100 coins\n",
-    "Random Test Button\n"
+    "Toggle Music\n"
 };
 static int page2Len = *(&page2Options + 1) - page2Options;
 
@@ -215,7 +215,7 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
 
         gTextWriter->beginDraw();
         gTextWriter->setCursorFromTopLeft(sead::Vector2f(10.f, (dispHeight / 3) + 30.f));
-        gTextWriter->setScaleFromFontHeight(20.f);
+        gTextWriter->setScaleFromFontHeight(17.5f);
 
         al::PlayerHolder* pHolder = al::getScenePlayerHolder(stageScene);
         PlayerActorHakoniwa* player = al::tryGetPlayerActor(pHolder, 0);
@@ -252,8 +252,11 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
             gTextWriter->printf("Rejection ID: %i\n", ri.rejectionID);
             gTextWriter->printf("Restriction Tier: %i\n", ri.restrictionTier);
             gTextWriter->printf("Ping Frames: %i\n", layouts.pingFrames);
-            gTextWriter->printf("Overlay State: %s\n\n", layouts.mConnectionWait->mIsAlive ? "true" : "false");
-            gTextWriter->printf("Gravity Timer: %f\n", amy::getGravityState().timer);
+            gTextWriter->printf("Save Swap Frames: %i\n", ri.isSaveLoad);
+            gTextWriter->printf("Lang Swap Frames: %i\n", ri.isLangChange);
+            gTextWriter->printf("Scene Swap Frames: %i\n", ri.isSceneKill);
+            gTextWriter->printf("Bubble Frames: %i\n", ri.isRecoverBubble);
+            gTextWriter->printf("\nGravity Timer: %f\n", amy::getGravityState().timer);
             gTextWriter->printf("Wind Timer: %f\n", amy::getWindState().timer);
             gTextWriter->printf("Coin Tick Rate: %f\n", amy::getCoinTickState().speed);
             gTextWriter->printf("Hot Floor Timer: %f\n", amy::getHotFloorState().timer);
@@ -306,7 +309,7 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
                     stageScene->mHolder->mGameDataFile->addCoin(100);
                     break;
                 case 6:
-                    amy::getGravityState().timer -= 150;
+                    ri.isMusic = !ri.isMusic;
                     break;
                 }
             break;
@@ -401,6 +404,11 @@ void stageSceneHook(StageScene* stageScene)
     bool isDead = PlayerFunction::isPlayerDeadStatus(player);
     bool isInterupted = isDead || isDemo || isPause || amy::getDancePartyState().timer > 0;
 
+    // Disable in-game music
+    if (al::isPlayingBgm(stageScene) && !ri.isMusic) {
+        al::stopAllBgm(stageScene, 0);
+    }
+
     // Frame timer based states
     if (ri.isSaveLoad > 0)
         ri.isSaveLoad--;
@@ -408,6 +416,8 @@ void stageSceneHook(StageScene* stageScene)
         ri.isLangChange--;
     if (ri.isSceneKill > 0)
         ri.isSceneKill--;
+    if (ri.isRecoverBubble > 0)
+        ri.isRecoverBubble--;
 
     // Calculate the restriction tiers if it's the first frame in the full scene
     if (ri.isTransition) {
@@ -424,7 +434,7 @@ void stageSceneHook(StageScene* stageScene)
     ri.isTransition = false;
 
     // Gravity timer updater
-    if (amy::getGravityState().timer < 0 && !rs::isPlayer2D(player))
+    if ((amy::getGravityState().timer < 0 && !rs::isPlayer2D(player)) || ri.isRecoverBubble > 0)
         al::setGravity(player, sead::Vector3f { 0, -1, 0 });
     else if (!isInterupted)
         amy::getGravityState().timer--;
@@ -538,6 +548,14 @@ void seadPrintHook(const char* fmt, ...) // hook for replacing sead::system::pri
     va_start(args, fmt);
 
     va_end(args);
+}
+
+HOOK_ATTR
+bool recoverBubbleHook(al::LiveActor const* player)
+{
+    amy::RedeemInfo::state& ri = amy::getRedeemInfo();
+    ri.isRecoverBubble = 180;
+    return rs::isPlayer2D(player);
 }
 
 bool hotFloorHook(PlayerInput* input)

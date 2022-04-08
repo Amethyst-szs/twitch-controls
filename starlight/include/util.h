@@ -15,11 +15,13 @@ struct RedeemInfo {
         bool isInvalidStage = true;
         bool isRedeemsValid = false;
         bool isTransition = true;
+        bool isMusic = false;
 
         // Frame timer based states
         int isSaveLoad = 0;
         int isLangChange = 0;
         int isSceneKill = 0;
+        int isRecoverBubble = 0;
 
         // Say message
         int sayTimer = -1;

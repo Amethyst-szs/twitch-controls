@@ -13,6 +13,7 @@
 #include "al/camera/Projection.h"
 #include "al/camera/alCameraPoserFunction.h"
 #include "al/factory/ProjectActorFactory.h"
+#include "al/util/AudioUtil.h"
 
 #include "game/Actors/Shine.h"
 #include "game/Controller/ControllerAppletFunction.h"
