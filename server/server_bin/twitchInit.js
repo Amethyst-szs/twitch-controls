@@ -13,7 +13,7 @@ let costDisabled = false;
 let cooldownMulti = 1;
 let previewViewers = -1;
 
-let refreshTotalTimer = 180;
+let refreshTotalTimer = 30;
 let refreshTimer = 0;
 
 async function createAlreadyExistsList(twitchRedeems, langList) {
@@ -152,7 +152,6 @@ async function priceUpdate(api, streamerID, streamerMe, CurDir) {
       setTimeout(updateRedeemCost, (updatedAmount+1)*200, twitchRedeem.id, redeem, api, streamerID);
     }
   }
-  log.log(1, `Finished queuing price updates!`);
 }
 
 module.exports = {

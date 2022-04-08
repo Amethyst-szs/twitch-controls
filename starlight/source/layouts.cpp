@@ -1,5 +1,4 @@
 #include "layouts.hpp"
-#include "al/layout/GaugeAir.h"
 #include "sead/random/seadGlobalRandom.h"
 
 smo::Layouts& smo::getLayouts()
