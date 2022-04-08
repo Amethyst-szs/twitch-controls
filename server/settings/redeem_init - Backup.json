@@ -2,7 +2,7 @@
     "Resize": {
         "autoFulfill:": true,
         "backgroundColor": "#84BDA3",
-        "cost": 500,
+        "cost": 30,
         "globalCooldown": 1,
         "isEnabled": true,
         "isPaused": false,
@@ -13,7 +13,7 @@
     "Position Randomizer": {
         "autoFulfill:": true,
         "backgroundColor": "#543d5a",
-        "cost": 500,
+        "cost": 50,
         "globalCooldown": 2,
         "isEnabled": true,
         "isPaused": false,
@@ -24,7 +24,7 @@
     "Resize DX": {
         "autoFulfill:": true,
         "backgroundColor": "#1ACE87",
-        "cost": 900,
+        "cost": 300,
         "globalCooldown": 10,
         "isEnabled": true,
         "isPaused": false,
@@ -35,7 +35,7 @@
     "Position Randomizer DX": {
         "autoFulfill:": true,
         "backgroundColor": "#9842AD",
-        "cost": 900,
+        "cost": 750,
         "globalCooldown": 20,
         "isEnabled": true,
         "isPaused": false,
@@ -57,7 +57,7 @@
     "Change Gravity": {
         "autoFulfill:": true,
         "backgroundColor": "#4888ad",
-        "cost": 1000,
+        "cost": 300,
         "globalCooldown": 1,
         "isEnabled": true,
         "isPaused": false,
@@ -134,7 +134,7 @@
     "Stick Flip": {
         "autoFulfill:": true,
         "backgroundColor": "#64368d",
-        "cost": 1000,
+        "cost": 250,
         "globalCooldown": 3,
         "isEnabled": true,
         "isPaused": false,
@@ -145,7 +145,7 @@
     "Hot Tub Stream": {
         "autoFulfill:": true,
         "backgroundColor": "#2daba7",
-        "cost": 800,
+        "cost": 100,
         "globalCooldown": 2,
         "isEnabled": true,
         "isPaused": false,
