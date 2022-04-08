@@ -80,7 +80,7 @@ void amy::calcWorldTier(s32 worldID, const char* stageName)
         0, // Sand Kingdom
         0, // Wooded Kingdom
         0, // Lake Kingdom
-        1, // Cloud Kingdom
+        2, // Cloud Kingdom
         1, // Lost Kingdom
         0, // Metro Kingdom
         0, // Seaside Kingdom

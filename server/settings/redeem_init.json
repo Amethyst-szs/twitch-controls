@@ -112,7 +112,7 @@
     "Whispy Winds": {
         "autoFulfill:": true,
         "backgroundColor": "#a1ccbd",
-        "cost": 1100,
+        "cost": 1900,
         "globalCooldown": 3,
         "isEnabled": true,
         "isPaused": false,
@@ -123,7 +123,7 @@
     "Hot Floor": {
         "autoFulfill:": true,
         "backgroundColor": "#6e463f",
-        "cost": 150,
+        "cost": 750,
         "globalCooldown": 3,
         "isEnabled": true,
         "isPaused": false,
