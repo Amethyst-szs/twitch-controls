@@ -112,7 +112,7 @@
     "Whispy Winds": {
         "autoFulfill:": true,
         "backgroundColor": "#a1ccbd",
-        "cost": 1700,
+        "cost": 2500,
         "globalCooldown": 3,
         "isEnabled": true,
         "isPaused": false,
