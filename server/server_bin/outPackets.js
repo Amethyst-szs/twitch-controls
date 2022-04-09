@@ -98,6 +98,11 @@ module.exports = {
     serverRef.send(bufferTool.sayBuf(msg), client.port, client.address);
   },
 
+  toggleMusic: function(){
+    if(client)
+      Events(17, false);
+  },
+
   prepareLang: function(){
     langInit = JSON.parse(fs.readFileSync(`${process.cwd()}/settings/localize/${twitchInit.getLang()}_init.json`));
     return;

@@ -9,10 +9,12 @@ bool checkIsPlayingSe(al::IUseAudioKeeper const*, const sead::SafeString&, const
 
 bool isPlayingBgm(al::IUseAudioKeeper const*);
 
-bool isPlayingBgm(al::IUseAudioKeeper const*,char const*);
+bool isPlayingBgm(al::IUseAudioKeeper const*, char const*);
 
 void stopAllBgm(al::IUseAudioKeeper const*, int);
 
-bool tryStopAllBgm(al::IUseAudioKeeper const *, int);
+bool tryStopAllBgm(al::IUseAudioKeeper const*, int);
+
+void startBgm(al::IUseAudioKeeper const*, char const*, int, int);
 
 }

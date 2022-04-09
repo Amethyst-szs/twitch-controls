@@ -119,6 +119,10 @@ module.exports = {
 					log.log(3, `Kicking ${log.getNickname()} off of the server!`);
 					interaction.reply(`Kicked the current client off!`);
 					break;
+				case "music":
+					outPackets.toggleMusic();
+					interaction.reply(`Music toggled!`);
+					break;
 				default:
 					interaction.reply("**ERROR**\nDunno what you did, but it didn't work");
 					log.log(3, "Strange interaction, ignoring");
@@ -223,7 +227,10 @@ module.exports = {
 				),
 			new SlashCommandBuilder()
 				.setName('boot-off')
-				.setDescription('Kicks the current client off, blocking them for this session')
+				.setDescription('Kicks the current client off, blocking them for this session'),
+			new SlashCommandBuilder()
+				.setName('music')
+				.setDescription('Toggles the game music, defaults off')
 		]
 			.map(command => command.toJSON());
 		

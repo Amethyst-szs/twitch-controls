@@ -8,6 +8,7 @@
 #include "al/scene/Scene.h"
 #include "al/scene/SceneObjHolder.h"
 #include "al/util.hpp"
+#include "al/util/AudioUtil.h"
 #include "debugMenu.hpp"
 #include "fl/server.h"
 #include "game/GameData/GameDataFunction.h"
@@ -46,8 +47,7 @@ static const char* page2Options[] {
     "Kill player\n",
     "End puppetable\n",
     "Complete kingdom (Glitch central)\n",
-    "Plus 100 coins\n",
-    "Toggle Music\n"
+    "Plus 100 coins\n"
 };
 static int page2Len = *(&page2Options + 1) - page2Options;
 
@@ -250,6 +250,7 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
             gTextWriter->printf("Twitch Integration Values:\n");
             gTextWriter->printf("Reject Redeems: %s\n", !ri.isRedeemsValid ? "true" : "false");
             gTextWriter->printf("Invalid Stage: %s\n", ri.isInvalidStage ? "true" : "false");
+            gTextWriter->printf("Music Enabled: %s\n", ri.isMusic ? "true" : "false");
             gTextWriter->printf("Rejection ID: %i\n", ri.rejectionID);
             gTextWriter->printf("Restriction Tier: %i\n", ri.restrictionTier);
             gTextWriter->printf("Ping Frames: %i\n", layouts.pingFrames);
@@ -309,9 +310,6 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
                     break;
                 case 5:
                     stageScene->mHolder->mGameDataFile->addCoin(100);
-                    break;
-                case 6:
-                    ri.isMusic = !ri.isMusic;
                     break;
                 }
             break;
@@ -408,7 +406,11 @@ void stageSceneHook(StageScene* stageScene)
 
     // Disable in-game music
     if (al::isPlayingBgm(stageScene) && !ri.isMusic) {
-        al::stopAllBgm(stageScene, 0);
+        // al::stopAllBgm(stageScene, 0);
+    }
+
+    if (al::isPadTriggerL(-1)) {
+        al::startBgm(stageScene, "", 1, 1);
     }
 
     // Frame timer based states
