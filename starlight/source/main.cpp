@@ -406,11 +406,7 @@ void stageSceneHook(StageScene* stageScene)
 
     // Disable in-game music
     if (al::isPlayingBgm(stageScene) && !ri.isMusic) {
-        // al::stopAllBgm(stageScene, 0);
-    }
-
-    if (al::isPadTriggerL(-1)) {
-        al::startBgm(stageScene, "", 1, 1);
+        al::stopAllBgm(stageScene, 0);
     }
 
     // Frame timer based states
