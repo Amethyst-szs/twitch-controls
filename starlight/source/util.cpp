@@ -216,16 +216,11 @@ void amy::updateRedeemStatus(bool isTwitch)
     PlayerActorHakoniwa* player = al::tryGetPlayerActor(pHolder, 0);
     amy::RedeemInfo::state& ri = amy::getRedeemInfo();
 
-    if (isTwitch)
-        amy::getRedeemInfo().isRedeemsValid = !(stageScene->isPause()
-            || PlayerFunction::isPlayerDeadStatus(player)
-            || rs::isActiveDemo(player)
-            || amy::getDancePartyState().timer > 0
-            || ri.isRecoverBubble > 0);
-    else
-        amy::getRedeemInfo().isRedeemsValid = !(stageScene->isPause()
-            || PlayerFunction::isPlayerDeadStatus(player)
-            || ri.isRecoverBubble > 0);
+    amy::getRedeemInfo().isRedeemsValid = !(stageScene->isPause()
+        || PlayerFunction::isPlayerDeadStatus(player)
+        || rs::isActiveDemo(player)
+        || amy::getDancePartyState().timer > 0
+        || ri.isRecoverBubble > 0);
     // amy::log("Info: %i %i %s", amy::getRedeemInfo().isRedeemsValid, amy::getRedeemInfo().isInvalidStage, GameDataFunction::getCurrentStageName(*amy::getGlobalStageScene()->mHolder));
     return;
 }

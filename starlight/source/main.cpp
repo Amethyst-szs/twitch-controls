@@ -85,6 +85,7 @@ al::StageInfo* initDebugListHook(const al::Scene* curScene)
 void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead::DrawContext* drawContext)
 {
     amy::RedeemInfo::state& ri = amy::getRedeemInfo();
+    amy::RedeemInfo::windState& wind = amy::getWindState();
 
     // Increase the frame counter since the last ping
     smo::Layouts& layouts = smo::getLayouts();
@@ -258,6 +259,7 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
             gTextWriter->printf("Bubble Frames: %i\n", ri.isRecoverBubble);
             gTextWriter->printf("\nGravity Timer: %f\n", amy::getGravityState().timer);
             gTextWriter->printf("Wind Timer: %f\n", amy::getWindState().timer);
+            gTextWriter->printf("Wind Vect: %fx %fy %fz\n", wind.vect.x, wind.vect.y, wind.vect.z);
             gTextWriter->printf("Coin Tick Rate: %f\n", amy::getCoinTickState().speed);
             gTextWriter->printf("Hot Floor Timer: %f\n", amy::getHotFloorState().timer);
             gTextWriter->printf("Stick Inversion Timer: %f\n", amy::getStickInverState().timer);
@@ -464,10 +466,13 @@ void stageSceneHook(StageScene* stageScene)
     }
 
     // Wind handler
-    if (amy::getWindState().timer > 0 && !isInterupted && player->getPlayerHackKeeper()->getCurrentHackName() == nullptr) {
-        if (!rs::isPlayerOnGround(player))
-            al::addVelocity(player, amy::getWindState().vect);
-        amy::getWindState().timer--;
+    amy::RedeemInfo::windState& wind = amy::getWindState();
+    if (wind.timer > 0 && !isInterupted && player->getPlayerHackKeeper()->getCurrentHackName() == nullptr) {
+        sead::Vector3f* trans = al::getTrans(player);
+        trans->x += wind.vect.x * wind.strength;
+        trans->y += wind.vect.y * wind.strength;
+        trans->z += wind.vect.z * wind.strength;
+        wind.timer--;
     }
 
     // Hot floor updater

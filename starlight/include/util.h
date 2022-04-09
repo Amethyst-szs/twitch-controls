@@ -47,8 +47,9 @@ struct RedeemInfo {
     };
     struct windState {
         float timer;
-        float addLength = 10; // Second of time added to timer when called
-        float comboDec = 0.95; // Amount of add time to remove on repeated calls
+        float strength = 5.5;
+        float addLength = 5; // Second of time added to timer when called
+        float comboDec = 0.49; // Amount of add time to remove on repeated calls
         float comboLength; // Float to track current spam combo
         sead::Vector3f vect;
     };
