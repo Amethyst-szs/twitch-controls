@@ -123,6 +123,14 @@ module.exports = {
 					outPackets.toggleMusic();
 					interaction.reply(`Music toggled!`);
 					break;
+				case "scost":
+					redeemName = interaction.options.getString("redeem", true);
+					factor = interaction.options.getNumber("factor", true);
+
+					twitchInit.sCostUpdate(redeemName, factor);
+					log.log(3, `Updating cost factor of ${redeemName} to ${factor}`);
+					interaction.reply(`Updating cost factor of ${redeemName} to ${factor}`);
+					break;
 				default:
 					interaction.reply("**ERROR**\nDunno what you did, but it didn't work");
 					log.log(3, "Strange interaction, ignoring");
@@ -230,7 +238,21 @@ module.exports = {
 				.setDescription('Kicks the current client off, blocking them for this session'),
 			new SlashCommandBuilder()
 				.setName('music')
-				.setDescription('Toggles the game music, defaults off')
+				.setDescription('Toggles the game music, defaults off'),
+			new SlashCommandBuilder()
+				.setName('scost')
+				.setDescription('Set a price multiplier on one specific redeem')
+				.addStringOption(option =>
+					option.setName('redeem')
+					.setDescription('What redeem are you changing?')
+					.setRequired(true)
+					.addChoices(formattedRedeems)
+				)
+				.addNumberOption(option =>
+					option.setName('factor')
+						.setDescription('What is the multi factor of this redeem?')
+						.setRequired(true)	
+				)
 		]
 			.map(command => command.toJSON());
 		

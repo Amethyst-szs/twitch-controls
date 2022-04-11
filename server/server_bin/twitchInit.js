@@ -9,6 +9,7 @@ const restrictions = require("./restrictions");
 let lang = `english`;
 
 let costFactor = 1;
+let sCostFactors = [];
 let costDisabled = false;
 let cooldownMulti = 1;
 let previewViewers = -1;
@@ -75,11 +76,12 @@ function RefreshTimer(api, streamerID, streamerMe, CurDir){
   return;
 }
 
-async function priceCalc(baseCost, viewers){
+async function priceCalc(baseCost, viewers, redeemIndex){
   let cost = baseCost;
 
   //Handle the dynamic cost
   cost *= costFactor*Math.max(1,Math.log10(viewers)/1.5);
+  cost *= sCostFactors[redeemIndex];
   cost = Math.floor(cost/10)*10;
 
   //In these edge cases, fix it
@@ -135,8 +137,8 @@ async function priceUpdate(api, streamerID, streamerMe, CurDir) {
       log.log(1, `Can't update the price of a redeem that doesn't exist??`);
       continue;
     }
-    
-    redeem.cost = await priceCalc(redeem.cost, viewers);
+
+    redeem.cost = await priceCalc(redeem.cost, viewers, FullRedeemList.indexOf(redeem.title));
     
     //Sets the global cooldown based on the base and cooldown multiplier
     redeem.globalCooldown = Math.floor(redeem.globalCooldown*cooldownMulti);
@@ -240,6 +242,19 @@ module.exports = {
 
   setPreviewMode: function(newPreview){
     previewViewers = newPreview;
+    return;
+  },
+
+  setupSCost: function(langType){
+    FullRedeemList = JSON.parse(fs.readFileSync(`${process.cwd()}/settings/localize/${langType}_list.json`)).FullRedeemList;
+    sCostFactors = new Array(FullRedeemList.length).fill(1, 0, FullRedeemList.length);
+  },
+
+  sCostUpdate: function(redeemName, factor){
+    FullRedeemList = JSON.parse(fs.readFileSync(`${process.cwd()}/settings/localize/${langType}_list.json`)).FullRedeemList;
+    index = FullRedeemList.indexOf(redeemName);
+    sCostFactors[index] = factor;
+    this.skipRefreshTimer();
     return;
   }
 };
