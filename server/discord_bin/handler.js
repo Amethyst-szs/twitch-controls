@@ -131,6 +131,14 @@ module.exports = {
 					log.log(3, `Updating cost factor of ${redeemName} to ${factor}`);
 					interaction.reply(`Updating cost factor of ${redeemName} to ${factor}`);
 					break;
+				case "scooldown":
+					redeemName = interaction.options.getString("redeem", true);
+					factor = interaction.options.getNumber("factor", true);
+
+					twitchInit.sCooldownUpdate(redeemName, factor);
+					log.log(3, `Updating cooldown factor of ${redeemName} to ${factor}`);
+					interaction.reply(`Updating cooldown factor of ${redeemName} to ${factor}`);
+					break;
 				default:
 					interaction.reply("**ERROR**\nDunno what you did, but it didn't work");
 					log.log(3, "Strange interaction, ignoring");
@@ -250,9 +258,23 @@ module.exports = {
 				)
 				.addNumberOption(option =>
 					option.setName('factor')
-						.setDescription('What is the multi factor of this redeem?')
+						.setDescription('What is the multi cost factor of this redeem?')
 						.setRequired(true)	
+				),
+			new SlashCommandBuilder()
+				.setName('scooldown')
+				.setDescription('Set a cooldown multiplier on one specific redeem')
+				.addStringOption(option =>
+					option.setName('redeem')
+					.setDescription('What redeem are you changing?')
+					.setRequired(true)
+					.addChoices(formattedRedeems)
 				)
+				.addNumberOption(option =>
+					option.setName('factor')
+						.setDescription('What is the multi cooldown factor of this redeem?')
+						.setRequired(true)	
+				),
 		]
 			.map(command => command.toJSON());
 		

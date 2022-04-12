@@ -11,7 +11,10 @@ let lang = `english`;
 let costFactor = 1;
 let sCostFactors = [];
 let costDisabled = false;
+
 let cooldownMulti = 1;
+let sCooldownMulti = [];
+
 let previewViewers = -1;
 
 let refreshTotalTimer = 30;
@@ -141,7 +144,7 @@ async function priceUpdate(api, streamerID, streamerMe, CurDir) {
     redeem.cost = await priceCalc(redeem.cost, viewers, FullRedeemList.indexOf(redeem.title));
     
     //Sets the global cooldown based on the base and cooldown multiplier
-    redeem.globalCooldown = Math.floor(redeem.globalCooldown*cooldownMulti);
+    redeem.globalCooldown = Math.floor(redeem.globalCooldown*cooldownMulti*sCooldownMulti[FullRedeemList.indexOf(redeem.title)]);
 
     //Sets if the redeem is enabled based on the restriction list
     redeem.isEnabled = !restrictedRedeems.includes(title);
@@ -245,15 +248,24 @@ module.exports = {
     return;
   },
 
-  setupSCost: function(langType){
+  setupS: function(langType){
     FullRedeemList = JSON.parse(fs.readFileSync(`${process.cwd()}/settings/localize/${langType}_list.json`)).FullRedeemList;
     sCostFactors = new Array(FullRedeemList.length).fill(1, 0, FullRedeemList.length);
+    sCooldownMulti = new Array(FullRedeemList.length).fill(1, 0, FullRedeemList.length);
   },
 
   sCostUpdate: function(redeemName, factor){
     FullRedeemList = JSON.parse(fs.readFileSync(`${process.cwd()}/settings/localize/${langType}_list.json`)).FullRedeemList;
     index = FullRedeemList.indexOf(redeemName);
     sCostFactors[index] = factor;
+    this.skipRefreshTimer();
+    return;
+  },
+
+  sCooldownUpdate: function(redeemName, factor){
+    FullRedeemList = JSON.parse(fs.readFileSync(`${process.cwd()}/settings/localize/${langType}_list.json`)).FullRedeemList;
+    index = FullRedeemList.indexOf(redeemName);
+    sCooldownMulti[index] = factor;
     this.skipRefreshTimer();
     return;
   }

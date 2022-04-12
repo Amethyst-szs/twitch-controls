@@ -301,7 +301,7 @@ async function TwitchHandler() {
 
   //Starts a timer tracking automatic refreshing of costs, cooldowns, and enabled status
   twitchInit.startRefreshTimer(api, streamerID, streamerMe, CurDir);
-  twitchInit.setupSCost(langType);
+  twitchInit.setupS(langType);
 
   //Once Twitch is authenticated and ready, finish UDP server
   server.bind(7902);
