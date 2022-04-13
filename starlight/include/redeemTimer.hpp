@@ -1,5 +1,5 @@
 #include "game/StageScene/StageScene.h"
-#include "main.hpp"
+#include "util.h"
 
 namespace amy {
 

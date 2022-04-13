@@ -1,4 +1,7 @@
 #include "redeemTimer.hpp"
+#include "game/GameData/GameDataFunction.h"
+#include "game/Player/PlayerFunction.h"
+#include "rs/util.hpp"
 
 void amy::handleTimerRedeems(bool isInterupted, StageScene* stageScene, PlayerActorHakoniwa* player)
 {

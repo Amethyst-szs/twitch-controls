@@ -433,6 +433,9 @@ void stageSceneHook(StageScene* stageScene)
     // Once the restriction test is done, make sure to set the transition state to false!
     ri.isTransition = false;
 
+    //Handle all redeems that run on a timer!
+    amy::handleTimerRedeems(isInterupted, stageScene, player);
+
     // Activate home ship yes
     GameDataFunction::enableCap(holder);
     if (GameData.mGameDataFile->mCurWorldID > 1) {
