@@ -507,10 +507,11 @@ void stageSceneHook(StageScene* stageScene)
     }
 
     // Activate home ship yes
-    GameDataFunction::activateHome(holder);
-    holder.mGameDataFile->mProgressData->talkCapNearHomeInWaterfall();
-    // GameDataFunction::repairHome(holder);
     GameDataFunction::enableCap(holder);
+    if (GameData.mGameDataFile->mCurWorldID > 1) {
+        GameDataFunction::activateHome(holder);
+        holder.mGameDataFile->mProgressData->talkCapNearHomeInWaterfall();
+    }
 
     if (!isInGame || !isDead || !isDemo) {
         isInGame = true;
