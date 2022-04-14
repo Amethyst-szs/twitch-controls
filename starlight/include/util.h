@@ -23,6 +23,10 @@ struct RedeemInfo {
         int isSceneKill = 0;
         int isRecoverBubble = 0;
 
+        // Kingdom flee
+        int fleeDelay = 300;
+        int fleeFrames = -1;
+
         // Say message
         int sayTimer = -1;
         int sayLines = 1;
@@ -104,9 +108,11 @@ void calcWorldTier(s32 worldID, const char* stageName);
 void updateServerDemoState();
 void sendPacketStateNotice(bool rejectState, bool isTwitch);
 
-const char* getRandomHomeStage();
+const char* getRandomHomeStage(const char* curStage);
 sead::Vector3f getRandomGravity();
 void updateRedeemStatus(bool isTwitch);
+
+void triggerKingdomFlee(StageScene* stageScene, PlayerActorHakoniwa* player);
 
 void drawBackground(agl::DrawContext* context, sead::Vector2f position, sead::Vector2f size, sead::Vector2f offset, sead::Color4f color);
 int limitInt(int min, int value, int max);

@@ -1,5 +1,6 @@
 #include "util.h"
 #include "al/util.hpp"
+#include "game/GameData/GameDataFunction.h"
 #include "main.hpp"
 #include "sead/container/seadListImpl.h"
 #include "sead/math/seadVector.h"
@@ -193,7 +194,7 @@ sead::Vector3f amy::getRandomGravity()
     return VectorOptions[sead::GlobalRandom::instance()->getU32() % (sizeof(VectorOptions) / sizeof(sead::Vector3f))];
 }
 
-const char* amy::getRandomHomeStage()
+const char* amy::getRandomHomeStage(const char* curStage)
 {
     constexpr static const char* stageNames[] = {
         "ForestWorldHomeStage",
@@ -206,7 +207,12 @@ const char* amy::getRandomHomeStage()
         "Special2WorldHomeStage"
     };
 
-    return stageNames[sead::GlobalRandom::instance()->getU32() % (sizeof(stageNames) / sizeof(const char*))];
+    const char* newStage = stageNames[sead::GlobalRandom::instance()->getU32() % (sizeof(stageNames) / sizeof(const char*))];
+
+    if (al::isEqualString(newStage, curStage))
+        newStage = stageNames[(sead::GlobalRandom::instance()->getU32() + 1) % (sizeof(stageNames) / sizeof(const char*))];
+
+    return newStage;
 }
 
 void amy::updateRedeemStatus(bool isTwitch)
@@ -223,6 +229,37 @@ void amy::updateRedeemStatus(bool isTwitch)
         || ri.isRecoverBubble > 0);
     // amy::log("Info: %i %i %s", amy::getRedeemInfo().isRedeemsValid, amy::getRedeemInfo().isInvalidStage, GameDataFunction::getCurrentStageName(*amy::getGlobalStageScene()->mHolder));
     return;
+}
+
+void amy::triggerKingdomFlee(StageScene* stageScene, PlayerActorHakoniwa* player)
+{
+    amy::RedeemInfo::state& ri = amy::getRedeemInfo();
+    ri.fleeFrames++;
+    // First frame code
+    if (ri.fleeFrames == 0) {
+        // Set the say box on the first frame
+        if (ri.sayText)
+            ri.sayText = nullptr;
+
+        ri.sayText = "All moons in this stage are collected! Deposit them once you get back!";
+        ri.sayTimer = ri.fleeDelay;
+        ri.sayAnimator = 20;
+
+        // Setup player
+        player->startDemoPuppetable();
+        al::setVelocityZero(player);
+        player->mPlayerAnimator->endSubAnim();
+        player->mPlayerAnimator->startAnim("WorldWarpBind");
+    }
+
+    // Lock player to face camera
+    rs::faceToCamera(player);
+
+    if (ri.fleeFrames >= ri.fleeDelay) {
+        ChangeStageInfo stageInfo(stageScene->mHolder, "start", amy::getRandomHomeStage(stageScene->mHolder->getCurrentStageName()), false, -1, ChangeStageInfo::SubScenarioType::UNK);
+        stageScene->mHolder->changeNextStage(&stageInfo, 0);
+        ri.fleeFrames = -1;
+    }
 }
 
 void amy::drawBackground(agl::DrawContext* context, sead::Vector2f position, sead::Vector2f size, sead::Vector2f offset, sead::Color4f color)

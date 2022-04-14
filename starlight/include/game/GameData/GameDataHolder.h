@@ -8,8 +8,7 @@
 #include "al/scene/Scene.h"
 #include "game/GameData/GameDataFile.h"
 
-class GameDataHolder : public al::ISceneObj
-{
+class GameDataHolder : public al::ISceneObj {
 public:
     // GameDataHolder(al::MessageSystem const *);
     GameDataHolder();
@@ -24,7 +23,7 @@ public:
     void initialzeDataCommon();
     void resetTempSaveData(bool);
     void initializeDataId(s32);
-    void readByamlData(s32, char const *);
+    void readByamlData(s32, char const*);
     s32 tryFindEmptyFileId() const;
 
     bool isRequireSave() const;
@@ -35,12 +34,12 @@ public:
     bool isInvalidSaveForMoonGet() const;
     void invalidateSaveForMoonGet();
     void validateSaveForMoonGet();
-    void setLanguage(char const *);
+    void setLanguage(char const*);
     char* getLanguage() const;
 
     void resetLocationName();
-    void changeNextStageWithDemoWorldWarp(char const *);
-    bool tryChangeNextStageWithWorldWarpHole(char const *);
+    void changeNextStageWithDemoWorldWarp(char const*);
+    bool tryChangeNextStageWithWorldWarpHole(char const*);
     void returnPrevStage();
     char* getNextStageName() const;
     char* getNextStageName(s32 idx) const;
@@ -52,7 +51,7 @@ public:
     // void setCheckpointId(al::PlacementId const *);
     char* tryGetRestartPointIdString() const;
     void endStage();
-    void startStage(char const *, s32);
+    void startStage(char const*, s32);
     // void onObjNoWriteSaveData(al::PlacementId const *);
     // void offObjNoWriteSaveData(al::PlacementId const *);
     // bool isOnObjNoWriteSaveData(al::PlacementId const *) const;
@@ -61,12 +60,12 @@ public:
     // bool isOnObjNoWriteSaveDataResetMiniGame(al::PlacementId const *) const;
     // void onObjNoWriteSaveDataInSameScenario(al::PlacementId const *);
     // bool isOnObjNoWriteSaveDataInSameScenario(al::PlacementId const *) const;
-    void writeTempSaveDataToHash(char const *, bool);
+    void writeTempSaveDataToHash(char const*, bool);
 
     void resetMiniGameData();
     s32 getPlayingFileId() const;
 
-    s32 findUnlockShineNum(bool *, s32) const;
+    s32 findUnlockShineNum(bool*, s32) const;
     s32 calcBeforePhaseWorldNumMax(s32) const;
     bool isFindKoopaNext(s32) const;
     bool isBossAttackedHomeNext(s32) const;
@@ -78,7 +77,7 @@ public:
 
     void readFromSaveDataBufferCommonFileOnlyLanguage();
 
-    void changeNextStage(struct ChangeStageInfo const *, int);
+    void changeNextStage(struct ChangeStageInfo const*, int);
 
     // unsigned char padding_20[0x20 - sizeof(al::ISceneObj)];
     // GameDataFile* mGameDataFile;

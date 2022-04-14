@@ -70,4 +70,5 @@ void forcePutOffMarioHeadCap(al::LiveActor*);
 bool isPlayer2D(const al::LiveActor*);
 bool isActiveDemo(al::LiveActor const*);
 bool isDemoEnvironmentChange(al::Scene const*);
+bool checkGetEnoughShine(al::LiveActor const*, int);
 }

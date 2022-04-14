@@ -144,7 +144,7 @@ void InPacketEvent::on(Server& server)
             break;
         }
         case 5: {
-            ChangeStageInfo stageInfo(stageScene->mHolder, "start", amy::getRandomHomeStage(), false, -1, ChangeStageInfo::SubScenarioType::UNK);
+            ChangeStageInfo stageInfo(stageScene->mHolder, "start", amy::getRandomHomeStage(stageScene->mHolder->getCurrentStageName()), false, -1, ChangeStageInfo::SubScenarioType::UNK);
             stageScene->mHolder->changeNextStage(&stageInfo, 0);
             break;
         }

@@ -42,6 +42,9 @@ B59E28: // sead::system::print
 3A85F8: // stops OpeningStageCapManHero from full init
     MOV X0, #1
 
+// 1B50A0: // Stop softlocks from snow kingdom doors
+    // NOP
+
 // Amiibo Button Disabling
 577078: // rs::isHoldAmiiboMode
     MOV X0, #0

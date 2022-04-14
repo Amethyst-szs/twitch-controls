@@ -11,6 +11,7 @@
 #include "al/util/AudioUtil.h"
 #include "debugMenu.hpp"
 #include "fl/server.h"
+#include "game/GameData/GameDataFile.h"
 #include "game/GameData/GameDataFunction.h"
 #include "game/GameData/GameDataHolderAccessor.h"
 #include "game/GameData/GameDataHolderBase.h"
@@ -223,6 +224,8 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
         GameDataHolderAccessor GameData = *stageScene->mHolder;
         GameDataHolderWriter holder = *stageScene->mHolder;
 
+        bool lockValue = true;
+
         // Header
         gTextWriter->printf("Twitch Controls - Debug Menu\nPage %i/%i\n\n", debugPage + 1, debugMax + 1);
         // Scene Info
@@ -233,8 +236,15 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
             gTextWriter->printf("Coin Counter: %i\n", GameDataFunction::getCoinNum(*stageScene->mHolder));
             gTextWriter->printf("Stage Name: %s\n", stageScene->mHolder->getCurrentStageName());
             gTextWriter->printf("Scenario: %i\n", GameDataFunction::getScenarioNo(player));
-            gTextWriter->printf("Language: %s\n", amy::getGlobalStageScene()->mHolder->getLanguage());
-            gTextWriter->printf("Total Shines in Kingdom: %i\n", GameDataFunction::getWorldTotalShineNum(GameData, GameDataFunction::getCurrentWorldId(GameData)));
+
+            gTextWriter->printf("\nWorld ID: %i\n", stageScene->mHolder->mGameDataFile->mCurWorldID);
+            gTextWriter->printf("Is Unlocked This World: %s\n", GameDataFunction::isUnlockedCurrentWorld(GameData) ? "true" : "false");
+            gTextWriter->printf("Collected Shine World Count: %i\n", stageScene->mHolder->mGameDataFile->getShineNum());
+            gTextWriter->printf("World Shine Total: %i\n", stageScene->mHolder->mGameDataFile->getWorldTotalShineNum(stageScene->mHolder->mGameDataFile->mCurWorldID));
+            gTextWriter->printf("Lock Number: %i\n", stageScene->mHolder->mGameDataFile->findUnlockShineNumCurrentWorld(&lockValue));
+            gTextWriter->printf("Got Enough Shines: %i\n", rs::checkGetEnoughShine(player, stageScene->mHolder->mGameDataFile->mCurWorldID));
+
+            gTextWriter->printf("\nLanguage: %s\n", amy::getGlobalStageScene()->mHolder->getLanguage());
             gTextWriter->printf("Animation: %s\n", player->mPlayerAnimator->mAnimFrameCtrl->getActionName());
             // Player Information
             if (player->getPlayerHackKeeper()->getCurrentHackName() != nullptr) {
@@ -340,7 +350,7 @@ bool sceneKillHook(GameDataHolderAccessor value)
 {
     amy::RedeemInfo::state& ri = amy::getRedeemInfo();
     amy::log("StageScene killed, transition triggered");
-    ri.isSceneKill = 60;
+    ri.isSceneKill = 20;
 
     return GameDataFunction::isMissEndPrevStageForSceneDead(value);
 }
@@ -433,7 +443,7 @@ void stageSceneHook(StageScene* stageScene)
     // Once the restriction test is done, make sure to set the transition state to false!
     ri.isTransition = false;
 
-    //Handle all redeems that run on a timer!
+    // Handle all redeems that run on a timer!
     amy::handleTimerRedeems(isInterupted, stageScene, player);
 
     // Activate home ship yes
@@ -443,11 +453,21 @@ void stageSceneHook(StageScene* stageScene)
         holder.mGameDataFile->mProgressData->talkCapNearHomeInWaterfall();
     }
 
+    // Handle if the game is active
     if (!isInGame || !isDead || !isDemo) {
         isInGame = true;
     } else {
         isInGame = false;
     }
+
+    // Trigger kingdom leave if you reach a kingdom early and gather a lock amount of moons
+    bool isTriggerFlee = ((GameData.mGameDataFile->getShineNum()) >= GameData.mGameDataFile->findUnlockShineNumCurrentWorld(&isDemo));
+
+    if (!GameDataFunction::isUnlockedCurrentWorld(GameData)
+        && rs::checkGetEnoughShine(player, holder.mGameDataFile->mCurWorldID)
+        && (!isInterupted || ri.fleeFrames > -1)
+        && ri.isSceneKill <= 0)
+        amy::triggerKingdomFlee(stageScene, player);
 
     // DEBUG MENU HOTKEYS
     if (al::isPadHoldZL(-1) && al::isPadTriggerUp(-1)) // enables/disables debug menu
@@ -466,11 +486,6 @@ void stageSceneHook(StageScene* stageScene)
         if (debugPage < 0)
             debugPage = debugMax;
     }
-
-    // TESTING FUNCTIONS
-    // if (al::isPadHoldZR(-1) && al::isPadTriggerLeft(-1)) {
-    //     // rs::appearCapMsgTutorial(stageScene, "YukimaruTutorial");
-    // }
 
     __asm("MOV X0, %[input]"
           : [input] "=r"(stageScene));

@@ -123,4 +123,6 @@ public:
     static void subCoin(GameDataHolderWriter, int value);
 
     static bool isMissEndPrevStageForSceneDead(GameDataHolderAccessor);
+
+    static bool isUnlockedCurrentWorld(GameDataHolderAccessor);
 };
