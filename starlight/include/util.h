@@ -26,6 +26,7 @@ struct RedeemInfo {
         // Kingdom flee
         int fleeDelay = 300;
         int fleeFrames = -1;
+        bool fleeDisabled = false;
 
         // Say message
         int sayTimer = -1;

@@ -466,7 +466,8 @@ void stageSceneHook(StageScene* stageScene)
     if (!GameDataFunction::isUnlockedCurrentWorld(GameData)
         && rs::checkGetEnoughShine(player, holder.mGameDataFile->mCurWorldID)
         && (!isInterupted || ri.fleeFrames > -1)
-        && ri.isSceneKill <= 0)
+        && ri.isSceneKill <= 0
+        && !ri.fleeDisabled)
         amy::triggerKingdomFlee(stageScene, player);
 
     // DEBUG MENU HOTKEYS

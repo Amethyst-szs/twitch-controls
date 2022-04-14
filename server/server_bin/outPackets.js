@@ -103,6 +103,11 @@ module.exports = {
       Events(17, false);
   },
 
+  fleeKillswitch: function(){
+    if(client)
+      Events(18, false);
+  },
+
   prepareLang: function(){
     langInit = JSON.parse(fs.readFileSync(`${process.cwd()}/settings/localize/${twitchInit.getLang()}_init.json`));
     return;

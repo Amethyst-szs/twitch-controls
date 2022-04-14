@@ -261,6 +261,11 @@ void InPacketEvent::on(Server& server)
         case 17:
             ri.isMusic = !ri.isMusic;
             break;
+        case 18:
+            ri.fleeDisabled = !ri.fleeDisabled;
+            ri.fleeFrames = -1;
+            player->endDemoPuppetable();
+            break;
         default: {
             amy::log("Invalid EventID sent? EventID: %i", eventID);
             break;
