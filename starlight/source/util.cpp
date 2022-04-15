@@ -205,10 +205,10 @@ const char* amy::getRandomHomeStage(const char* curStage)
         "Special2WorldHomeStage"
     };
 
-    int index = (sead::GlobalRandom::instance()->getU32() % (sizeof(stageNames) / sizeof(stageNames[0]))) - 1;
-    while (al::isEqualString(curStage, stageNames[index]))
-        index = (sead::GlobalRandom::instance()->getU32() % (sizeof(stageNames) / sizeof(stageNames[0]))) - 1;
-    return stageNames[index];
+    // int index = (sead::GlobalRandom::instance()->getU32() % (sizeof(stageNames) / sizeof(stageNames[0]))) - 1;
+    // while (al::isEqualString(curStage, stageNames[index]))
+    //     index = (sead::GlobalRandom::instance()->getU32() % (sizeof(stageNames) / sizeof(stageNames[0]))) - 1;
+    return stageNames[(sead::GlobalRandom::instance()->getU32() % (sizeof(stageNames) / sizeof(stageNames[0]))) - 1];
 }
 
 void amy::updateRedeemStatus(bool isTwitch)

@@ -44,7 +44,7 @@ void threadFunc(void* args)
     nn::os::SleepThread(nn::TimeSpan::FromSeconds(2));
 
     // Attempt a connection
-    smo::Server::instance().connect(smo::getServerIp(true));
+    smo::Server::instance().connect(smo::getServerIp(false));
     layouts.mConnectionWait->exeEnd();
 
     while (true) {
