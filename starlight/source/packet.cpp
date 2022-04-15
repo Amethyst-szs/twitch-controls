@@ -42,7 +42,7 @@ void InPacketPing::on(Server& server)
 {
     smo::Layouts& layouts = smo::getLayouts();
     layouts.pingFrames = 0;
-    amy::log("Ping");
+    smo::Server::instance().pongResponse();
 }
 
 void InPacketKick::parse(const u8* data, u32 len)
@@ -65,7 +65,6 @@ void InPacketSay::parse(const u8* data, u32 len)
 
 void InPacketSay::on(Server& server)
 {
-    amy::log("Say message: %s", message);
     amy::RedeemInfo::state& ri = amy::getRedeemInfo();
     if (ri.sayText)
         ri.sayText = nullptr;
@@ -341,7 +340,6 @@ void InPacketPosRandomize::on(Server& server)
         al::LiveActor* curHack = player->getPlayerHackKeeper()->currentHackActor;
 
         if (rs::isPlayer2D(player)) {
-            amy::log("Rejected PosRandomize because of 2D Area");
             return;
         }
 

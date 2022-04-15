@@ -34,7 +34,6 @@ void threadFunc(void* args)
     nn::os::SleepThread(nn::TimeSpan::FromSeconds(12));
 
     // Prepare the connecting layout
-    amy::RedeemInfo::state& ri = amy::getRedeemInfo();
     smo::Layouts& layouts = smo::getLayouts();
     layouts.mConnectionWait->appear();
     layouts.mConnectionWait->playLoop();
@@ -132,7 +131,7 @@ void Server::connect(const char* ipS)
 
     sendInit(ipS);
     amy::updateServerDemoState();
-    amy::log("Restrict%u", amy::getRedeemInfo().restrictionTier);
+    smo::Server::instance().restrict();
 }
 
 void Server::disconnect()
@@ -150,6 +149,43 @@ void Server::disconnect()
         socket = -1;
     }
     connected = false;
+}
+
+void Server::dcPacket()
+{
+    OutPacketType dummy = OutPacketType::Disconnect;
+    nn::socket::SendTo(socket, &dummy, 1, 0, (struct sockaddr*)&server, sizeof(server));
+}
+
+void Server::pongResponse()
+{
+    OutPacketType dummy = OutPacketType::Pong;
+    nn::socket::SendTo(socket, &dummy, 1, 0, (struct sockaddr*)&server, sizeof(server));
+}
+
+void Server::restrict()
+{
+    u8 data[2];
+    data[0] = OutPacketType::Restrict;
+    data[1] = amy::getRedeemInfo().restrictionTier;
+    nn::socket::SendTo(socket, &data, 2, 0, (struct sockaddr*)&server, sizeof(server));
+}
+
+void Server::demoUpdate()
+{
+    u8 data[2];
+    data[0] = OutPacketType::DemoToggle;
+    data[1] = amy::getRedeemInfo().isInvalidStage;
+    nn::socket::SendTo(socket, &data, 2, 0, (struct sockaddr*)&server, sizeof(server));
+}
+
+void Server::reject(bool isReject)
+{
+    u8 data[3];
+    data[0] = OutPacketType::Reject;
+    data[1] = amy::getRedeemInfo().rejectionID;
+    data[2] = isReject;
+    nn::socket::SendTo(socket, &data, 3, 0, (struct sockaddr*)&server, sizeof(server));
 }
 
 void Server::sendPacket(OutPacket& packet, OutPacketType type)

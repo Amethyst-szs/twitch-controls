@@ -12,8 +12,12 @@ class Server;
 enum OutPacketType : u8 {
     DummyInit = (u8)-1,
     Init = (u8)-2,
-    Log = (u8)-3 //,
-    // DemoToggle = (u8)-4
+    Log = (u8)-3,
+    Disconnect = (u8)-4,
+    Pong = (u8)-5,
+    Restrict = (u8)-6,
+    DemoToggle = (u8)-7,
+    Reject = (u8)-8
 };
 
 class OutPacket {

@@ -32,6 +32,11 @@ public:
     void start();
     void connect(const char* ip);
     void disconnect();
+    void dcPacket();
+    void pongResponse();
+    void restrict();
+    void demoUpdate();
+    void reject(bool isReject);
     void sendPacket(OutPacket& packet, OutPacketType type);
     bool isConnected();
     void handlePacket(u8* buf, size_t bufSize);

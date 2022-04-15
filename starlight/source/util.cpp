@@ -1,5 +1,6 @@
 #include "util.h"
 #include "al/util.hpp"
+#include "fl/server.h"
 #include "game/GameData/GameDataFunction.h"
 #include "main.hpp"
 #include "sead/container/seadListImpl.h"
@@ -15,7 +16,7 @@
 void amy::updateServerDemoState()
 {
     amy::RedeemInfo::state& ri = amy::getRedeemInfo();
-    amy::log("Demo%i", ri.isInvalidStage);
+    smo::Server::instance().demoUpdate();
 }
 
 StageScene*& amy::getGlobalStageScene()
@@ -175,10 +176,7 @@ void amy::sendPacketStateNotice(bool rejectState, bool isTwitch)
 {
     if (isTwitch) {
         amy::RedeemInfo::state& ri = amy::getRedeemInfo();
-        if (ri.rejectionID > 9)
-            amy::log("Reject/%u/%u", ri.rejectionID, rejectState);
-        else
-            amy::log("Reject/0%u/%u", ri.rejectionID, rejectState);
+        smo::Server::instance().reject(rejectState);
     }
 }
 
@@ -207,12 +205,10 @@ const char* amy::getRandomHomeStage(const char* curStage)
         "Special2WorldHomeStage"
     };
 
-    const char* newStage = stageNames[sead::GlobalRandom::instance()->getU32() % (sizeof(stageNames) / sizeof(const char*))];
-
-    if (al::isEqualString(newStage, curStage))
-        newStage = stageNames[(sead::GlobalRandom::instance()->getU32() + 1) % (sizeof(stageNames) / sizeof(const char*))];
-
-    return newStage;
+    int index = (sead::GlobalRandom::instance()->getU32() % (sizeof(stageNames) / sizeof(stageNames[0]))) - 1;
+    while (al::isEqualString(curStage, stageNames[index]))
+        index = (sead::GlobalRandom::instance()->getU32() % (sizeof(stageNames) / sizeof(stageNames[0]))) - 1;
+    return stageNames[index];
 }
 
 void amy::updateRedeemStatus(bool isTwitch)

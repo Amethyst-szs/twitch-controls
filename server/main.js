@@ -39,7 +39,7 @@ let curTime = new Date().getTime();
 
 //Respond to packets from the switch
 server.on("message", (msg, rinfo) => {
-  // console.log(msg);
+  console.log(msg);
   switch (msg.readInt8()) {
     // case -1: //Dummy Initalization
       //No code is actually ran here
@@ -63,42 +63,29 @@ server.on("message", (msg, rinfo) => {
 
       break;
     case -3: //Log any information with msg info
-      //Ping check
-      if(bufferTool.PingBuf(msg, CurDir)){
-        lastPingTime = curTime;
-        break;
-      }
-
-      //Check if this log is a disconnection request
-      if (bufferTool.disconnectCheck(msg, CurDir)){
-        outPackets.clearClient();
-        break;
-      }
-
-      //Invalid stage log type check
-      if(bufferTool.demoUpdate(msg, CurDir)){
-        break;
-      };
-
-      //Rejection status update check
-      isReject = bufferTool.reject(msg, CurDir);
-      if (isReject.wasRejectLog){
-        updateRedeem(api, streamerID,
-          rejectionList[isReject.rejectionID].rewardID,
-          rejectionList[isReject.rejectionID].ID,
-          !isReject.rejectionState);
-        break;
-      }
-
-      //Restrict status update
-      if(bufferTool.restrict(msg, CurDir)){
-        break;
-      };
-
       inPackets.Log(msg, rinfo, CurDir);
       break;
-    case -4: //demoToggle
-      log.log(0, "DemoToggle");
+    case -4: //Disconnect request
+      log.log(0, "Disconnect requested from client");
+      outPackets.clearClient();
+      break;
+    case -5: //Ping request
+      lastPingTime = curTime;
+      break;
+    case -6: //Restriction
+      restrictions.updateStandardRestriction(msg[1], CurDir);
+      twitchInit.skipRefreshTimer();
+      log.log(1, `Changing the current restriction tier to ${msg[1]}`);
+      break;
+    case -7: //DemoToggle
+      invalidStage = Boolean(msg[1]);
+      log.log(1, `Is invalid stage: ${Boolean(msg[1])}`);
+      break;
+    case -8: //Reject
+      updateRedeem(api, streamerID,
+        rejectionList[msg[1]].rewardID,
+        rejectionList[msg[1]].ID,
+        Boolean(msg[2]));
       break;
   }
 });

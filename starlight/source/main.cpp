@@ -10,6 +10,7 @@
 #include "al/util.hpp"
 #include "al/util/AudioUtil.h"
 #include "debugMenu.hpp"
+#include "fl/packet.h"
 #include "fl/server.h"
 #include "game/GameData/GameDataFile.h"
 #include "game/GameData/GameDataFunction.h"
@@ -307,7 +308,7 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
                     layouts.pingFrames = 400;
                     break;
                 case 1:
-                    amy::log("ClientDisconnect");
+                    smo::Server::instance().dcPacket();
                     break;
                 case 2:
                     GameDataFunction::killPlayer(*stageScene->mHolder);
@@ -349,7 +350,6 @@ HOOK_ATTR
 bool sceneKillHook(GameDataHolderAccessor value)
 {
     amy::RedeemInfo::state& ri = amy::getRedeemInfo();
-    amy::log("StageScene killed, transition triggered");
     ri.isSceneKill = 20;
 
     return GameDataFunction::isMissEndPrevStageForSceneDead(value);
@@ -435,7 +435,7 @@ void stageSceneHook(StageScene* stageScene)
         amy::calcWorldTier(GameDataFunction::getCurrentWorldId(*stageScene->mHolder), holder.getCurrentStageName());
         // In the event that the restriction tier has changed from the last scene to this one, publish the change
         if (ri.restrictionTier != ri.lastPublishRestrictionTier) {
-            amy::log("Restrict%u", ri.restrictionTier);
+            smo::Server::instance().restrict();
             ri.lastPublishRestrictionTier = ri.restrictionTier;
         }
     }
