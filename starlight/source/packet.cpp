@@ -42,6 +42,7 @@ void InPacketPing::on(Server& server)
 {
     smo::Layouts& layouts = smo::getLayouts();
     layouts.pingFrames = 0;
+    amy::getRedeemInfo().pingCalls++;
     smo::Server::instance().pongResponse();
 }
 

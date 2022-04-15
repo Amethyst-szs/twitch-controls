@@ -11,6 +11,8 @@ namespace smo {
 struct Layouts {
     // -- Game Layouts --
     int pingFrames = 0;
+    int pingPreviousFrame;
+    int pingFrameStuckFrames = 0;
     bool firstBoot = false;
     al::WindowConfirmWait* mConnectionWait;
     // al::GaugeAir* mGague;

@@ -17,6 +17,9 @@ struct RedeemInfo {
         bool isTransition = true;
         bool isMusic = false;
 
+        // Debugging
+        int pingCalls = 0;
+
         // Frame timer based states
         int isSaveLoad = 0;
         int isLangChange = 0;

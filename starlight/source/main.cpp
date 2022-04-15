@@ -93,6 +93,17 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
     smo::Layouts& layouts = smo::getLayouts();
     layouts.pingFrames++;
 
+    // Check for ping frame freezes
+    if (layouts.pingFrames == layouts.pingPreviousFrame)
+        layouts.pingFrameStuckFrames++;
+    else
+        layouts.pingFrameStuckFrames = 0;
+
+    if (layouts.pingFrameStuckFrames == 120) {
+        smo::Server::instance().dcPacket();
+        layouts.pingFrames = 400;
+    }
+
     if (layouts.pingFrames >= 400 && layouts.firstBoot) {
         // In this case, the game is fairly sure the server is lost and it should go idle
         if (!layouts.mConnectionWait->mIsAlive) {
@@ -116,6 +127,8 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
         layouts.mConnectionWait->exeEnd();
         layouts.mConnectionWait->setTxtMessage(u"Connection to Twitch lost! One moment!");
     }
+
+    layouts.pingPreviousFrame = layouts.pingFrames;
 
     al::Scene* curScene = curSequence->curScene;
 
@@ -218,7 +231,7 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
 
         gTextWriter->beginDraw();
         gTextWriter->setCursorFromTopLeft(sead::Vector2f(10.f, (dispHeight / 3) + 30.f));
-        gTextWriter->setScaleFromFontHeight(17.5f);
+        gTextWriter->setScaleFromFontHeight(15.f);
 
         al::PlayerHolder* pHolder = al::getScenePlayerHolder(stageScene);
         PlayerActorHakoniwa* player = al::tryGetPlayerActor(pHolder, 0);
@@ -259,12 +272,16 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
             break;
         case 1:
             gTextWriter->printf("Twitch Integration Values:\n");
+            gTextWriter->printf("Server Connected: %s\n", smo::Server::instance().isConnected() ? "true" : "false");
             gTextWriter->printf("Reject Redeems: %s\n", !ri.isRedeemsValid ? "true" : "false");
             gTextWriter->printf("Invalid Stage: %s\n", ri.isInvalidStage ? "true" : "false");
             gTextWriter->printf("Music Enabled: %s\n", ri.isMusic ? "true" : "false");
             gTextWriter->printf("Rejection ID: %i\n", ri.rejectionID);
             gTextWriter->printf("Restriction Tier: %i\n", ri.restrictionTier);
             gTextWriter->printf("Ping Frames: %i\n", layouts.pingFrames);
+            gTextWriter->printf("Prev Ping Frame: %i\n", layouts.pingPreviousFrame);
+            gTextWriter->printf("Freeze Frames: %i\n", layouts.pingFrameStuckFrames);
+            gTextWriter->printf("Ping Calls: %i\n", ri.pingCalls);
             gTextWriter->printf("Save Swap Frames: %i\n", ri.isSaveLoad);
             gTextWriter->printf("Lang Swap Frames: %i\n", ri.isLangChange);
             gTextWriter->printf("Scene Swap Frames: %i\n", ri.isSceneKill);
@@ -277,7 +294,6 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
             gTextWriter->printf("Stick Inversion Timer: %f\n", amy::getStickInverState().timer);
             gTextWriter->printf("Water Area Timer: %f\n", amy::getWaterAreaState().timer);
             gTextWriter->printf("Dance Party Timer: %f\n", amy::getDancePartyState().timer);
-            gTextWriter->printf("Shine Warp: %s\n", amy::getShineWarpState().isWarp ? "true" : "false");
             gTextWriter->printf("Shine Warp Target: %i\n", amy::getShineWarpState().targetShineID);
             break;
         case 2:
