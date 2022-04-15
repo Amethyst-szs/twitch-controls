@@ -39,7 +39,7 @@ let curTime = new Date().getTime();
 
 //Respond to packets from the switch
 server.on("message", (msg, rinfo) => {
-  console.log(msg);
+  // console.log(msg);
   switch (msg.readInt8()) {
     // case -1: //Dummy Initalization
       //No code is actually ran here
