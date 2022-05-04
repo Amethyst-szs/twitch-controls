@@ -82,6 +82,7 @@ struct RedeemInfo {
     struct dancePartyState {
         float timer = -1;
         float addLength = 20; // Second of time added to timer when called
+        const char* textDisplay = "Dance Party!";
         sead::SafeString selectedAnim = "AreaWaitDance01";
         sead::Vector2f overlayPos = { 0.f, 0.f };
         sead::Vector2f overlayDirecton = { 1.f, 1.f };
@@ -102,7 +103,10 @@ RedeemInfo::windState& getWindState();
 RedeemInfo::hotFloorState& getHotFloorState();
 RedeemInfo::stickInverState& getStickInverState();
 RedeemInfo::waterAreaState& getWaterAreaState();
+
 RedeemInfo::dancePartyState& getDancePartyState();
+void dancePartyInit(const char* name, PlayerActorHakoniwa* player);
+
 RedeemInfo::shineWarpState& getShineWarpState();
 
 // Restriction functions

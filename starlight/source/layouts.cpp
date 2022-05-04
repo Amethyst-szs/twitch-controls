@@ -14,8 +14,7 @@ void smo::layoutInit(al::LayoutInitInfo const& initInfo)
     layouts.mConnectionWait = new al::WindowConfirmWait("ServerWaitConnect", "WindowConfirmWait", initInfo);
     layouts.mConnectionWait->setTxtMessage(u"Connecting to Twitch Controls server!");
 
-    // layouts.mGague = new al::GaugeAir("TestGauge", "GaugeAir", initInfo);
-    // layouts.mGague->exeAppear();
+    layouts.mGauge = new Gauge("GaugeAir", initInfo);
 
     // mConnectionWait->tryEndForce();
 }

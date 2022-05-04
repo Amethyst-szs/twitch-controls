@@ -2,6 +2,7 @@
 #include "al/util.hpp"
 #include "fl/server.h"
 #include "game/GameData/GameDataFunction.h"
+#include "game/Player/PlayerActorHakoniwa.h"
 #include "main.hpp"
 #include "sead/container/seadListImpl.h"
 #include "sead/math/seadVector.h"
@@ -66,6 +67,29 @@ amy::RedeemInfo::dancePartyState& amy::getDancePartyState()
 {
     static RedeemInfo::dancePartyState i;
     return i;
+}
+
+void amy::dancePartyInit(const char* name, PlayerActorHakoniwa* player)
+{
+    if (rs::isPlayer2D(player)) {
+        al::setTransY(player, al::getTrans(player)->y + 2000.f);
+        return;
+    }
+
+    amy::RedeemInfo::dancePartyState& party = amy::getDancePartyState();
+
+    // If timer ended up at an unresonably low value, bump to zero
+    if (party.timer < -1)
+        party.timer = 0;
+
+    party.timer += party.addLength * 60;
+
+    if (party.enableFrame == false)
+        party.enableFrame = true;
+
+    party.textDisplay = name;
+
+    return;
 }
 
 amy::RedeemInfo::shineWarpState& amy::getShineWarpState()
@@ -204,6 +228,8 @@ const char* amy::getRandomHomeStage(const char* curStage)
         "Special1WorldHomeStage",
         "Special2WorldHomeStage"
     };
+
+    // FIX THIS CODE!
 
     // int index = (sead::GlobalRandom::instance()->getU32() % (sizeof(stageNames) / sizeof(stageNames[0]))) - 1;
     // while (al::isEqualString(curStage, stageNames[index]))

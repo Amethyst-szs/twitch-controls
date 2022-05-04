@@ -215,22 +215,7 @@ void InPacketEvent::on(Server& server)
             break;
         }
         case 11: {
-            if (rs::isPlayer2D(player)) {
-                al::setTransY(player, al::getTrans(player)->y + 2000.f);
-                break;
-            }
-
-            amy::RedeemInfo::dancePartyState& party = amy::getDancePartyState();
-
-            // If timer ended up at an unresonably low value, bump to zero
-            if (party.timer < -1)
-                party.timer = 0;
-
-            party.timer += party.addLength * 60;
-
-            if (party.enableFrame == false)
-                party.enableFrame = true;
-
+            amy::dancePartyInit("Dance Party!", player);
             break;
         }
         case 12: {
@@ -265,6 +250,15 @@ void InPacketEvent::on(Server& server)
             ri.fleeDisabled = !ri.fleeDisabled;
             ri.fleeFrames = -1;
             player->endDemoPuppetable();
+            break;
+        case 19:
+            amy::dancePartyInit("Dance Party!", player);
+            break;
+        case 20:
+            amy::dancePartyInit("Festival Party!", player);
+            break;
+        case 21:
+            amy::dancePartyInit("Nipple Party!", player);
             break;
         default: {
             amy::log("Invalid EventID sent? EventID: %i", eventID);

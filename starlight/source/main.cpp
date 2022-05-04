@@ -189,7 +189,7 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
         gTextWriter->beginDraw();
         gTextWriter->setCursorFromTopLeft(dp.overlayPos);
         gTextWriter->setScaleFromFontHeight(80.f);
-        gTextWriter->printf("DANCE PARTY!");
+        gTextWriter->printf(dp.textDisplay);
 
         // End
         gTextWriter->endDraw();
@@ -351,18 +351,6 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
 }
 
 HOOK_ATTR
-void stageInitHook(StageScene* initStageScene, al::SceneInitInfo* sceneInitInfo)
-{
-    __asm("MOV X19, X0");
-    __asm("LDR X24, [X1, #0x18]");
-
-    amy::getRedeemInfo().isTransition = true;
-    isInGame = false;
-
-    __asm("MOV X1, X24");
-}
-
-HOOK_ATTR
 bool sceneKillHook(GameDataHolderAccessor value)
 {
     amy::RedeemInfo::state& ri = amy::getRedeemInfo();
@@ -391,11 +379,24 @@ bool threadInit(HakoniwaSequence* mainSeq)
     al::LayoutInitInfo lytInfo = al::LayoutInitInfo();
     smo::Layouts& layouts = smo::getLayouts();
 
+    layouts.mainSeq = mainSeq;
     al::initLayoutInitInfo(&lytInfo, mainSeq->mLytKit, 0, mainSeq->mAudioDirector, initInfo->mSystemInfo->mLayoutSys, initInfo->mSystemInfo->mMessageSys, initInfo->mSystemInfo->mGamePadSys);
 
     smo::layoutInit(lytInfo);
 
     return GameDataFunction::isPlayDemoOpening(*mainSeq->mGameDataHolder);
+}
+
+HOOK_ATTR
+void stageInitHook(StageScene* initStageScene, al::SceneInitInfo* sceneInitInfo)
+{
+    __asm("MOV X19, X0");
+    __asm("LDR X24, [X1, #0x18]");
+
+    amy::getRedeemInfo().isTransition = true;
+    isInGame = false;
+
+    __asm("MOV X1, X24");
 }
 
 HOOK_ATTR
@@ -502,6 +503,10 @@ void stageSceneHook(StageScene* stageScene)
             debugPage = 0;
         if (debugPage < 0)
             debugPage = debugMax;
+    }
+
+    if (al::isPadTriggerUp(-1)) {
+        smo::getLayouts().mGauge->appear();
     }
 
     __asm("MOV X0, %[input]"

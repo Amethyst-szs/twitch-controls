@@ -2,8 +2,8 @@
 	"Version": "10",
 	"PName": "twitch-controls",
 	"DumpStats": {
-		"Time": "4-15-2022 12:37:22",
-		"Amount": 878,
+		"Time": "5-4-2022 15:46:23",
+		"Amount": 889,
 		"isUndumped": false,
 		"Type": "Quick"
 	},
@@ -17,6 +17,7 @@
 				"KidsMode.szs": 1619387757107.188,
 				"TitleLogoParts.szs": 1648276715330.8557,
 				"TitleLogoSmallParts.szs": 1648883245455.9746,
+				"TwTimer.szs": 1651171336963.0166,
 				"WindowConfirmWait.szs": 1648489305038.0693
 			},
 			"ObjectData": {

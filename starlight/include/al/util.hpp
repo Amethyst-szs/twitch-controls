@@ -25,6 +25,7 @@ class LogicalFrameBuffer;
 #include "al/camera/Projection.h"
 #include "al/layout/IUseLayout.h"
 #include "al/layout/LayoutActor.h"
+#include "al/layout/LayoutInitInfo.h"
 #include "al/layout/LayoutKit.h"
 #include "al/scene/Scene.h"
 #include "al/sensor/SensorMsg.h"
@@ -131,6 +132,7 @@ char const* getActionName(al::LiveActor const*);
 float getActionFrame(al::LiveActor const*);
 
 int getActionFrameMax(al::LiveActor const*);
+int getActionFrameMax(al::IUseLayoutAction const*, char const*, char const*);
 
 bool isActionEnd(al::LiveActor const*);
 
@@ -163,6 +165,9 @@ void setEffectParticleScale(al::IUseEffectKeeper* actor, char const* effectName,
 // layout stuff
 
 void setPaneTexture(al::IUseLayout*, char const*, nn::ui2d::TextureInfo const*);
+
+// layout init stuff
+void initLayoutActor(al::LayoutActor*, al::LayoutInitInfo const&, char const*, char const*);
 
 // void setPaneString(al::IUseLayout *layout, char const *paneName, char16_t const *, ushort);
 
@@ -341,6 +346,7 @@ void offCollide(al::LiveActor*);
 void onCollide(al::LiveActor*);
 
 void startAction(al::LiveActor*, char const*);
+void startAction(al::IUseLayoutAction*, char const*, char const*);
 
 bool tryStartSe(al::IUseAudioKeeper const*, sead::SafeStringBase<char> const&);
 
@@ -394,5 +400,7 @@ void setDitherAnimBoundingBox(al::LiveActor*, sead::Vector3f const&);
 void setDitherAnimMaxAlpha(al::LiveActor*, float);
 void setDitherAnimClippingJudgeLocalOffset(al::LiveActor*, sead::Vector3f const&);
 void setDitherAnimClippingJudgeParam(al::LiveActor*, const char*);
+
+bool isNearZeroOrLess(float, float);
 
 }

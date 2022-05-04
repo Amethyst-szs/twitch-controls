@@ -189,7 +189,48 @@ module.exports = {
         break;
       default:
         //Generic reward
-        log.log(2, `Generic reward ${redeemName} redeemed`);
+        log.log(1, `Generic reward ${redeemName} redeemed`);
+        break;
+    }
+  },
+
+  outVoiceHandler: function (redeemName) {
+    //Get the lang init so you can fetch the original name of the redeem
+    redeemTitle = redeemName;
+
+    //If this is a translation, convert back to English
+    if(langInit.hasOwnProperty(redeemName))
+      redeemTitle = langInit[redeemName].original;
+
+    if(!client)
+      return;
+
+    //Switch case through all valid rewards
+    switch (redeemTitle) {
+      case "Change Gravity":
+        Events(2, false);
+        break;
+      case "Cappy":
+        Events(4, false);
+        break;
+      case "kill":
+        Events(15, false);
+        break;
+      case "dance":
+        Events(19, false);
+        break;
+      case "festival":
+        Events(20, false);
+        break;
+      case "nipple":
+        Events(21, false);
+        break;
+      case "Stick":
+        Events(9, false);
+        break;
+      default:
+        //Generic reward
+        log.log(1, `Voice command ${redeemName} was run but not sure what this is?`);
         break;
     }
   },

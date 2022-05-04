@@ -37,6 +37,10 @@ const restrictions = require("./server_bin/restrictions");
 let lastPingTime = new Date().getTime();
 let curTime = new Date().getTime();
 
+let voiceMode = false;
+let voiceLastTitle = ``;
+let voiceLastID = -1;
+
 //Respond to packets from the switch
 server.on("message", (msg, rinfo) => {
   // console.log(msg);
@@ -241,6 +245,25 @@ async function backupCheck(api, streamerID, listID) {
   }
 }
 
+async function voiceUpdate(){
+  //Read in most recent event from file
+  let rawRead = fs.readFileSync(`${CurDir}/voice_bin/events.log`).toString();
+  let eventTitle = rawRead.slice(0, rawRead.indexOf("\n")-1);
+  let eventID = parseInt(rawRead.slice(rawRead.indexOf("\n"), rawRead.length), 10);
+  log.title(`Recent Voice: ${eventTitle}`);
+
+  //Check if the event ID changed, if so, run an event
+  if(voiceLastID != eventID){
+    //Update last values
+    voiceLastTitle = eventTitle;
+    voiceLastID = eventID;
+
+    //Send packet
+    outPackets.outVoiceHandler(eventTitle, false);
+  }
+  return;
+}
+
 async function testFunc(){
   if(outPackets.getClient()){
     outPackets.outHandler("Hot Tub Stream", false);
@@ -268,8 +291,11 @@ async function TwitchHandler() {
   restrictions.setupRedeemList(CurDir, langType);
 
   //Quick menu check to see what the user is looking to do
-  runType = await input.select(["Run Server", "Initalize Twitch Account", "Remove Redeems"]);
+  runType = await input.select(["Run Server", "Run Voice Mode", "Initalize Twitch Account", "Remove Redeems"]);
   switch(runType){
+    case "Run Voice Mode":
+      voiceMode = true;
+      break;
     case "Initalize Twitch Account": 
       log.title(`Initalizing redeems`);
       await twitchInit.Main(api, streamerID, CurDir, langType, true);
@@ -287,7 +313,9 @@ async function TwitchHandler() {
   log.log(2, `Subscribed to redeem alerts with channel:read:redemptions scope!\nWelcome ${streamerMe.displayName}` );
 
   //Starts a timer tracking automatic refreshing of costs, cooldowns, and enabled status
-  twitchInit.startRefreshTimer(api, streamerID, streamerMe, CurDir);
+  if(!voiceMode)
+    twitchInit.startRefreshTimer(api, streamerID, streamerMe, CurDir);
+  
   twitchInit.setupS(langType);
 
   //Once Twitch is authenticated and ready, finish UDP server
@@ -299,16 +327,17 @@ async function TwitchHandler() {
   discordHandler.slashCommandInit(CurDir);
   discordHandler.botManage();
 
-  // setInterval(testFunc, 50);
+  //If running in Voice Mode, initalize everything required for that here
+  if(voiceMode){
+    setInterval(voiceUpdate, 250);
+    return;
+  }
 
   //Create listener that is triggered every channel point redeem
   const listener = await PubSubClient.onRedemption(userId, (message) => {
     //Start by verifying the redeem here is actually an SMO point redeem just to avoid altering redeems it can't
     if(!FullRedeemList.includes(message.rewardTitle)){
-      log.log(
-        2,
-        `Generic ${message.rewardTitle} from ${message.userDisplayName}`
-      );
+      log.log(2,`Generic ${message.rewardTitle} from ${message.userDisplayName}`);
       return;
     }
 
