@@ -1,13 +1,13 @@
 {
     "FullRedeemList": [
-        "Redimensionner",
-        "Position Aléatoire",
-        "Redimensionner DX+",
-        "Position Aléatoire DX+",
+        "Change la Taille",
+        "Téléportation Aléatoire",
+        "Change la Taille +",
+        "Téléportation Aléatoire +",
         "Tu Sors!",
         "Changement de Gravité",
         "Vers l'infini et l'au-delà!",
-        "Pas de Cappy? Pas si mal!",
+        "Pas de Cappy? Pas grave!",
         "Billet d'Avion aller simple",
         "La Mort à l'Appel",
         "Vigilance Rouge selon Météo France",
@@ -17,6 +17,6 @@
         "Fiesta",
         "Aimant à Lune",
         "Objectif Lune",
-        "Jeu EA"
+        "Invincibilité"
     ]
 }

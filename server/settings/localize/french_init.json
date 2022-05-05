@@ -1,22 +1,22 @@
 {
-    "Redimensionner": {
+    "Change la Taille": {
         "prompt": "Change aléatoirement la taille de Mario, ou de la capture actuelle !",
-        "title": "Redimensionner",
+        "title": "Change la Taille",
         "original": "Resize"
     },
-    "Position Aléatoire": {
+    "Téléportation Aléatoire": {
         "prompt": "Me téléporte à une position aléatoire dans le niveau actuel.",
-        "title": "Position Aléatoire",
+        "title": "Téléportation Aléatoire",
         "original": "Position Randomizer"
     },
-    "Redimensionner DX+": {
+    "Change la Taille +": {
         "prompt": "Change aléatoirement la taille de Mario, ou de la capture actuelle, MAIS ENCORE PLUS!",
-        "title": "Redimensionner DX+",
+        "title": "Change la Taille +",
         "original": "Resize DX"
     },
-    "Position Aléatoire DX+": {
+    "Téléportation Aléatoire +": {
         "prompt": "Me téléporte à une position aléatoire et très éloignée dans le niveau actuel.",
-        "title": "Position Aléatoire DX+",
+        "title": "Téléportation Aléatoire +",
         "original": "Position Randomizer DX"
     },
     "Tu Sors!": {
@@ -34,9 +34,9 @@
         "title": "Vers l'infini et l'au-delà!",
         "original": "Up we go"
     },
-    "Pas de Cappy? Pas si mal!": {
+    "Pas de Cappy? Pas grave!": {
         "prompt": "Me prive de Cappy... Il peut uniquement être restauré en mourrant, se téléportant à un Checkpoint, où en entrant une salle bonus.",
-        "title": "Pas de Cappy? Pas si mal!",
+        "title": "Pas de Cappy? Pas grave!",
         "original": "Cappy? Nah"
     },
     "Billet d'Avion aller simple": {
@@ -84,9 +84,9 @@
         "title": "Objectif Lune",
         "original": "Fly me to the Moon"
     },
-    "Jeu EA": {
+    "Invincibilité": {
         "prompt": "Active un powerup d'invincibilité!",
-        "title": "Jeu EA",
+        "title": "Invincibilité",
         "original": "Pay to Win"
     }
 }
