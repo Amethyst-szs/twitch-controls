@@ -92,7 +92,6 @@ struct RedeemInfo {
     };
     struct shineWarpState {
         bool isWarp = false;
-        int targetShineID = -1;
     };
 };
 

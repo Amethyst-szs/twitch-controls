@@ -294,7 +294,7 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
             gTextWriter->printf("Stick Inversion Timer: %f\n", amy::getStickInverState().timer);
             gTextWriter->printf("Water Area Timer: %f\n", amy::getWaterAreaState().timer);
             gTextWriter->printf("Dance Party Timer: %f\n", amy::getDancePartyState().timer);
-            gTextWriter->printf("Shine Warp Target: %i\n", amy::getShineWarpState().targetShineID);
+            gTextWriter->printf("Shine Warp: %i\n", amy::getShineWarpState().isWarp);
             break;
         case 2:
             gTextWriter->printf("Quick Functions:\n");
@@ -570,45 +570,10 @@ HOOK_ATTR
 bool shineControl(Shine* actor, sead::Vector3f const& location)
 {
     amy::RedeemInfo::shineWarpState& info = amy::getShineWarpState();
-
-    // Get 2D areas and check it isn't a 2D moon
-    // al::AreaObjGroup* area2Ds = al::tryFindAreaObjGroup(player, "2DMoveArea");
-    // if (area2Ds) {
-    //     al::AreaObj* targetArea = area2Ds->getInVolumeAreaObj(location);
-    //     if (targetArea)
-    //         return al::isInWaterPos(actor, location);
-    // }
-
-    // Disable teleport if the target shine is collected
-    if (info.targetShineID == actor->shineId && actor->isGot()) {
-        amy::getShineWarpState().isWarp = false;
-        info.targetShineID = -1;
-    }
-
     // Set the target if there is no set target
-    if (
-        info.isWarp
-        && !actor->isGot()
-        && !rs::isMainShine(actor)
-        && info.targetShineID == -1
-        && !rs::isPlayer2D(rs::getPlayerActor(amy::getGlobalStageScene())))
-        info.targetShineID = actor->shineId;
-
-    // Check if an active shine is loaded
-    if (info.targetShineID == actor->shineId) {
-        // Get player
-        StageScene* stageScene = amy::getGlobalStageScene();
-        al::PlayerHolder* pHolder = al::getScenePlayerHolder(stageScene);
-        PlayerActorHakoniwa* player = al::tryGetPlayerActor(pHolder, 0);
-
-        // Calculate position
-        sead::Vector3f target = location;
-        target.y += 0.f;
-
-        // Update
-        if (player) {
-            al::setTrans(actor, *al::getTrans(player));
-        }
+    if (info.isWarp && !actor->isGot() && !rs::isMainShine(actor)) {
+        al::setTrans(actor, sead::Vector3f(0.f, -10000.f, 0.f));
+        info.isWarp = false;
     }
 
     // Return the original result

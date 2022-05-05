@@ -237,6 +237,9 @@ module.exports = {
       case "Coin":
         Events(6, false);
         break;
+      case "Moon":
+        Events(12, false);
+        break;
       default:
         //Generic reward
         log.log(1, `Voice command ${redeemName} was run but not sure what this is?`);
