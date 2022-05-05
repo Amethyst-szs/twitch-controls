@@ -9,6 +9,16 @@
         "title": "Position Aléatoire",
         "original": "Position Randomizer"
     },
+    "Redimensionner DX+": {
+        "prompt": "Change aléatoirement la taille de Mario, ou de la capture actuelle, MAIS ENCORE PLUS!",
+        "title": "Redimensionner DX+",
+        "original": "Resize DX"
+    },
+    "Position Aléatoire DX+": {
+        "prompt": "Me téléporte à une position aléatoire et très éloignée dans le niveau actuel.",
+        "title": "Position Aléatoire DX+",
+        "original": "Position Randomizer DX"
+    },
     "Tu Sors!": {
         "prompt": "Me vire du stage où je suis actuellement et me renvoie au stage précédent.",
         "title": "Tu Sors!",
@@ -73,5 +83,10 @@
         "prompt": "M'envoie directement sur la lune !",
         "title": "Objectif Lune",
         "original": "Fly me to the Moon"
+    },
+    "Jeu EA": {
+        "prompt": "Active un powerup d'invincibilité!",
+        "title": "Jeu EA",
+        "original": "Pay to Win"
     }
 }
