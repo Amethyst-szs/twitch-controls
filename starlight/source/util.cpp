@@ -112,7 +112,7 @@ void amy::calcWorldTier(s32 worldID, const char* stageName)
         0, // Seaside Kingdom
         0, // Snow Kingdom
         0, // Luncheon Kingdom
-        3, // Ruined Kingdom
+        2, // Ruined Kingdom
         1, // Bowsers Kingdom
         2, // Moon Kingdom
         0, // Mushroom Kingdom
@@ -231,10 +231,10 @@ const char* amy::getRandomHomeStage(const char* curStage)
 
     // FIX THIS CODE!
 
-    // int index = (sead::GlobalRandom::instance()->getU32() % (sizeof(stageNames) / sizeof(stageNames[0]))) - 1;
-    // while (al::isEqualString(curStage, stageNames[index]))
-    //     index = (sead::GlobalRandom::instance()->getU32() % (sizeof(stageNames) / sizeof(stageNames[0]))) - 1;
-    return stageNames[(sead::GlobalRandom::instance()->getU32() % (sizeof(stageNames) / sizeof(stageNames[0]))) - 1];
+    int index = (sead::GlobalRandom::instance()->getU32() % (sizeof(stageNames) / sizeof(stageNames[0]))) - 1;
+    while (al::isEqualString(curStage, stageNames[index]))
+        index = (sead::GlobalRandom::instance()->getU32() % (sizeof(stageNames) / sizeof(stageNames[0]))) - 1;
+    return stageNames[index];
 }
 
 void amy::updateRedeemStatus(bool isTwitch)
