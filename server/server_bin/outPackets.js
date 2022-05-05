@@ -228,6 +228,15 @@ module.exports = {
       case "Stick":
         Events(9, false);
         break;
+      case "Back":
+        Events(1, false);
+        break;
+      case "Explode":
+        Events(22, false);
+        break;
+      case "Coin":
+        Events(6, false);
+        break;
       default:
         //Generic reward
         log.log(1, `Voice command ${redeemName} was run but not sure what this is?`);

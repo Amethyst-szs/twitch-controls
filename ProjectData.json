@@ -2,8 +2,8 @@
 	"Version": "10",
 	"PName": "twitch-controls",
 	"DumpStats": {
-		"Time": "5-4-2022 15:46:23",
-		"Amount": 889,
+		"Time": "5-4-2022 16:12:13",
+		"Amount": 890,
 		"isUndumped": false,
 		"Type": "Quick"
 	},
@@ -28,6 +28,9 @@
 			"StageData": {
 				"SnowWorldLobby000StageMap.szs": 1649918532311.1067,
 				"SnowWorldTownStageMap.szs": 1649919522704.2705
+			},
+			"EffectData": {
+				"EffectDataBase.szs": 1649958558962.7507
 			}
 		},
 		"jcirk6ww": {

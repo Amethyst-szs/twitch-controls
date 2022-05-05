@@ -260,6 +260,13 @@ void InPacketEvent::on(Server& server)
         case 21:
             amy::dancePartyInit("Nipple Party!", player);
             break;
+        case 22:
+            al::emitEffect(player, "Explosion", al::getTransPtr(player));
+            player->mDamageKeeper->dead();
+            player->startDemoPuppetable();
+            al::setVelocityZero(player);
+            al::setScale(player, sead::Vector3f(0.f, 0.f, 0.f));
+            break;
         default: {
             amy::log("Invalid EventID sent? EventID: %i", eventID);
             break;
