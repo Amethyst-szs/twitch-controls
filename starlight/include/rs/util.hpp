@@ -71,4 +71,6 @@ bool isPlayer2D(const al::LiveActor*);
 bool isActiveDemo(al::LiveActor const*);
 bool isDemoEnvironmentChange(al::Scene const*);
 bool checkGetEnoughShine(al::LiveActor const*, int);
+bool isCollisionCodeDamageFireGround(IUsePlayerCollision const*);
+bool isTouchDamageFireCode(al::LiveActor const*, IUsePlayerCollision const*, IPlayerModelChanger const*);
 }

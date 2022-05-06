@@ -93,6 +93,9 @@ struct RedeemInfo {
     struct shineWarpState {
         bool isWarp = false;
     };
+    struct fireDamageState {
+        bool isDamage = false;
+    };
 };
 
 RedeemInfo::state& getRedeemInfo();
@@ -102,6 +105,7 @@ RedeemInfo::windState& getWindState();
 RedeemInfo::hotFloorState& getHotFloorState();
 RedeemInfo::stickInverState& getStickInverState();
 RedeemInfo::waterAreaState& getWaterAreaState();
+RedeemInfo::fireDamageState& getfireDamageState();
 
 RedeemInfo::dancePartyState& getDancePartyState();
 void dancePartyInit(const char* name, PlayerActorHakoniwa* player);

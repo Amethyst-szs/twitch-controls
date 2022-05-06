@@ -579,3 +579,21 @@ bool shineControl(Shine* actor, sead::Vector3f const& location)
     // Return the original result
     return al::isInWaterPos(actor, location);
 }
+
+HOOK_ATTR
+bool isOnDamageFire(PlayerTrigger* param_1)
+{
+    return amy::getfireDamageState().isDamage;
+}
+
+HOOK_ATTR
+bool isCollisionCodeDamageFireGround(IUsePlayerCollision const* param_1)
+{
+    return amy::getfireDamageState().isDamage ? true : rs::isCollisionCodeDamageFireGround(param_1);
+}
+
+HOOK_ATTR
+bool isTouchDamageFireCode(al::LiveActor const* param_1, IUsePlayerCollision const* param_2, IPlayerModelChanger const* param_3)
+{
+    return amy::getfireDamageState().isDamage ? true : rs::isTouchDamageFireCode(param_1, param_2, param_3);
+}

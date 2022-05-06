@@ -248,3 +248,11 @@ B59E28: // sead::system::print
 //On recovery bubble
 0046137c:
     BL recoverBubbleHook
+
+//Fire damage hook
+0041ff78:
+    BL isOnDamageFire
+0046881c:
+    BL isCollisionCodeDamageFireGround
+0041fae4:
+    BL isTouchDamageFireCode

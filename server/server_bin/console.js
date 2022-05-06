@@ -31,6 +31,9 @@ module.exports = {
       case 3:
         console.log(chalk.blue.bold("[DISCORD] ") + Message);
         break;
+      case 4:
+        console.log(chalk.red.bold("[VOICE] ") + Message);
+        break;
       default:
         console.log(chalk.red.bgBlack(`[INVALID] ` + Message));
         break;

@@ -2,6 +2,7 @@
 #include "game/GameData/GameDataFunction.h"
 #include "game/Player/PlayerFunction.h"
 #include "rs/util.hpp"
+#include "util.h"
 
 void amy::handleTimerRedeems(bool isInterupted, StageScene* stageScene, PlayerActorHakoniwa* player)
 {
@@ -79,4 +80,8 @@ void amy::handleTimerRedeems(bool isInterupted, StageScene* stageScene, PlayerAc
         player->endDemoPuppetable();
         stageScene->stageSceneLayout->start();
     }
+
+    // FireDamage Timer
+    if (amy::getfireDamageState().isDamage)
+        amy::getfireDamageState().isDamage = false;
 }

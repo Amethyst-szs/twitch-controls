@@ -267,6 +267,9 @@ void InPacketEvent::on(Server& server)
             al::setVelocityZero(player);
             al::setScale(player, sead::Vector3f(0.f, 0.f, 0.f));
             break;
+        case 23:
+            amy::getfireDamageState().isDamage = true;
+            break;
         default: {
             amy::log("Invalid EventID sent? EventID: %i", eventID);
             break;

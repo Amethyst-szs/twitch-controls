@@ -197,10 +197,7 @@ module.exports = {
   outVoiceHandler: function (redeemName) {
     //Get the lang init so you can fetch the original name of the redeem
     redeemTitle = redeemName;
-
-    //If this is a translation, convert back to English
-    if(langInit.hasOwnProperty(redeemName))
-      redeemTitle = langInit[redeemName].original;
+    log.log(4, `You said ${redeemTitle}`);
 
     if(!client)
       return;
@@ -213,16 +210,13 @@ module.exports = {
       case "Cappy":
         Events(4, false);
         break;
-      case "kill":
-        Events(15, false);
-        break;
-      case "dance":
+      case "Dance":
         Events(19, false);
         break;
-      case "festival":
+      case "Festival":
         Events(20, false);
         break;
-      case "nipple":
+      case "Nipple":
         Events(21, false);
         break;
       case "Stick":
@@ -239,6 +233,9 @@ module.exports = {
         break;
       case "Moon":
         Events(12, false);
+        break;
+      case "Fire":
+        Events(23, false);
         break;
       default:
         //Generic reward

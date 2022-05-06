@@ -98,6 +98,12 @@ amy::RedeemInfo::shineWarpState& amy::getShineWarpState()
     return i;
 }
 
+amy::RedeemInfo::fireDamageState& amy::getfireDamageState()
+{
+    static RedeemInfo::fireDamageState i;
+    return i;
+}
+
 void amy::calcWorldTier(s32 worldID, const char* stageName)
 {
     constexpr static const u8 worldTier[] = {
