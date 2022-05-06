@@ -61,3 +61,5 @@ starlight/starlight_patch_100/
 
 # Redeem History Log
 server/settings/redeemHistory.txt
+server/voice_bin/events.log
+server\voice_bin\events.log
