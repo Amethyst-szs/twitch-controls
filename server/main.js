@@ -38,8 +38,10 @@ let lastPingTime = new Date().getTime();
 let curTime = new Date().getTime();
 
 let voiceMode = false;
-let voiceLastTitle = ``;
 let voiceLastID = -1;
+
+const leapSource = require("./server_bin/leapMode");
+let leapMode = false;
 
 //Respond to packets from the switch
 server.on("message", (msg, rinfo) => {
@@ -53,6 +55,10 @@ server.on("message", (msg, rinfo) => {
 
       if(!outPackets.getBlockList().includes(nickname)){
         outPackets.setClient(rinfo);
+
+        if(leapMode)
+          leapSource.setClient(rinfo);
+
         log.setNickname(nickname);
       
         initRejectionList();
@@ -83,7 +89,7 @@ server.on("message", (msg, rinfo) => {
       break;
     case -7: //DemoToggle
       invalidStage = Boolean(msg[1]);
-      log.log(1, `Is invalid stage: ${Boolean(msg[1])}`);
+      log.log(0, `Is invalid stage: ${Boolean(msg[1])}`);
       break;
     case -8: //Reject
       updateRedeem(api, streamerID,
@@ -291,10 +297,13 @@ async function TwitchHandler() {
   restrictions.setupRedeemList(CurDir, langType);
 
   //Quick menu check to see what the user is looking to do
-  runType = await input.select(["Run Server", "Run Voice Mode", "Initalize Twitch Account", "Remove Redeems"]);
+  runType = await input.select(["Run Server", "Run Voice Mode", "Run Leap Mode", "Initalize Twitch Account", "Remove Redeems"]);
   switch(runType){
     case "Run Voice Mode":
       voiceMode = true;
+      break;
+    case "Run Leap Mode":
+      leapMode = true;
       break;
     case "Initalize Twitch Account": 
       log.title(`Initalizing redeems`);
@@ -313,7 +322,7 @@ async function TwitchHandler() {
   log.log(2, `Subscribed to redeem alerts with channel:read:redemptions scope!\nWelcome ${streamerMe.displayName}` );
 
   //Starts a timer tracking automatic refreshing of costs, cooldowns, and enabled status
-  if(!voiceMode)
+  if(!voiceMode && !leapMode)
     twitchInit.startRefreshTimer(api, streamerID, streamerMe, CurDir);
   
   twitchInit.setupS(langType);
@@ -330,6 +339,12 @@ async function TwitchHandler() {
   //If running in Voice Mode, initalize everything required for that here
   if(voiceMode){
     setInterval(voiceUpdate, 250);
+    return;
+  }
+
+  //If using Leap Mode, launch the leap init
+  if(leapMode){
+    leapSource.init(server);
     return;
   }
 

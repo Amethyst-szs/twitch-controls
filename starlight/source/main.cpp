@@ -505,9 +505,9 @@ void stageSceneHook(StageScene* stageScene)
             debugPage = debugMax;
     }
 
-    if (al::isPadTriggerUp(-1)) {
-        smo::getLayouts().mGauge->appear();
-    }
+    // if (al::isPadTriggerUp(-1)) {
+    //     al::emitEffect(player, "FlySmoke", al::getTransPtr(player));
+    // }
 
     __asm("MOV X0, %[input]"
           : [input] "=r"(stageScene));
@@ -572,7 +572,7 @@ bool shineControl(Shine* actor, sead::Vector3f const& location)
     amy::RedeemInfo::shineWarpState& info = amy::getShineWarpState();
     // Set the target if there is no set target
     if (info.isWarp && !actor->isGot() && !rs::isMainShine(actor)) {
-        al::setTrans(actor, sead::Vector3f(0.f, -10000.f, 0.f));
+        actor->makeActorDead();
         info.isWarp = false;
     }
 
