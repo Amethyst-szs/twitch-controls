@@ -40,7 +40,7 @@ let curTime = new Date().getTime();
 let voiceMode = false;
 let voiceLastID = -1;
 
-const leapSource = require("./server_bin/leapMode");
+// const leapSource = require("./server_bin/leapMode");
 let leapMode = false;
 
 //Respond to packets from the switch
@@ -56,8 +56,8 @@ server.on("message", (msg, rinfo) => {
       if(!outPackets.getBlockList().includes(nickname)){
         outPackets.setClient(rinfo);
 
-        if(leapMode)
-          leapSource.setClient(rinfo);
+        // if(leapMode)
+          // leapSource.setClient(rinfo);
 
         log.setNickname(nickname);
       
@@ -343,10 +343,10 @@ async function TwitchHandler() {
   }
 
   //If using Leap Mode, launch the leap init
-  if(leapMode){
-    leapSource.init(server);
-    return;
-  }
+  // if(leapMode){
+  //   leapSource.init(server);
+  //   return;
+  // }
 
   //Create listener that is triggered every channel point redeem
   const listener = await PubSubClient.onRedemption(userId, (message) => {
