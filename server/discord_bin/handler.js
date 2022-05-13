@@ -113,6 +113,10 @@ module.exports = {
 					outPackets.outHandler(interaction.options.getString("redeem", true), false);
 					interaction.reply(`Sending fake redeem to client: ${interaction.options.getString("redeem", true)}`);
 					break;
+				case "fake-id":
+					outPackets.outHandlerId(interaction.options.getNumber("id", true));
+					interaction.reply(`Sending fake id to client: ${interaction.options.getNumber("id", true)}`);
+					break;
 				case "boot-off":
 					outPackets.pushNewBlock(log.getNickname());
 					outPackets.blockPacket(outPackets.getClient());
@@ -246,6 +250,13 @@ module.exports = {
 					.addChoices(formattedRedeems.slice(4, formattedRedeems.length))
 				),
 			new SlashCommandBuilder()
+				.setName('fake-id')
+				.setDescription('Sends a fake redeem id')
+				.addNumberOption(option =>
+					option.setName('id')
+					.setDescription('What is the id')
+					.setRequired(true),
+			new SlashCommandBuilder()
 				.setName('boot-off')
 				.setDescription('Kicks the current client off, blocking them for this session'),
 			new SlashCommandBuilder()
@@ -282,7 +293,8 @@ module.exports = {
 						.setDescription('What is the multi cooldown factor of this redeem?')
 						.setRequired(true)	
 				),
-		]
+			)
+		]	
 			.map(command => command.toJSON());
 		
 		const rest = new REST({ version: '9' }).setToken(distoken);

@@ -113,6 +113,11 @@ module.exports = {
     return;
   },
   
+  outHandlerId: function(id){
+    Events(id, false);
+    return;
+  },
+
   outHandler: function (redeemName, isTwitch) {
     //Get the lang init so you can fetch the original name of the redeem
     redeemTitle = redeemName;
