@@ -293,7 +293,6 @@ module.exports = {
 						.setDescription('What is the multi cooldown factor of this redeem?')
 						.setRequired(true)	
 				),
-			)
 		]	
 			.map(command => command.toJSON());
 		
