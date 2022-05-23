@@ -1,10 +1,31 @@
 //Modules
 const bufferTool = require("./bufferTool");
-// const Leap = require('leapjs');
+const Leap = require('leapjs');
 
 //Identification
 let serverRef;
 let client;
+
+async function mainleap(){
+    // ASSIGN LEAP MOTION CONTROLLER
+    var controller = new Leap.Controller();
+    controller.connect();
+    console.log(controller.connection);
+
+    console.log(Leap.version);
+
+    controller.on('streamingStarted', onServiceStreaming);
+    function onServiceStreaming()
+    {
+        console.log("Service started streaming event");
+    }
+
+    controller.on('streamingStopped', onServiceStopped);
+    function onServiceStopped()
+    {
+        console.log("Service stopped streaming event");
+    }
+};
 
 async function updateLeap(){
     //Calculate position and velocity
@@ -17,18 +38,8 @@ module.exports = {
     init: function(server){
         //Set the server
         serverRef = server;
-        // Leap.loop({
-        //     // frame callback is run before individual frame components
-        //     frame: function(frame){
-                
-        //     },
-
-        //     // hand callbacks are run once for each hand in the frame
-        //     hand: function(hand){
-        //         console.log( "Hand: " + hand.id + ' &nbsp;roll: ' + Math.round(hand.roll() * TO_DEG) + '°<br/>');
-        //     }
-        // });
         setInterval(updateLeap, 100);
+        mainleap();
     },
     setClient: function(newClient){
         client = newClient;

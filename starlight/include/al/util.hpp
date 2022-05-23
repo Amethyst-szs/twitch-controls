@@ -37,12 +37,16 @@ class LogicalFrameBuffer;
 
 #include "nn/ui2d/Texture.h"
 
+#include "game/GameData/GameDataHolderBase.h"
 #include "types.h"
+
 
 template <class T>
 al::LiveActor* createActorFunction(const char* name);
 
 namespace al {
+
+struct SceneMsgCtrl;
 
 // General Input functions
 
@@ -310,6 +314,9 @@ void initActorWithArchiveName(LiveActor*, const al::ActorInitInfo&, const sead::
 void initJointControllerKeeper(const LiveActor*, int);
 
 void initJointGlobalQuatController(const LiveActor*, const sead::Quatf*, const char*);
+
+void initCreateActorNoPlacementInfo(al::LiveActor*, al::ActorInitInfo const&);
+void initActorInitInfo(al::ActorInitInfo*, al::Scene const*, al::PlacementInfo const*, al::LayoutInitInfo const*, al::ActorFactory const*, al::SceneMsgCtrl*, GameDataHolderBase*);
 
 // misc
 

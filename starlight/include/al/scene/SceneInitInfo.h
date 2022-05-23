@@ -1,13 +1,11 @@
 #pragma once
 
-#include "game/GameData/GameDataHolder.h"
-
 namespace al {
-    struct SceneInitInfo {
-        struct GameSystemInfo * gameSysInfo;
-        GameDataHolderAccessor *gameDataHolder;
-        undefined field_0x10[8];
-        const char *initStageName;
-        u32 scenarioNo;
-    };
+struct SceneInitInfo {
+    struct GameSystemInfo* gameSysInfo;
+    void* gameDataHolder;
+    char field_0x10[8];
+    const char* initStageName;
+    unsigned int scenarioNo;
+};
 }

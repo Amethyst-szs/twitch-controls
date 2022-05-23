@@ -5,10 +5,13 @@
 
 #pragma once
 
+#include "al/hio/HioNode.h"
+#include "al/message/IUseMessageSystem.h"
 #include "al/scene/Scene.h"
 #include "game/GameData/GameDataFile.h"
+#include "game/GameData/GameDataHolderBase.h"
 
-class GameDataHolder : public al::ISceneObj {
+class GameDataHolder : public al::GameDataHolderBase, al::ISceneObj, al::HioNode, al::IUseMessageSystem {
 public:
     // GameDataHolder(al::MessageSystem const *);
     GameDataHolder();
@@ -16,6 +19,7 @@ public:
     virtual ~GameDataHolder();
 
     virtual char* getSceneObjName() const;
+    virtual al::MessageSystem* getMessageSystem() const override { return nullptr; };
     // virtual al::MessageSystem* getMessageSystem() const;
 
     void setPlayingFileId(s32 file);

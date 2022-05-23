@@ -12,7 +12,8 @@
     "chalk": "^4.1.2",
     "discord-api-types": "^0.29.0",
     "discord.js": "^13.6.0",
-    "input": "^1.0.1"
+    "input": "^1.0.1",
+    "leapjs": "^1.1.1"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

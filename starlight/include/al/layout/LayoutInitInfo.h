@@ -7,6 +7,7 @@
 #include "al/layout/LayoutKit.h"
 #include "al/layout/LayoutSceneInfo.h"
 #include "al/rumble/PadRumbleDirector.h"
+#include "al/scene/Scene.h"
 #include "al/scene/SceneObjHolder.h"
 #include "game/System/GameSystemInfo.h"
 
@@ -28,4 +29,5 @@ public:
 };
 
 void initLayoutInitInfo(al::LayoutInitInfo*, al::LayoutKit const*, al::SceneObjHolder*, al::AudioDirector const*, al::LayoutSystem const*, al::MessageSystem const*, al::GamePadSystem const*);
+void initLayoutInitInfo(al::LayoutInitInfo*, al::Scene const*, al::SceneInitInfo const&);
 } // namespace al

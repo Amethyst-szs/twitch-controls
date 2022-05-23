@@ -1,10 +1,12 @@
 #include "main.hpp"
 #include "al/LiveActor/LiveActor.h"
 #include "al/PlayerHolder/PlayerHolder.h"
+#include "al/actor/Placement.h"
 #include "al/area/AreaObjGroup.h"
 #include "al/area/ChangeStageInfo.h"
 #include "al/camera/CameraDirector.h"
 #include "al/camera/Projection.h"
+#include "al/factory/ActorFactory.h"
 #include "al/scene/Scene.h"
 #include "al/scene/SceneObjHolder.h"
 #include "al/util.hpp"
@@ -388,15 +390,28 @@ bool threadInit(HakoniwaSequence* mainSeq)
 }
 
 HOOK_ATTR
-void stageInitHook(StageScene* initStageScene, al::SceneInitInfo* sceneInitInfo)
+void stageInitHook(StageScene* initStageScene, al::SceneInitInfo const& sceneInitInfo)
 {
-    __asm("MOV X19, X0");
-    __asm("LDR X24, [X1, #0x18]");
-
     amy::getRedeemInfo().isTransition = true;
     isInGame = false;
 
-    __asm("MOV X1, X24");
+    initStageScene->initDrawSystemInfo(sceneInitInfo);
+}
+
+HOOK_ATTR
+void stageSceneInitLateHook(al::LayoutInitInfo* layoutInit, StageScene* stageScene, al::SceneInitInfo const& sceneInit)
+{
+    // al::LiveActor* coin = al::createActorFunction<Coin>("Test");
+
+    // al::ActorInitInfo initInfo;
+    // al::PlacementInfo placementInfo;
+    // ProjectActorFactory* actorFactory = new ProjectActorFactory();
+
+    // al::initActorInitInfo(&initInfo, stageScene, &placementInfo, nullptr, actorFactory, nullptr, stageScene->mHolder);
+    // al::initCreateActorNoPlacementInfo(coin, initInfo);
+
+    // Final
+    al::initLayoutInitInfo(layoutInit, stageScene, sceneInit);
 }
 
 HOOK_ATTR
