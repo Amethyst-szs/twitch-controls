@@ -390,12 +390,15 @@ bool threadInit(HakoniwaSequence* mainSeq)
 }
 
 HOOK_ATTR
-void stageInitHook(StageScene* initStageScene, al::SceneInitInfo const& sceneInitInfo)
+void stageInitHook(StageScene* initStageScene, al::SceneInitInfo* sceneInitInfo)
 {
+    __asm("MOV X19, X0");
+    __asm("LDR X24, [X1, #0x18]");
+
     amy::getRedeemInfo().isTransition = true;
     isInGame = false;
 
-    initStageScene->initDrawSystemInfo(sceneInitInfo);
+    __asm("MOV X1, X24");
 }
 
 HOOK_ATTR
