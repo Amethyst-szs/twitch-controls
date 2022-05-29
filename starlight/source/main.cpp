@@ -237,6 +237,8 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
 
         al::PlayerHolder* pHolder = al::getScenePlayerHolder(stageScene);
         PlayerActorHakoniwa* player = al::tryGetPlayerActor(pHolder, 0);
+        sead::Vector3f pFront;
+        al::calcFrontDir(&pFront, player);
         GameDataHolderAccessor GameData = *stageScene->mHolder;
         GameDataHolderWriter holder = *stageScene->mHolder;
 
@@ -252,6 +254,8 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
             gTextWriter->printf("Coin Counter: %i\n", GameDataFunction::getCoinNum(*stageScene->mHolder));
             gTextWriter->printf("Stage Name: %s\n", stageScene->mHolder->getCurrentStageName());
             gTextWriter->printf("Scenario: %i\n", GameDataFunction::getScenarioNo(player));
+
+            gTextWriter->printf("\nPlayer Front: %fx %fy %fz\n", pFront.x, pFront.y, pFront.z);
 
             gTextWriter->printf("\nWorld ID: %i\n", stageScene->mHolder->mGameDataFile->mCurWorldID);
             gTextWriter->printf("Is Unlocked This World: %s\n", GameDataFunction::isUnlockedCurrentWorld(GameData) ? "true" : "false");
@@ -404,13 +408,19 @@ void stageInitHook(StageScene* initStageScene, al::SceneInitInfo* sceneInitInfo)
 HOOK_ATTR
 void initActorWithArchiveNameHook(al::LiveActor* actor, al::ActorInitInfo const& initInfo, sead::SafeStringBase<char> const& string, char const* anotherString)
 {
+    // Get actorController
+    amy::ActorController& controller = amy::getActorController();
+
     // Create actors here
-    al::LiveActor* coin = al::createActorFunction<Coin>("Test");
+    controller.coinTest = al::createActorFunction<Coin>("Test");
+    controller.Kuribo = al::createActorFunction<KuriboHack>("KuriboSpawn");
 
     // Init those actors here
-    al::initCreateActorNoPlacementInfo(coin, initInfo);
-    al::setTrans(coin, sead::Vector3f(0.f, 0.f, 0.f)); //Probably not needed?
-    coin->makeActorAlive(); //Probably not needed at all idk I didn't check yet
+    al::initCreateActorNoPlacementInfo(controller.coinTest, initInfo);
+    controller.coinTest->makeActorDead();
+
+    al::initCreateActorNoPlacementInfo(controller.Kuribo, initInfo);
+    controller.Kuribo->makeActorDead();
 
     // Complete hooked functionn
     al::initActorWithArchiveName(actor, initInfo, string, anotherString);
@@ -522,9 +532,10 @@ void stageSceneHook(StageScene* stageScene)
             debugPage = debugMax;
     }
 
-    // if (al::isPadTriggerUp(-1)) {
-    //     al::emitEffect(player, "FlySmoke", al::getTransPtr(player));
-    // }
+    if (al::isPadTriggerUp(-1)) {
+        amy::ActorController& controller = amy::getActorController();
+        amy::trySummonActor(controller.Kuribo, 500.f);
+    }
 
     __asm("MOV X0, %[input]"
           : [input] "=r"(stageScene));

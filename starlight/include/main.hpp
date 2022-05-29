@@ -42,10 +42,12 @@
 #include "agl/RenderBuffer.h"
 #include "agl/utl.h"
 
+#include "actorController.h"
 #include "debugMenu.hpp"
 #include "helpers.hpp"
 #include "ips.hpp"
 #include "redeemTimer.hpp"
+
 
 #define RAD(deg) (deg * (M_PI / 180)) // converts Degrees to Radians
 #define DEG(rad) (rad * (180 / M_PI)) // converts Radians to Degrees
