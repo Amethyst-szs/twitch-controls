@@ -297,6 +297,10 @@ async function TwitchHandler() {
   restrictions.setupRedeemList(CurDir, langType);
 
   //Quick menu check to see what the user is looking to do
+  isDebug = await input.select("Run server in debug mode?", ["Yes", "No"]);
+  if(isDebug == "Yes")
+    log.setDebugModeState(true);
+  
   runType = await input.select(["Run Server", "Run Voice Mode", "Run Leap Mode", "Initalize Twitch Account", "Remove Redeems"]);
   switch(runType){
     case "Run Voice Mode":
@@ -322,13 +326,16 @@ async function TwitchHandler() {
   log.log(2, `Subscribed to redeem alerts with channel:read:redemptions scope!\nWelcome ${streamerMe.displayName}` );
 
   //Starts a timer tracking automatic refreshing of costs, cooldowns, and enabled status
-  if(!voiceMode && !leapMode)
+  if(!voiceMode && !leapMode){
     twitchInit.startRefreshTimer(api, streamerID, streamerMe, CurDir);
+    log.debugLog("Refresh timer started because of default mode");
+  }
   
   twitchInit.setupS(langType);
 
   //Once Twitch is authenticated and ready, finish UDP server
   server.bind(7902);
+  log.debugLog("IP binded at 7902");
   outPackets.setServerRef(server);
   outPackets.prepareLang();
 
@@ -338,6 +345,7 @@ async function TwitchHandler() {
 
   //If running in Voice Mode, initalize everything required for that here
   if(voiceMode){
+    log.debugLog("Voice loop launched");
     setInterval(voiceUpdate, 250);
     return;
   }
@@ -349,7 +357,9 @@ async function TwitchHandler() {
   }
 
   //Create listener that is triggered every channel point redeem
+  log.debugLog("Initing listener for redeems");
   const listener = await PubSubClient.onRedemption(userId, (message) => {
+    log.debugLog(`Redeem processing:\nRedemption ID: ${message.id}\nReward ID: ${message.rewardId}\nReward: ${message.rewardTitle}`);
     //Start by verifying the redeem here is actually an SMO point redeem just to avoid altering redeems it can't
     if(!FullRedeemList.includes(message.rewardTitle)){
       log.log(2,`Generic ${message.rewardTitle} from ${message.userDisplayName}`);
@@ -358,18 +368,21 @@ async function TwitchHandler() {
 
     //Check if the player is currently in a demo scene, if so, STOP
     if (invalidStage) {
+      log.debugLog(`Redeem is in an invalid scene ${message.id}`);
       updateRedeem(api, streamerID, message.rewardId, message.id, true);
       return;
     }
 
     //If a redeem that is the the restriction list is redeemed, refund it!
     if (restrictions.getRestrictedRedeems().includes(message.rewardTitle)) {
+      log.debugLog(`Redeem is in restriction list ${message.id}`);
       updateRedeem(api, streamerID, message.rewardId, message.id, true);
       return;
     }
 
     //Check and make sure a switch has connected already
     if (!outPackets.getClient()) {
+      log.debugLog(`Redeem not sent due to missing client reference ${message.id}`);
       updateRedeem(api, streamerID, message.rewardId, message.id, true);
       return;
     }
@@ -386,6 +399,8 @@ async function TwitchHandler() {
     rejectionList[rejectionID].ID = message.id;
     tempVal = rejectionID;
     setTimeout(backupCheck, 1500, api, streamerID, tempVal);
+
+    log.debugLog(`Rejection ID: ${rejectionID}`);
     
     // console.log(rejectionList);
 

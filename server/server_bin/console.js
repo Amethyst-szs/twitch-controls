@@ -1,5 +1,6 @@
 const chalk = require("chalk");
 let nickname = `//////////////`;
+let isDebugMode = false;
 
 module.exports = {
   title: function(title){
@@ -15,6 +16,10 @@ module.exports = {
 
   getNickname: function(){
     return nickname;
+  },
+
+  setDebugModeState: function(state){
+    isDebugMode = state;
   },
 
   log: function(Source, Message) {
@@ -39,4 +44,10 @@ module.exports = {
         break;
     }
   },
+
+  debugLog: function(Message){
+    if(isDebugMode)
+      console.log(chalk.red.bgRgb(30,0,30).bold("[DEBUG]") + " " + Message);
+    return;
+  }
 };

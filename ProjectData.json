@@ -2,14 +2,17 @@
 	"Version": "10",
 	"PName": "twitch-controls",
 	"DumpStats": {
-		"Time": "5-23-2022 10:28:27",
-		"Amount": 940,
+		"Time": "5-29-2022 14:58:9",
+		"Amount": 944,
 		"isUndumped": false,
 		"Type": "Quick"
 	},
 	"songs": {},
 	"dates": {
 		"2i6owudm0": {
+			"EffectData": {
+				"EffectDataBase.szs": 1651815231986.3657
+			},
 			"LayoutData": {
 				"BootLoading.szs": 1579550369000,
 				"CounterLife.szs": 1648275536207.9785,
@@ -28,9 +31,6 @@
 			"StageData": {
 				"SnowWorldLobby000StageMap.szs": 1649918532311.1067,
 				"SnowWorldTownStageMap.szs": 1649919522704.2705
-			},
-			"EffectData": {
-				"EffectDataBase.szs": 1651815231986.3657
 			}
 		},
 		"jcirk6ww": {

@@ -4,6 +4,7 @@ let langInit;
 let blockList = [];
 
 const RedeemSet = require("../settings/redeem_set.json");
+const eventList = require('../settings/event_list.json').FullEventList;
 const Rand = require("./advancedRand");
 const bufferTool = require("./bufferTool");
 const log = require("./console");
@@ -14,6 +15,7 @@ let client;
 //Channel point redeem: PrevScene (Server -> Client)
 function Events(EventID, isTwitch) {
   //Socket ID 1 - Event ID 1
+  log.debugLog(`Sending event packet with ID ${EventID}`);
   serverRef.send(bufferTool.GenericBuf(1, EventID, isTwitch), client.port, client.address);
 }
 
@@ -99,7 +101,9 @@ module.exports = {
   },
 
   toggleMusic: function(){
+    log.debugLog("Music toggle step 1");
     if(client)
+      console.log(`2`);
       Events(17, false);
   },
 
@@ -118,9 +122,21 @@ module.exports = {
     return;
   },
 
+  outAnyEventHandler: function(eventName){
+    if(client){
+      log.log(3, `Sending event ${eventName} / ID ${eventList.indexOf(eventName)+1}`);
+      Events(eventList.indexOf(eventName)+1, false);
+      return;
+    }
+    log.log(3, `No client to send event to`);
+    return;
+  },
+
   outHandler: function (redeemName, isTwitch) {
     //Get the lang init so you can fetch the original name of the redeem
     redeemTitle = redeemName;
+
+    log.debugLog(`Preparing to send packet with name ${redeemTitle}`);
 
     //If this is a Twitch log this extra info
     if(!isTwitch)
@@ -129,6 +145,8 @@ module.exports = {
     //If this is a translation, convert back to English
     if(langInit.hasOwnProperty(redeemName))
       redeemTitle = langInit[redeemName].original;
+
+    log.debugLog(`Redeem title after translation ${redeemTitle}`);
 
     //Switch case through all valid rewards
     switch (redeemTitle) {
@@ -211,6 +229,9 @@ module.exports = {
     switch (redeemTitle) {
       case "Change Gravity":
         Events(2, false);
+        break;
+      case "Up Go":
+        Events(3, false);
         break;
       case "Cappy":
         Events(4, false);

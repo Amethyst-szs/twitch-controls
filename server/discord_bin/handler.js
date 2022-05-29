@@ -11,6 +11,7 @@ const log = require('../server_bin/console');
 const twitchInit = require('../server_bin/twitchInit');
 const restrictions = require('../server_bin/restrictions');
 const outPackets = require('../server_bin/outPackets');
+const eventList = require('../settings/event_list.json').FullEventList;
 
 // Create a new client instance
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
@@ -109,14 +110,10 @@ module.exports = {
 					
 					twitchInit.skipRefreshTimer();
 					break;
-				case "fake-event":
-					outPackets.outHandler(interaction.options.getString("redeem", true), false);
-					interaction.reply(`Sending fake redeem to client: ${interaction.options.getString("redeem", true)}`);
+				case "do":
+					outPackets.outAnyEventHandler(interaction.options.getString("event", true));
+					interaction.reply(`Sending event *"${interaction.options.getString("event", true)}"*`);
 					break;
-				// case "fake-id":
-				// 	outPackets.outHandlerId(interaction.options.getNumber("id", true));
-				// 	interaction.reply(`Sending fake id to client: ${interaction.options.getNumber("id", true)}`);
-				// 	break;
 				case "boot-off":
 					outPackets.pushNewBlock(log.getNickname());
 					outPackets.blockPacket(outPackets.getClient());
@@ -162,13 +159,20 @@ module.exports = {
 		//Get a list of the current redeems
 		const FullRedeemList = JSON.parse(fs.readFileSync(`${CurDir}/settings/localize/${twitchInit.getLang()}_list.json`)).FullRedeemList;
 		let formattedRedeems = [];
-		let fakeRedeems = [];
+		let formattedEvents = [];
 
 		//Format this list into a weird formatted redeems array for the twitch API
 		for(i=0;i<FullRedeemList.length;i++){
 			formattedRedeems.push([
 				FullRedeemList[i],
 				FullRedeemList[i]
+			])
+		}
+
+		for(i=0;i<eventList.length;i++){
+			formattedEvents.push([
+				eventList[i],
+				eventList[i]
 			])
 		}
 
@@ -241,13 +245,13 @@ module.exports = {
 					.setRequired(true)
 				),
 			new SlashCommandBuilder()
-				.setName('fake-event')
-				.setDescription('Sends a fake redeem to the client')
+				.setName('do')
+				.setDescription('Sends any event to the client')
 				.addStringOption(option =>
-					option.setName('redeem')
-					.setDescription('Which redeem are you sending')
+					option.setName('event')
+					.setDescription('Which event are you sending')
 					.setRequired(true)
-					.addChoices(formattedRedeems.slice(4, formattedRedeems.length))
+					.addChoices(formattedEvents)
 				),
 			// new SlashCommandBuilder()
 			// 	.setName('fake-id')
