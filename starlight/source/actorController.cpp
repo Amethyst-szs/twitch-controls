@@ -11,6 +11,14 @@ amy::ActorController& amy::getActorController()
     return i;
 }
 
+void amy::setupActorListArray()
+{
+    amy::ActorController& controller = amy::getActorController();
+    controller.actorList[0] = controller.coinTest;
+    controller.actorList[1] = controller.Kuribo;
+    return;
+}
+
 void amy::trySummonActor(al::LiveActor* actor, float playerDistance)
 {
     // Get scene and player
@@ -38,4 +46,14 @@ void amy::trySummonActor(al::LiveActor* actor, float playerDistance)
 
         return;
     }
+}
+
+bool amy::isCaptureActorController(al::LiveActor* actor)
+{
+    amy::ActorController& controller = amy::getActorController();
+    for (int i = 0; i < 2; i++) {
+        if (controller.actorList[i] == actor)
+            return true;
+    }
+    return false;
 }

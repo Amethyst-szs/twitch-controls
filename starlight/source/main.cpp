@@ -44,7 +44,7 @@ int curWarpPoint = 0;
 
 static int debugPage = 0;
 static int debugSel = 0;
-static int debugMax = 2;
+static int debugMax = 3;
 static const char* page2Options[] {
     "Force Reconnection Screen\n",
     "Disconnect from server\n",
@@ -239,6 +239,8 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
         PlayerActorHakoniwa* player = al::tryGetPlayerActor(pHolder, 0);
         sead::Vector3f pFront;
         al::calcFrontDir(&pFront, player);
+
+        al::LiveActor* capture = player->getPlayerHackKeeper()->currentHackActor;
         GameDataHolderAccessor GameData = *stageScene->mHolder;
         GameDataHolderWriter holder = *stageScene->mHolder;
 
@@ -266,10 +268,6 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
 
             gTextWriter->printf("\nLanguage: %s\n", amy::getGlobalStageScene()->mHolder->getLanguage());
             gTextWriter->printf("Animation: %s\n", player->mPlayerAnimator->mAnimFrameCtrl->getActionName());
-            // Player Information
-            if (player->getPlayerHackKeeper()->getCurrentHackName() != nullptr) {
-                gTextWriter->printf("Current Capture: %s\n", player->getPlayerHackKeeper()->getCurrentHackName());
-            }
             gTextWriter->printf("Left Stick: %fx %fy\n", al::getLeftStick(-1)->x, al::getLeftStick(-1)->y);
             // Game flow information
             gTextWriter->printf("In game? %s\n", isInGame ? "true" : "false");
@@ -277,6 +275,16 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
             gTextWriter->printf("Is dead? %s\n", PlayerFunction::isPlayerDeadStatus(player) ? "true" : "false");
             break;
         case 1:
+            gTextWriter->printf("Capture Information:\n");
+            if (capture == nullptr) {
+                gTextWriter->printf("Capture something for information");
+            } else {
+                gTextWriter->printf("Current Capture: %s\n", player->getPlayerHackKeeper()->getCurrentHackName());
+                gTextWriter->printf("Is actorController actor? %s\n", amy::isCaptureActorController(capture) ? "True" : "False");
+                gTextWriter->printf("Capture Trans:\n  %fx\n  %fy\n  %fz\n", al::getTrans(capture)->x, al::getTrans(capture)->y, al::getTrans(capture)->z);
+            }
+            break;
+        case 2:
             gTextWriter->printf("Twitch Integration Values:\n");
             gTextWriter->printf("Server Connected: %s\n", smo::Server::instance().isConnected() ? "true" : "false");
             gTextWriter->printf("Reject Redeems: %s\n", !ri.isRedeemsValid ? "true" : "false");
@@ -302,7 +310,7 @@ void drawMainHook(HakoniwaSequence* curSequence, sead::Viewport* viewport, sead:
             gTextWriter->printf("Dance Party Timer: %f\n", amy::getDancePartyState().timer);
             gTextWriter->printf("Shine Warp: %i\n", amy::getShineWarpState().isWarp);
             break;
-        case 2:
+        case 3:
             gTextWriter->printf("Quick Functions:\n");
 
             // Draw the page
@@ -387,7 +395,6 @@ bool threadInit(HakoniwaSequence* mainSeq)
 
     layouts.mainSeq = mainSeq;
     al::initLayoutInitInfo(&lytInfo, mainSeq->mLytKit, 0, mainSeq->mAudioDirector, initInfo->mSystemInfo->mLayoutSys, initInfo->mSystemInfo->mMessageSys, initInfo->mSystemInfo->mGamePadSys);
-
     smo::layoutInit(lytInfo);
 
     return GameDataFunction::isPlayDemoOpening(*mainSeq->mGameDataHolder);
@@ -421,6 +428,9 @@ void initActorWithArchiveNameHook(al::LiveActor* actor, al::ActorInitInfo const&
 
     al::initCreateActorNoPlacementInfo(controller.Kuribo, initInfo);
     controller.Kuribo->makeActorDead();
+
+    // Once all actors are ready, reload the all actor controller array
+    amy::setupActorListArray();
 
     // Complete hooked functionn
     al::initActorWithArchiveName(actor, initInfo, string, anotherString);
