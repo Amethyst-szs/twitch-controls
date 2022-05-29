@@ -3,8 +3,8 @@ StageScene::control+18:
     BL stageSceneHook
 4C8648: // hook to the init of a stage to modify certain conditions (we also have access to SceneInitInfo)
     BL stageInitHook
-// 4c8da0:
-    // BL stageSceneInitLateHook // Scene init hook for actor creation
+0041b384:
+    BL initActorWithArchiveNameHook // Scene init hook for actor creation
 
 // hooks to start old crafty logger
 // 5359D8: // GameSystem::init 
@@ -251,10 +251,10 @@ B59E28: // sead::system::print
 0046137c:
     BL recoverBubbleHook
 
-//Fire damage hook
-// 0041ff78:
-//     BL isOnDamageFire
-// 0046881c:
-//     BL isCollisionCodeDamageFireGround
-// 0041fae4:
-//     BL isTouchDamageFireCode
+// Fire damage hook
+ 0041ff78:
+     BL isOnDamageFire
+ 0046881c:
+     BL isCollisionCodeDamageFireGround
+ 0041fae4:
+     BL isTouchDamageFireCode

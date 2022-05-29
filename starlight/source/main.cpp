@@ -402,19 +402,18 @@ void stageInitHook(StageScene* initStageScene, al::SceneInitInfo* sceneInitInfo)
 }
 
 HOOK_ATTR
-void stageSceneInitLateHook(al::LayoutInitInfo* layoutInit, StageScene* stageScene, al::SceneInitInfo const& sceneInit)
+void initActorWithArchiveNameHook(al::LiveActor* actor, al::ActorInitInfo const& initInfo, sead::SafeStringBase<char> const& string, char const* anotherString)
 {
-    // al::LiveActor* coin = al::createActorFunction<Coin>("Test");
+    // Create actors here
+    al::LiveActor* coin = al::createActorFunction<Coin>("Test");
 
-    // al::ActorInitInfo initInfo;
-    // al::PlacementInfo placementInfo;
-    // ProjectActorFactory* actorFactory = new ProjectActorFactory();
+    // Init those actors here
+    al::initCreateActorNoPlacementInfo(coin, initInfo);
+    al::setTrans(coin, sead::Vector3f(0.f, 0.f, 0.f)); //Probably not needed?
+    coin->makeActorAlive(); //Probably not needed at all idk I didn't check yet
 
-    // al::initActorInitInfo(&initInfo, stageScene, &placementInfo, nullptr, actorFactory, nullptr, stageScene->mHolder);
-    // al::initCreateActorNoPlacementInfo(coin, initInfo);
-
-    // Final
-    al::initLayoutInitInfo(layoutInit, stageScene, sceneInit);
+    // Complete hooked functionn
+    al::initActorWithArchiveName(actor, initInfo, string, anotherString);
 }
 
 HOOK_ATTR
