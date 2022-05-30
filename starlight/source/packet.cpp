@@ -104,6 +104,7 @@ void InPacketEvent::on(Server& server)
     al::PlayerHolder* pHolder = al::getScenePlayerHolder(stageScene);
     PlayerActorHakoniwa* player = al::tryGetPlayerActor(pHolder, 0);
     al::LiveActor* curHack = player->getPlayerHackKeeper()->currentHackActor;
+    amy::ActorController& controller = amy::getActorController();
 
     if (ri.isRedeemsValid) {
         // Send an update about successful packet
@@ -269,6 +270,9 @@ void InPacketEvent::on(Server& server)
             break;
         case 23:
             amy::getfireDamageState().isDamage = true;
+            break;
+        case 24:
+            amy::trySummonActor(controller.Kuribo, 600.f);
             break;
         default: {
             amy::log("Invalid EventID sent? EventID: %i", eventID);

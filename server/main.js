@@ -45,13 +45,14 @@ let leapMode = false;
 
 //Respond to packets from the switch
 server.on("message", (msg, rinfo) => {
-  // console.log(msg);
+  log.debugLog(`Incoming packet: ${msg.readInt8()}`);
   switch (msg.readInt8()) {
-    // case -1: //Dummy Initalization
-      //No code is actually ran here
-      // break;
+    case -1: //Dummy Initalization
+      log.debugLog("Dummy init request");
+      break;
     case -2: //Initalization
       nickname = msg.slice(1, msg.indexOf(0x00)).toString().toUpperCase();
+      log.debugLog(`Nickname processed ${nickname}`);
 
       if(!outPackets.getBlockList().includes(nickname)){
         outPackets.setClient(rinfo);
@@ -103,6 +104,8 @@ server.on("message", (msg, rinfo) => {
 async function serverPing(){
   curTime = new Date().getTime();
   curClient = outPackets.getClient();
+
+  log.debugLog("Outgoing ping attempt");
 
   if(curClient){
     const buf = Buffer.alloc(1);
@@ -199,6 +202,7 @@ async function langSelect(){
 }
 
 function initRejectionList(){
+  log.debugLog("Rejection list cleared");
   rejectionID = 0;
   rejectionList = [];
 
@@ -214,6 +218,7 @@ function initRejectionList(){
 
 async function updateRedeem(api, streamerID, rewardId, id, isRefund) {
   //Grab the redemption, ready to catch an error
+  log.debugLog(`Redeem ${id} is refund: ${isRefund}`);
   redemption = await api.channelPoints.getRedemptionById(streamerID, rewardId, id)
   .catch(console.error);
   if(!redemption){ //If the redemption wasn't found, return early

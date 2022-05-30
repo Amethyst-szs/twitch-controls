@@ -542,11 +542,6 @@ void stageSceneHook(StageScene* stageScene)
             debugPage = debugMax;
     }
 
-    if (al::isPadTriggerUp(-1)) {
-        amy::ActorController& controller = amy::getActorController();
-        amy::trySummonActor(controller.Kuribo, 500.f);
-    }
-
     __asm("MOV X0, %[input]"
           : [input] "=r"(stageScene));
 }

@@ -111,6 +111,7 @@ module.exports = {
 					twitchInit.skipRefreshTimer();
 					break;
 				case "do":
+					log.debugLog(`Discord event trigger`);
 					outPackets.outAnyEventHandler(interaction.options.getString("event", true));
 					interaction.reply(`Sending event *"${interaction.options.getString("event", true)}"*`);
 					break;

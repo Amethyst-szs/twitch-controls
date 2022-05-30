@@ -103,7 +103,6 @@ module.exports = {
   toggleMusic: function(){
     log.debugLog("Music toggle step 1");
     if(client)
-      console.log(`2`);
       Events(17, false);
   },
 
