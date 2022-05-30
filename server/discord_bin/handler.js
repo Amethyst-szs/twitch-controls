@@ -125,10 +125,10 @@ module.exports = {
 					outPackets.toggleMusic();
 					interaction.reply(`Music toggled!`);
 					break;
-				case "flee-killswitch":
-					outPackets.fleeKillswitch();
-					interaction.reply(`Toggled the kingdom flee feature!`);
-					break;
+				// case "flee-killswitch":
+				// 	outPackets.fleeKillswitch();
+				// 	interaction.reply(`Toggled the kingdom flee feature!`);
+				// 	break;
 				case "scost":
 					redeemName = interaction.options.getString("redeem", true);
 					factor = interaction.options.getNumber("factor", true);
@@ -267,9 +267,9 @@ module.exports = {
 			new SlashCommandBuilder()
 				.setName('music')
 				.setDescription('Toggles the game music, defaults off'),
-			new SlashCommandBuilder()
-				.setName('flee-killswitch')
-				.setDescription('Turns off the experimental kingdom flee feature'),
+			// new SlashCommandBuilder()
+			// 	.setName('flee-killswitch')
+			// 	.setDescription('Turns off the experimental kingdom flee feature'),
 			new SlashCommandBuilder()
 				.setName('scost')
 				.setDescription('Set a price multiplier on one specific redeem')

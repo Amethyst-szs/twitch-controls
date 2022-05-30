@@ -103,12 +103,7 @@ module.exports = {
   toggleMusic: function(){
     log.debugLog("Music toggle step 1");
     if(client)
-      Events(17, false);
-  },
-
-  fleeKillswitch: function(){
-    if(client)
-      Events(18, false);
+      Events(15, false);
   },
 
   prepareLang: function(){
@@ -191,23 +186,17 @@ module.exports = {
       case "Hot Tub Stream": //Event ID 10
         Events(10, isTwitch);
         break;
-      case "Dance Party": //Event ID 11
+      case "Moon Magnet": //Event ID 12
         Events(11, isTwitch);
         break;
-      case "Moon Magnet": //Event ID 12
+      case "Fly me to the Moon": //Event ID 13
         Events(12, isTwitch);
         break;
-      case "Fly me to the Moon": //Event ID 13
+      case "kill": //Event ID 15
         Events(13, isTwitch);
         break;
-      case "unfreeze": //Event ID 14
-        Events(14, isTwitch);
-        break;
-      case "kill": //Event ID 15
-        Events(15, isTwitch);
-        break;
       case "Pay to Win": //Event ID 16
-        Events(16, isTwitch);
+        Events(14, isTwitch);
         break;
       default:
         //Generic reward
@@ -236,13 +225,10 @@ module.exports = {
         Events(4, false);
         break;
       case "Dance":
-        Events(19, false);
-        break;
-      case "Festival":
-        Events(20, false);
+        Events(16, false);
         break;
       case "Nipple":
-        Events(21, false);
+        Events(17, false);
         break;
       case "Stick":
         Events(9, false);
@@ -251,16 +237,16 @@ module.exports = {
         Events(1, false);
         break;
       case "Explode":
-        Events(22, false);
+        Events(18, false);
         break;
       case "Coin":
         Events(6, false);
         break;
       case "Moon":
-        Events(12, false);
+        Events(11, false);
         break;
       case "Fire":
-        Events(23, false);
+        Events(19, false);
         break;
       default:
         //Generic reward

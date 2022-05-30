@@ -16,6 +16,11 @@ void amy::setupActorListArray()
     amy::ActorController& controller = amy::getActorController();
     controller.actorList[0] = controller.coinTest;
     controller.actorList[1] = controller.Kuribo;
+    controller.actorList[2] = controller.TRex;
+    controller.actorList[3] = controller.Senobi;
+    controller.actorList[4] = controller.Statue;
+    controller.actorList[5] = controller.Tsukkun;
+    controller.actorList[6] = controller.Utsubo;
     return;
 }
 
@@ -28,13 +33,14 @@ void amy::trySummonActor(al::LiveActor* actor, float playerDistance)
     al::LiveActor* hackReference = player->getPlayerHackKeeper()->currentHackActor;
 
     if (actor != hackReference) {
+        // if (true) {
         // Actor positioning info
         sead::Vector3f actorPos = *al::getTrans(player);
         sead::Vector3f forwardVector;
         al::calcFrontDir(&forwardVector, player);
 
         actorPos.x += forwardVector.x * playerDistance;
-        actorPos.y += forwardVector.y * (playerDistance * 0.25);
+        actorPos.y += (forwardVector.y * (playerDistance * 0.5) + 200.f);
         actorPos.z += forwardVector.z * playerDistance;
 
         // Prepare actor
@@ -51,7 +57,7 @@ void amy::trySummonActor(al::LiveActor* actor, float playerDistance)
 bool amy::isCaptureActorController(al::LiveActor* actor)
 {
     amy::ActorController& controller = amy::getActorController();
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < 6; i++) {
         if (controller.actorList[i] == actor)
             return true;
     }

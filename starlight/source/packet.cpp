@@ -216,23 +216,15 @@ void InPacketEvent::on(Server& server)
             break;
         }
         case 11: {
-            amy::dancePartyInit("Dance Party!", player);
-            break;
-        }
-        case 12: {
             amy::getShineWarpState().isWarp = true;
             break;
         }
-        case 13: {
+        case 12: {
             ChangeStageInfo stageInfo(stageScene->mHolder, "start", "MoonWorldHomeStage", false, -1, ChangeStageInfo::SubScenarioType::UNK);
             stageScene->mHolder->changeNextStage(&stageInfo, 0);
             break;
         }
-        case 14: {
-            player->endDemoPuppetable();
-            break;
-        }
-        case 15: {
+        case 13: {
             GameDataFunction::killPlayer(*stageScene->mHolder);
             player->startDemoPuppetable();
             al::setVelocityZero(player);
@@ -241,38 +233,45 @@ void InPacketEvent::on(Server& server)
             player->mPlayerAnimator->startAnim("RaceResultLose");
             break;
         }
-        case 16:
+        case 14:
             player->mDamageKeeper->activatePreventDamage();
             break;
-        case 17:
+        case 15:
             ri.isMusic = !ri.isMusic;
             break;
-        case 18:
-            ri.fleeDisabled = !ri.fleeDisabled;
-            ri.fleeFrames = -1;
-            player->endDemoPuppetable();
-            break;
-        case 19:
+        case 16:
             amy::dancePartyInit("Dance Party!", player);
             break;
-        case 20:
-            amy::dancePartyInit("Festival Party!", player);
-            break;
-        case 21:
+        case 17:
             amy::dancePartyInit("Nipple Party!", player);
             break;
-        case 22:
+        case 18:
             al::emitEffect(player, "Explosion", al::getTransPtr(player));
             player->mDamageKeeper->dead();
             player->startDemoPuppetable();
             al::setVelocityZero(player);
             al::setScale(player, sead::Vector3f(0.f, 0.f, 0.f));
             break;
-        case 23:
+        case 19:
             amy::getfireDamageState().isDamage = true;
             break;
+        case 20:
+            amy::trySummonActor(controller.Kuribo, 800.f);
+            break;
+        case 21:
+            amy::trySummonActor(controller.TRex, 1500.f);
+            break;
+        case 22:
+            amy::trySummonActor(controller.Senobi, 600.f);
+            break;
+        case 23:
+            amy::trySummonActor(controller.Statue, 300.f);
+            break;
         case 24:
-            amy::trySummonActor(controller.Kuribo, 600.f);
+            amy::trySummonActor(controller.Tsukkun, 600.f);
+            break;
+        case 25:
+            amy::trySummonActor(controller.Utsubo, 1000.f);
             break;
         default: {
             amy::log("Invalid EventID sent? EventID: %i", eventID);

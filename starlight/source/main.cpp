@@ -420,14 +420,28 @@ void initActorWithArchiveNameHook(al::LiveActor* actor, al::ActorInitInfo const&
 
     // Create actors here
     controller.coinTest = al::createActorFunction<Coin>("Test");
-    controller.Kuribo = al::createActorFunction<KuriboHack>("KuriboSpawn");
+    controller.Kuribo = al::createActorFunction<KuriboHack>("KuriboSpawn"); // Goomba
+    controller.TRex = al::createActorFunction<TRex>("TRexSpawn"); // T-Rex
+    controller.Senobi = al::createActorFunction<Senobi>("SenobiSpawn"); // Uproot
+    controller.Statue = al::createActorFunction<Statue>("StatueSpawn"); // Bowser's Kingdom statue
+    controller.Tsukkun = al::createActorFunction<Tsukkun>("TsukkunSpawn"); // Pokio
+    controller.Utsubo = al::createActorFunction<Utsubo>("UtsuboSpawn"); // Eel hole
 
     // Init those actors here
     al::initCreateActorNoPlacementInfo(controller.coinTest, initInfo);
     controller.coinTest->makeActorDead();
-
     al::initCreateActorNoPlacementInfo(controller.Kuribo, initInfo);
     controller.Kuribo->makeActorDead();
+    al::initCreateActorNoPlacementInfo(controller.TRex, initInfo);
+    controller.TRex->makeActorDead();
+    al::initCreateActorNoPlacementInfo(controller.Senobi, initInfo);
+    controller.Senobi->makeActorDead();
+    al::initCreateActorNoPlacementInfo(controller.Statue, initInfo);
+    controller.Statue->makeActorDead();
+    al::initCreateActorNoPlacementInfo(controller.Tsukkun, initInfo);
+    controller.Tsukkun->makeActorDead();
+    al::initCreateActorNoPlacementInfo(controller.Utsubo, initInfo);
+    controller.Utsubo->makeActorDead();
 
     // Once all actors are ready, reload the all actor controller array
     amy::setupActorListArray();
@@ -541,6 +555,10 @@ void stageSceneHook(StageScene* stageScene)
         if (debugPage < 0)
             debugPage = debugMax;
     }
+
+    // if (al::isPadTriggerUp(-1)) {
+    //     amy::trySummonActor(amy::getActorController().AirBubble, 400.f);
+    // }
 
     __asm("MOV X0, %[input]"
           : [input] "=r"(stageScene));

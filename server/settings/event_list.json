@@ -10,19 +10,20 @@
         "Hot Floor",
         "Stick Flip",
         "Hot Tub Stream",
-        "Dance Party",
         "Delete Closest Moon",
         "Fly me to the Moon",
-        "[DEBUG UNFREEZE]",
         "Kill Player",
         "Invinciblity",
         "Toggle Music",
-        "[DEBUG FLEE KILLSWITCH]",
         "Dance Party",
-        "Festival Party",
         "Nipple Party",
         "Explode",
         "Fire Damage",
-        "Spawn Goomba"
+        "Spawn Goomba",
+        "Spawn T-Rex",
+        "Spawn Uproot",
+        "Spawn Statue",
+        "Spawn Pokio",
+        "Spawn Eel"
     ]
 }
