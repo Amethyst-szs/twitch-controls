@@ -426,6 +426,8 @@ void initActorWithArchiveNameHook(al::LiveActor* actor, al::ActorInitInfo const&
     controller.Statue = al::createActorFunction<Statue>("StatueSpawn"); // Bowser's Kingdom statue
     controller.Tsukkun = al::createActorFunction<Tsukkun>("TsukkunSpawn"); // Pokio
     controller.Utsubo = al::createActorFunction<Utsubo>("UtsuboSpawn"); // Eel hole
+    controller.Megane = al::createActorFunction<Megane>("MeganeSpawn"); // Moe eye
+    controller.Tank = al::createActorFunction<Tank>("TankSpawn"); // Tank
 
     // Init those actors here
     al::initCreateActorNoPlacementInfo(controller.coinTest, initInfo);
@@ -442,6 +444,10 @@ void initActorWithArchiveNameHook(al::LiveActor* actor, al::ActorInitInfo const&
     controller.Tsukkun->makeActorDead();
     al::initCreateActorNoPlacementInfo(controller.Utsubo, initInfo);
     controller.Utsubo->makeActorDead();
+    al::initCreateActorNoPlacementInfo(controller.Megane, initInfo);
+    controller.Megane->makeActorDead();
+    al::initCreateActorNoPlacementInfo(controller.Tank, initInfo);
+    controller.Tank->makeActorDead();
 
     // Once all actors are ready, reload the all actor controller array
     amy::setupActorListArray();

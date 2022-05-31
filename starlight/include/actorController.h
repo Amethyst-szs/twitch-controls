@@ -10,8 +10,10 @@ struct ActorController {
     al::LiveActor* Statue; // Bowser's Kingdom statue
     al::LiveActor* Tsukkun; // Pokio
     al::LiveActor* Utsubo; // Eel hole
+    al::LiveActor* Megane; // Moe eye
+    al::LiveActor* Tank; // Tank
 
-    al::LiveActor* actorList[7];
+    al::LiveActor* actorList[9];
 };
 
 ActorController& getActorController();

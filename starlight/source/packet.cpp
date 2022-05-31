@@ -255,23 +255,29 @@ void InPacketEvent::on(Server& server)
         case 19:
             amy::getfireDamageState().isDamage = true;
             break;
-        case 20:
+        case 51:
             amy::trySummonActor(controller.Kuribo, 800.f);
             break;
-        case 21:
+        case 52:
             amy::trySummonActor(controller.TRex, 1500.f);
             break;
-        case 22:
+        case 53:
             amy::trySummonActor(controller.Senobi, 600.f);
             break;
-        case 23:
+        case 54:
             amy::trySummonActor(controller.Statue, 300.f);
             break;
-        case 24:
+        case 55:
             amy::trySummonActor(controller.Tsukkun, 600.f);
             break;
-        case 25:
+        case 56:
             amy::trySummonActor(controller.Utsubo, 1000.f);
+            break;
+        case 57:
+            amy::trySummonActor(controller.Megane, 300.f);
+            break;
+        case 58:
+            amy::trySummonActor(controller.Tank, 500.f);
             break;
         default: {
             amy::log("Invalid EventID sent? EventID: %i", eventID);

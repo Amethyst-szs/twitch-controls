@@ -12,6 +12,7 @@ const twitchInit = require('../server_bin/twitchInit');
 const restrictions = require('../server_bin/restrictions');
 const outPackets = require('../server_bin/outPackets');
 const eventList = require('../settings/event_list.json').FullEventList;
+const spawnList = require('../settings/event_list.json').FullSpawnList;
 
 // Create a new client instance
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
@@ -111,9 +112,14 @@ module.exports = {
 					twitchInit.skipRefreshTimer();
 					break;
 				case "do":
-					log.debugLog(`Discord event trigger`);
-					outPackets.outAnyEventHandler(interaction.options.getString("event", true));
+					log.debugLog(`Discord event trigger (event)`);
+					outPackets.outAnyEventHandler(interaction.options.getString("event", true), "Event");
 					interaction.reply(`Sending event *"${interaction.options.getString("event", true)}"*`);
+					break;
+				case "spawn":
+					log.debugLog(`Discord event trigger (spawn)`);
+					outPackets.outAnyEventHandler(interaction.options.getString("spawn", true), "Spawn");
+					interaction.reply(`Sending spawn *"${interaction.options.getString("spawn", true)}"*`);
 					break;
 				case "boot-off":
 					outPackets.pushNewBlock(log.getNickname());
@@ -161,21 +167,12 @@ module.exports = {
 		const FullRedeemList = JSON.parse(fs.readFileSync(`${CurDir}/settings/localize/${twitchInit.getLang()}_list.json`)).FullRedeemList;
 		let formattedRedeems = [];
 		let formattedEvents = [];
+		let formattedSpawns = [];
 
 		//Format this list into a weird formatted redeems array for the twitch API
-		for(i=0;i<FullRedeemList.length;i++){
-			formattedRedeems.push([
-				FullRedeemList[i],
-				FullRedeemList[i]
-			])
-		}
-
-		for(i=0;i<eventList.length;i++){
-			formattedEvents.push([
-				eventList[i],
-				eventList[i]
-			])
-		}
+		for(i=0;i<FullRedeemList.length;i++){formattedRedeems.push([FullRedeemList[i], FullRedeemList[i]])}
+		for(i=0;i<eventList.length;i++){formattedEvents.push([eventList[i], eventList[i]])}
+		for(i=0;i<spawnList.length;i++){formattedSpawns.push([spawnList[i], spawnList[i]])}
 
 		const commands = [
 			new SlashCommandBuilder()
@@ -253,6 +250,15 @@ module.exports = {
 					.setDescription('Which event are you sending')
 					.setRequired(true)
 					.addChoices(formattedEvents)
+				),
+			new SlashCommandBuilder()
+				.setName('spawn')
+				.setDescription('Sends any entity spawn to the client')
+				.addStringOption(option =>
+					option.setName('spawn')
+					.setDescription('Which spawn are you sending')
+					.setRequired(true)
+					.addChoices(formattedSpawns)
 				),
 			// new SlashCommandBuilder()
 			// 	.setName('fake-id')

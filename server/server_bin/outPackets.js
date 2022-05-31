@@ -5,6 +5,7 @@ let blockList = [];
 
 const RedeemSet = require("../settings/redeem_set.json");
 const eventList = require('../settings/event_list.json').FullEventList;
+const spawnList = require('../settings/event_list.json').FullSpawnList;
 const Rand = require("./advancedRand");
 const bufferTool = require("./bufferTool");
 const log = require("./console");
@@ -116,10 +117,17 @@ module.exports = {
     return;
   },
 
-  outAnyEventHandler: function(eventName){
+  outAnyEventHandler: function(eventName, eventType){
     if(client){
-      log.log(3, `Sending event ${eventName} / ID ${eventList.indexOf(eventName)+1}`);
-      Events(eventList.indexOf(eventName)+1, false);
+      switch(eventType){
+        case "Event":
+          log.log(3, `Sending event ${eventName} / ID ${eventList.indexOf(eventName)+1}`);
+          Events(eventList.indexOf(eventName)+1, false);
+          break;
+        case "Spawn":
+          log.log(3, `Sending event ${eventName} / ID ${spawnList.indexOf(eventName)+51}`);
+          Events(spawnList.indexOf(eventName)+51, false);
+      }
       return;
     }
     log.log(3, `No client to send event to`);

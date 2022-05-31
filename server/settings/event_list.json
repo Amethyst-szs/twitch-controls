@@ -18,12 +18,16 @@
         "Dance Party",
         "Nipple Party",
         "Explode",
-        "Fire Damage",
+        "Fire Damage"
+    ],
+    "FullSpawnList": [
         "Spawn Goomba",
         "Spawn T-Rex",
         "Spawn Uproot",
         "Spawn Statue",
         "Spawn Pokio",
-        "Spawn Eel"
+        "Spawn Eel",
+        "Spawn Moeye",
+        "Spawn Tank"
     ]
 }
