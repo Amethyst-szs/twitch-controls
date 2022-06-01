@@ -279,6 +279,9 @@ void InPacketEvent::on(Server& server)
         case 58:
             amy::trySummonActor(controller.Tank, 500.f);
             break;
+        case 59:
+            amy::trySummonActor(controller.Pot, 3000.f);
+            break;
         default: {
             amy::log("Invalid EventID sent? EventID: %i", eventID);
             break;

@@ -12,8 +12,9 @@ struct ActorController {
     al::LiveActor* Utsubo; // Eel hole
     al::LiveActor* Megane; // Moe eye
     al::LiveActor* Tank; // Tank
+    al::LiveActor* Pot; // Luncheon Pot
 
-    al::LiveActor* actorList[9];
+    al::LiveActor* actorList[10];
 };
 
 ActorController& getActorController();

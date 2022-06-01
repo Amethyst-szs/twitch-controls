@@ -2,10 +2,10 @@
 	"Version": "10",
 	"PName": "twitch-controls",
 	"DumpStats": {
-		"Time": "5-29-2022 21:1:40",
-		"Amount": 1006,
+		"Time": "5-31-2022 9:31:57",
+		"Amount": 1007,
 		"isUndumped": false,
-		"Type": "Quick"
+		"Type": "Full"
 	},
 	"songs": {},
 	"dates": {
@@ -41,7 +41,8 @@
 				"KidsMode.szs": 1647990305872.4963,
 				"TitleLogoParts.szs": 1648400505460.183,
 				"TitleLogoSmallParts.szs": 1648946150708.5024,
-				"WindowConfirmWait.szs": 1648400505461.6636
+				"WindowConfirmWait.szs": 1648400505461.6636,
+				"TwTimer.szs": 1651781985221.604
 			},
 			"ObjectData": {
 				"PlayerActorHakoniwa.szs": 1647358466820.3208,
@@ -49,7 +50,11 @@
 			},
 			"SoundData": {},
 			"StageData": {
-				"SnowWorldLobby000StageMap.szs": 1648400505448.2346
+				"SnowWorldLobby000StageMap.szs": 1648400505448.2346,
+				"SnowWorldTownStageMap.szs": 1651781985218.9072
+			},
+			"EffectData": {
+				"EffectDataBase.szs": 1654011200082.8308
 			}
 		}
 	},

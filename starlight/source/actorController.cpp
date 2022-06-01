@@ -23,6 +23,7 @@ void amy::setupActorListArray()
     controller.actorList[6] = controller.Utsubo;
     controller.actorList[7] = controller.Megane;
     controller.actorList[8] = controller.Tank;
+    controller.actorList[9] = controller.Pot;
     return;
 }
 
@@ -59,7 +60,7 @@ void amy::trySummonActor(al::LiveActor* actor, float playerDistance)
 bool amy::isCaptureActorController(al::LiveActor* actor)
 {
     amy::ActorController& controller = amy::getActorController();
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < 9; i++) {
         if (controller.actorList[i] == actor)
             return true;
     }
