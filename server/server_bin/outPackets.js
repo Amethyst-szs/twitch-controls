@@ -256,6 +256,30 @@ module.exports = {
       case "Fire":
         Events(19, false);
         break;
+      case "MassGoomba":
+        Events(60, false);
+        break;
+      case "MassTrex":
+        Events(61, false);
+        break;
+      case "MassUproot":
+        Events(62, false);
+        break;
+      case "MassStatue":
+        Events(63, false);
+        break;
+      case "MassPokio":
+        Events(64, false);
+        break;
+      case "MassEel":
+        Events(65, false);
+        break;
+      case "MassMoeeye":
+        Events(66, false);
+        break;
+      case "MassTank":
+        Events(67, false);
+        break;
       default:
         //Generic reward
         log.log(1, `Voice command ${redeemName} was run but not sure what this is?`);

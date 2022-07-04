@@ -28,6 +28,7 @@
 #include "sead/math/seadVector.h"
 #include "sead/prim/seadSafeString.h"
 #include "util.h"
+#include "sead/math/seadMathCalcCommon.h"
 #include <string>
 #include <typeinfo>
 
@@ -455,6 +456,52 @@ void initActorWithArchiveNameHook(al::LiveActor* actor, al::ActorInitInfo const&
     // Once all actors are ready, reload the all actor controller array
     amy::setupActorListArray();
 
+    for(int i = 0; i < 80; i++)
+    {
+        switch(sead::MathCalcCommon<float>::floor(i/10.f)){
+            case 0:
+                controller.massSpawnList[i] = al::createActorFunction<KuriboHack>("KuriboSpawn"); // Goomba
+                al::initCreateActorNoPlacementInfo(controller.massSpawnList[i], initInfo);
+                controller.massSpawnList[i]->makeActorDead();
+                break;
+            case 1:
+                controller.massSpawnList[i] = al::createActorFunction<TRex>("TRexSpawn"); // Goomba
+                al::initCreateActorNoPlacementInfo(controller.massSpawnList[i], initInfo);
+                controller.massSpawnList[i]->makeActorDead();
+                break;
+            case 2:
+                controller.massSpawnList[i] = al::createActorFunction<Senobi>("SenobiSpawn"); // Goomba
+                al::initCreateActorNoPlacementInfo(controller.massSpawnList[i], initInfo);
+                controller.massSpawnList[i]->makeActorDead();
+                break;
+            case 3:
+                controller.massSpawnList[i] = al::createActorFunction<Statue>("StatueSpawn"); // Goomba
+                al::initCreateActorNoPlacementInfo(controller.massSpawnList[i], initInfo);
+                controller.massSpawnList[i]->makeActorDead();
+                break;
+            case 4:
+                controller.massSpawnList[i] = al::createActorFunction<Tsukkun>("TsukkunSpawn"); // Goomba
+                al::initCreateActorNoPlacementInfo(controller.massSpawnList[i], initInfo);
+                controller.massSpawnList[i]->makeActorDead();
+                break;
+            case 5:
+                controller.massSpawnList[i] = al::createActorFunction<Utsubo>("UtsuboSpawn"); // Goomba
+                al::initCreateActorNoPlacementInfo(controller.massSpawnList[i], initInfo);
+                controller.massSpawnList[i]->makeActorDead();
+                break;
+            case 6:
+                controller.massSpawnList[i] = al::createActorFunction<Megane>("MeganeSpawn"); // Goomba
+                al::initCreateActorNoPlacementInfo(controller.massSpawnList[i], initInfo);
+                controller.massSpawnList[i]->makeActorDead();
+                break;
+            case 7:
+                controller.massSpawnList[i] = al::createActorFunction<Tank>("TankSpawn"); // Goomba
+                al::initCreateActorNoPlacementInfo(controller.massSpawnList[i], initInfo);
+                controller.massSpawnList[i]->makeActorDead();
+                break;
+        }
+    }
+
     // Complete hooked functionn
     al::initActorWithArchiveName(actor, initInfo, string, anotherString);
 }
@@ -564,10 +611,6 @@ void stageSceneHook(StageScene* stageScene)
         if (debugPage < 0)
             debugPage = debugMax;
     }
-
-    // if (al::isPadTriggerUp(-1)) {
-    //     amy::trySummonActor(amy::getActorController().AirBubble, 400.f);
-    // }
 
     __asm("MOV X0, %[input]"
           : [input] "=r"(stageScene));

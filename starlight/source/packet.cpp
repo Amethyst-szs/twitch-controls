@@ -282,6 +282,46 @@ void InPacketEvent::on(Server& server)
         case 59:
             amy::trySummonActor(controller.Pot, 3000.f);
             break;
+        case 60:
+            for(int i = 0 ; i < 10 ; i++){
+                amy::trySummonActor(amy::getActorController().massSpawnList[i], (i*150)-600);
+            }
+            break;
+        case 61:
+            for(int i = 0 ; i < 10 ; i++){
+                amy::trySummonActor(amy::getActorController().massSpawnList[i+10], (i*150)-600);
+            }
+            break;
+        case 62:
+            for(int i = 0 ; i < 10 ; i++){
+                amy::trySummonActor(amy::getActorController().massSpawnList[i+20], (i*150)-600);
+            }
+            break;
+        case 63:
+            for(int i = 0 ; i < 10 ; i++){
+                amy::trySummonActor(amy::getActorController().massSpawnList[i+30], (i*150)-600);
+            }
+            break;
+        case 64:
+            for(int i = 0 ; i < 10 ; i++){
+                amy::trySummonActor(amy::getActorController().massSpawnList[i+40], (i*150)-600);
+            }
+            break;
+        case 65:
+            for(int i = 0 ; i < 10 ; i++){
+                amy::trySummonActor(amy::getActorController().massSpawnList[i+50], (i*500)-2500);
+            }
+            break;
+        case 66:
+            for(int i = 0 ; i < 10 ; i++){
+                amy::trySummonActor(amy::getActorController().massSpawnList[i+60], (i*150)-600);
+            }
+            break;
+        case 67:
+            for(int i = 0 ; i < 10 ; i++){
+                amy::trySummonActor(amy::getActorController().massSpawnList[i+70], (i*150)-600);
+            }
+            break;
         default: {
             amy::log("Invalid EventID sent? EventID: %i", eventID);
             break;

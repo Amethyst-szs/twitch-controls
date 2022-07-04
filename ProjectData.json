@@ -2,10 +2,10 @@
 	"Version": "10",
 	"PName": "twitch-controls",
 	"DumpStats": {
-		"Time": "5-31-2022 9:31:57",
-		"Amount": 1007,
+		"Time": "7-4-2022 9:23:30",
+		"Amount": 1024,
 		"isUndumped": false,
-		"Type": "Full"
+		"Type": "Quick"
 	},
 	"songs": {},
 	"dates": {
